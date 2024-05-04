@@ -3,11 +3,28 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
+     	"~/*": ["./src/*"],
+      "~apis/*": ["./src/apis/*"],
+			"~app/*": ["./src/app/*"],
+			"~assets/*": ["./src/assets/*"],
+			"~components/*": ["./src/components/*"],
+			"~contexts/*": ["./src/contexts/*"],
+			"~configs/*": ["./src/configs/*"],
+      "~graphql/*": ["./src/graphql/*"],
+			"~hooks/*": ["./src/hooks/*"],
+			"~i18n/*": ["./src/i18n/*"],
+			"~providers/*": ["./src/providers/*"],
+			"~services/*": ["./src/services/*"],
+			"~stores/*": ["./src/stores/*"],
+			"~styles/*": ["./src/styles/*"],
+			"~types/*": ["./src/types/*"],
+			"~utils/*": ["./src/utils/*"],
+			"~helpers/*": ["./src/helpers/*"]
+    },
+      "jsx": "react-native",
+    "types": ["nativewind/types"]
   },
+
   "include": [
     "**/*.ts",
     "**/*.tsx",
