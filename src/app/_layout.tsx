@@ -10,13 +10,12 @@ import "react-native-gesture-handler";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-import "~styles/styles.css";
-
+import "../../global.css";
+import { SpaceMonoRegular } from "~/assets";
 import { TouchableOpacity } from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { SpaceMonoRegular } from "~/assets";
 import { AmplifyProvider } from "~/providers";
 import { useAuthStore } from "~/stores";
 
@@ -36,7 +35,28 @@ preventAutoHideAsync().catch((error) => {
 const RootLayout = () => {
   const { clear, handleSignOut, currentUser } = useAuthStore();
 
+  const [loaded, error] = useFonts({
+    SpaceMono: SpaceMonoRegular,
+    ...FontAwesome.font,
+  });
+
   const pathname = usePathname();
+
+  useEffect(() => {
+    if (error) throw error;
+  }, [error]);
+
+  useEffect(() => {
+    if (loaded) {
+      hideAsync().catch((error) => {
+        console.error(error);
+      });
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
 
   return (
     <AmplifyProvider>

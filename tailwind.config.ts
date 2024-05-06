@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss";
+/** @type {import('tailwindcss').Config} */
 
 // @ts-expect-error - no types
 import nativewind from "nativewind/preset";
@@ -33,4 +33,4 @@ export default {
       },
     },
   },
-} satisfies Config;
+} 
