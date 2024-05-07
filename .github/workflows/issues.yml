@@ -1,0 +1,27 @@
+name: GitHub Issues
+
+on:
+    issues:
+        types:
+            [
+                opened,
+                closed,
+                reopened,
+                assigned,
+                unassigned,
+                milestoned,
+                demilestoned,
+            ]
+
+jobs:
+    discord_notification:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: sarisia/actions-status-discord@v1
+              if: always()
+              with:
+                  webhook: ${{ secrets.DISCORD_WEBHOOK_ISSUES }}
+                  title: "🔔 New GitHub Issue: ${{ github.event.issue.title }}"
+                  noprefix: true
+                  description: "${{ github.event.action }}: ${{ github.event.issue.html_url }}"
+                  color: 0xff9933

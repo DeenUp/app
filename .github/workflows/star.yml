@@ -1,0 +1,17 @@
+name: Star Events
+
+on:
+    watch:
+        types: [started]
+
+jobs:
+    discord_notification:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: sarisia/actions-status-discord@v1
+              if: always()
+              with:
+                  webhook: ${{ secrets.DISCORD_WEBHOOK_STAR }}
+                  title: "⭐ New Star: ${{ github.event.repository.name }}"
+                  description: "The repository has been starred by ${{ github.actor }}: [${{ github.event.repository.html_url }}](${{ github.event.repository.html_url }})"
+                  color: 0xffd700
