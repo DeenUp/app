@@ -1,6 +1,6 @@
 import { getUrl, uploadData } from "aws-amplify/storage"
 
-import type { StorageService } from "../types"
+import type { StorageService } from "~/types"
 
 export default class AmplifyStorageService implements StorageService {
 	download = async (key: string): Promise<File> => {

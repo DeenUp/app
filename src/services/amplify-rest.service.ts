@@ -2,7 +2,7 @@
 import { del, get, post, put } from "aws-amplify/api"
 import { fetchAuthSession } from "aws-amplify/auth"
 
-import type { RestService } from "../types"
+import type { RestService } from "~/types"
 
 export default class AmplifyRestService implements RestService {
 	private readonly apiName: string

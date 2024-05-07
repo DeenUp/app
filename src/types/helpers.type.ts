@@ -6,34 +6,16 @@ export type ApiResponse = {
 	hasData: boolean
 }
 
-export type ItemResponse<T> = ApiResponse & {
-	item?: T | null
-}
-
-export type ListResponse<T> = ApiResponse & {
-	items?: (T | null)[] | null
-	nextToken?: string | null
-}
-
-export type SubscriptionResponse<T> = {
-	type: "created" | "updated" | "deleted"
-	data: T
-}
-
-export type Success<T> = {
-	value: T
-}
-
 export type Fail = {
 	error: Error
 }
 
-export type Maybe<T> = Success<T> | Fail
+export type GraphqlSubscriptionMessage<T> = {
+	data: T
+}
 
-export type ListQueryParams<T> = {
-	filter?: T
-	limit?: number
-	nextToken?: string
+export type ItemResponse<T> = ApiResponse & {
+	item?: T | null
 }
 
 export type ListByIdQueryParams<T> = {
@@ -43,12 +25,30 @@ export type ListByIdQueryParams<T> = {
 	nextToken?: string
 }
 
+export type ListQueryParams<T> = {
+	filter?: T
+	limit?: number
+	nextToken?: string
+}
+
+export type ListResponse<T> = ApiResponse & {
+	items?: (T | null)[] | null
+	nextToken?: string | null
+}
+
+export type Maybe<T> = Success<T> | Fail
+
+export type Subscription = { unsubscribe: () => void }
+
 export type SubscriptionParams<T> = {
 	filter: T
 }
 
-export type Subscription = { unsubscribe: () => void }
-
-export type GraphqlSubscriptionMessage<T> = {
+export type SubscriptionResponse<T> = {
+	type: "created" | "updated" | "deleted"
 	data: T
+}
+
+export type Success<T> = {
+	value: T
 }

@@ -1,16 +1,21 @@
 {
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true,
-    "paths": {
-     	"~/*": ["./src/*"],
-      "~apis/*": ["./src/apis/*"],
+	"extends": "expo/tsconfig.base",
+	"compilerOptions": {
+		"target": "ES2022",
+		"lib": ["dom", "dom.iterable", "ES2022"],
+		"strict": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"moduleDetection": "force",
+		"paths": {
+			"~/*": ["./src/*"],
+			"~apis/*": ["./src/apis/*"],
 			"~app/*": ["./src/app/*"],
 			"~assets/*": ["./src/assets/*"],
 			"~components/*": ["./src/components/*"],
 			"~contexts/*": ["./src/contexts/*"],
 			"~configs/*": ["./src/configs/*"],
-      "~graphql/*": ["./src/graphql/*"],
+			"~graphql/*": ["./src/graphql/*"],
 			"~hooks/*": ["./src/hooks/*"],
 			"~i18n/*": ["./src/i18n/*"],
 			"~providers/*": ["./src/providers/*"],
@@ -20,15 +25,17 @@
 			"~types/*": ["./src/types/*"],
 			"~utils/*": ["./src/utils/*"],
 			"~helpers/*": ["./src/helpers/*"]
-    },
-      "jsx": "react-native",
-    "types": ["nativewind/types"]
-  },
+		},
+		"jsx": "react-native",
+		"types": ["nativewind/types"]
+	},
 
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-  ]
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		".expo/types/**/*.ts",
+		"expo-env.d.ts",
+		"prettier.config.js",
+		"eslint.config.js"
+	]
 }

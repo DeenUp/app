@@ -1,4 +1,4 @@
-import type { AnalyticsService } from "../types"
+import type { AnalyticsService } from "~/types"
 
 export default class AmplifyGraphqlService implements AnalyticsService {
 	setUserId(id: string): Promise<void> {

@@ -1,7 +1,7 @@
-import type { User } from "node_modules/@deenup/store/src/graphql/api"
-
 import React from "react"
 import { Text, View } from "react-native"
+
+import type { User } from "~graphql/api"
 
 import PlayerAvatar from "./PlayerAvatar"
 

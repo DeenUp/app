@@ -101,4 +101,4 @@ const NameInputField: FC<InputFieldProps> = (props) => {
 }
 
 export default InputField
-export { EmailInputField, PasswordInputField, NameInputField }
+export { EmailInputField, NameInputField, PasswordInputField }

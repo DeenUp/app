@@ -1,9 +1,5 @@
-export type Question = {
+export type Player = {
 	id: string
-	question: string
-	options: string[]
-	correctAnswer: string
-	userAnswer: string
 }
 
 export type PossibleAnswer = {
@@ -11,6 +7,10 @@ export type PossibleAnswer = {
 	answer: string
 }
 
-export type Player = {
+export type Question = {
 	id: string
+	question: string
+	options: string[]
+	correctAnswer: string
+	userAnswer: string
 }

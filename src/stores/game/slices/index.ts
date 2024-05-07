@@ -17,18 +17,18 @@ type GameStore = PlayerSlice &
 	TimerSlice
 
 export type {
-	PlayerSlice,
+	GameStore,
 	LobbySlice,
 	MultiplayerSessionSlice,
+	PlayerSlice,
 	SoloSessionSlice,
-	GameStore,
 	TimerSlice,
 }
 
 export {
-	createPlayerSlice,
 	createLobbySlice,
 	createMultiplayerSessionSlice,
+	createPlayerSlice,
 	createSoloSessionSlice,
 	createTimerSlice,
 }

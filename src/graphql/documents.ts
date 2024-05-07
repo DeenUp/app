@@ -282,10 +282,10 @@ const participantDocument = (include: {
 }
 
 export {
-	userDocument,
-	lobbyDocument,
-	gameSessionDocument,
 	gameRoundDocument,
-	submittedAnswersDocument,
+	gameSessionDocument,
+	lobbyDocument,
 	participantDocument,
+	submittedAnswersDocument,
+	userDocument,
 }

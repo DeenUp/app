@@ -5,4 +5,4 @@ import SignIn from "./SignIn"
 import SignUp from "./SignUp"
 import Verify from "./Verify"
 
-export { AuthHeader, ForgotPassword, CodeInput, SignIn, SignUp, Verify }
+export { AuthHeader, CodeInput, ForgotPassword, SignIn, SignUp, Verify }

@@ -6,41 +6,37 @@ import type {
 import type { DocumentNode, GraphQLError, Source } from "graphql"
 import type { Observable } from "rxjs"
 
-/**
- * Loose/Unknown options for raw GraphQLAPICategory `graphql()`.
- */
-export type GraphQLOptions = {
-	query: string | DocumentNode
-	variables?: Record<string, DocumentType>
+export type AuthModeParams = {
 	authMode?: GraphQLAuthMode
 	authToken?: string
-	/**
-	 * @deprecated This property should not be used
-	 */
-	userAgentSuffix?: string
-}
+} & Record<string, unknown>
 
-export type GraphQLResult<T = object | null> = {
-	data: T
-	errors?: GraphQLError[]
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	extensions?: Record<string, any>
+export type GenerateServerClientParams = {
+	config: ResourcesConfig
+	authMode?: GraphQLAuthMode
+	authToken?: string
 }
 
 // Opaque type used for determining the graphql query type
 declare const queryType: unique symbol
 
-export type GraphQLQuery<T> = T & { readonly [queryType]: "query" }
-export type GraphQLSubscription<T> = T & {
-	readonly [queryType]: "subscription"
+export type GeneratedMutation<InputType, OutputType> = string & {
+	__generatedMutationInput: InputType
+	__generatedMutationOutput: OutputType
 }
 
-export type GraphQLReturnType<T> =
-	T extends Record<string, unknown>
-		? {
-				[K in keyof T]?: GraphQLReturnType<T[K]>
-			}
-		: T
+export type GeneratedSubscription<InputType, OutputType> = string & {
+	__generatedSubscriptionInput: InputType
+	__generatedSubscriptionOutput: OutputType
+}
+
+export enum GraphQLAuthError {
+	NO_API_KEY = "No api-key configured",
+	NO_CURRENT_USER = "No current user",
+	NO_CREDENTIALS = "No credentials",
+	NO_FEDERATED_JWT = "No federated jwt",
+	NO_AUTH_TOKEN = "No auth token specified",
+}
 
 /**
  * Describes a paged list result from AppSync, which can either
@@ -70,10 +66,71 @@ type WithListsFixed<T> =
 			: T
 
 /**
- * Returns an updated response type to always return a value.
+ * GraphQLSource or string, the type of the parameter for calling graphql.parse
+ * @see: https://graphql.org/graphql-js/language/#parse
  */
-export type NeverEmpty<T> = {
-	[K in keyof T]-?: Exclude<WithListsFixed<T[K]>, undefined | null>
+export type GraphQLOperation = Source | string
+
+export type GraphQLOperationType<
+	IN extends Record<string, DocumentType>,
+	OUT extends Record<string, DocumentType>,
+> = {
+	variables: IN
+	result: OUT
+}
+
+/**
+ * Loose/Unknown options for raw GraphQLAPICategory `graphql()`.
+ */
+export type GraphQLOptions = {
+	query: string | DocumentNode
+	variables?: Record<string, DocumentType>
+	authMode?: GraphQLAuthMode
+	authToken?: string
+	/**
+	 * @deprecated This property should not be used
+	 */
+	userAgentSuffix?: string
+}
+
+export type GraphQLQuery<T> = T & { readonly [queryType]: "query" }
+
+export type GraphQLResult<T = object | null> = {
+	data: T
+	errors?: GraphQLError[]
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	extensions?: Record<string, any>
+}
+
+export type GraphQLReturnType<T> =
+	T extends Record<string, unknown>
+		? {
+				[K in keyof T]?: GraphQLReturnType<T[K]>
+			}
+		: T
+
+export type GraphQLSubscription<T> = T & {
+	readonly [queryType]: "subscription"
+}
+
+/**
+ * The shape of messages passed to `next()` from a graphql subscription. E.g.,
+ *
+ * ```ts
+ * const sub = client.graphql({
+ * 	query: onCreateWidget,
+ * }).subscribe({
+ * 	//
+ * 	//            |-- You are here
+ * 	//            v
+ * 	next(message: GraphqlSubscriptionMessage<OnCreateWidgetSubscription>) {
+ * 		handle(message.value);  // <-- type OnCreateWidgetSubscription
+ * 	}
+ * })
+ * ```
+ */
+export type GraphqlSubscriptionMessage<T> = {
+	data: T
 }
 
 /**
@@ -91,7 +148,6 @@ export type NeverEmpty<T> = {
 // 				>
 // 			}
 // 		: T
-
 /**
  * The return value from a `graphql({query})` call when `query` is a subscription.
  *
@@ -117,61 +173,13 @@ export type GraphqlSubscriptionResult<T> = Observable<
 >
 
 /**
- * The shape of messages passed to `next()` from a graphql subscription. E.g.,
- *
- * ```ts
- * const sub = client.graphql({
- * 	query: onCreateWidget,
- * }).subscribe({
- * 	//
- * 	//            |-- You are here
- * 	//            v
- * 	next(message: GraphqlSubscriptionMessage<OnCreateWidgetSubscription>) {
- * 		handle(message.value);  // <-- type OnCreateWidgetSubscription
- * 	}
- * })
- * ```
+ * Returns an updated response type to always return a value.
  */
-export type GraphqlSubscriptionMessage<T> = {
-	data: T
+export type NeverEmpty<T> = {
+	[K in keyof T]-?: Exclude<WithListsFixed<T[K]>, undefined | null>
 }
 
-export enum GraphQLAuthError {
-	NO_API_KEY = "No api-key configured",
-	NO_CURRENT_USER = "No current user",
-	NO_CREDENTIALS = "No credentials",
-	NO_FEDERATED_JWT = "No federated jwt",
-	NO_AUTH_TOKEN = "No auth token specified",
-}
-
-/**
- * GraphQLSource or string, the type of the parameter for calling graphql.parse
- * @see: https://graphql.org/graphql-js/language/#parse
- */
-export type GraphQLOperation = Source | string
-
-export type GraphQLOperationType<
-	IN extends Record<string, DocumentType>,
-	OUT extends Record<string, DocumentType>,
-> = {
-	variables: IN
-	result: OUT
-}
-
-export type GeneratedMutation<InputType, OutputType> = string & {
-	__generatedMutationInput: InputType
-	__generatedMutationOutput: OutputType
-}
-
-export type GeneratedSubscription<InputType, OutputType> = string & {
-	__generatedSubscriptionInput: InputType
-	__generatedSubscriptionOutput: OutputType
-}
-
-export const __amplify = Symbol("amplify")
-export const __authMode = Symbol("authMode")
-export const __authToken = Symbol("authToken")
-export const __headers = Symbol("headers")
+export type QueryArgs = Record<string, unknown>
 
 /**
  * @private
@@ -189,15 +197,10 @@ export type ServerClientGenerationParams = {
 	config: ResourcesConfig
 }
 
-export type QueryArgs = Record<string, unknown>
+export const __amplify = Symbol("amplify")
 
-export type AuthModeParams = {
-	authMode?: GraphQLAuthMode
-	authToken?: string
-} & Record<string, unknown>
+export const __authMode = Symbol("authMode")
 
-export type GenerateServerClientParams = {
-	config: ResourcesConfig
-	authMode?: GraphQLAuthMode
-	authToken?: string
-}
+export const __authToken = Symbol("authToken")
+
+export const __headers = Symbol("headers")

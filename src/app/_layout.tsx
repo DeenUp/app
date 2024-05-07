@@ -1,137 +1,154 @@
-import { useEffect } from "react";
+import type { ResourcesConfig } from "aws-amplify"
 
-import { useFonts } from "expo-font";
-import { router, Stack, usePathname } from "expo-router";
-import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
-import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react"
 
-import "react-native-reanimated";
-import "react-native-gesture-handler";
+import { useFonts } from "expo-font"
+import { router, Stack, usePathname } from "expo-router"
+import { hideAsync, preventAutoHideAsync } from "expo-splash-screen"
+import { StatusBar } from "expo-status-bar"
 
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Amplify } from "aws-amplify"
 
-import "../../global.css";
-import { SpaceMonoRegular } from "~/assets";
-import { TouchableOpacity } from "react-native";
+import config from "../amplifyconfiguration.json"
 
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import "react-native-reanimated"
+import "react-native-gesture-handler"
 
-import { AmplifyProvider } from "~/providers";
-import { useAuthStore } from "~/stores";
+import FontAwesome from "@expo/vector-icons/FontAwesome"
+
+import "../../global.css"
+
+import { TouchableOpacity } from "react-native"
+
+import { MaterialCommunityIcons } from "@expo/vector-icons"
+
+import { SpaceMonoRegular } from "~/assets"
+import { AmplifyProvider } from "~/providers"
+import { useAuthStore } from "~/stores"
+
+Amplify.configure(config as ResourcesConfig)
 
 export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from "expo-router";
+	// Catch any errors thrown by the Layout component.
+	ErrorBoundary,
+} from "expo-router"
 export const unstable_settings = {
-  initialRouteName: "/",
-};
+	initialRouteName: "/",
+}
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 preventAutoHideAsync().catch((error) => {
-  console.error(error);
-});
+	console.error(error)
+})
 
 const RootLayout = () => {
-  const { clear, handleSignOut, currentUser } = useAuthStore();
+	const { clear, handleSignOut, currentUser } = useAuthStore()
 
-  const [loaded, error] = useFonts({
-    SpaceMono: SpaceMonoRegular,
-    ...FontAwesome.font,
-  });
+	const [loaded, error] = useFonts({
+		SpaceMono: SpaceMonoRegular,
+		...FontAwesome.font,
+	})
 
-  const pathname = usePathname();
+	const pathname = usePathname()
 
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
+	useEffect(() => {
+		if (error) throw error
+	}, [error])
 
-  useEffect(() => {
-    if (loaded) {
-      hideAsync().catch((error) => {
-        console.error(error);
-      });
-    }
-  }, [loaded]);
+	useEffect(() => {
+		if (loaded) {
+			hideAsync().catch((error) => {
+				console.error(error)
+			})
+		}
+	}, [loaded])
 
-  if (!loaded) {
-    return null;
-  }
+	if (!loaded) {
+		return null
+	}
 
-  return (
-    <AmplifyProvider>
-      <Stack
-        screenOptions={{
-          headerShown: false,
+	return (
+		<AmplifyProvider>
+			<Stack
+				screenOptions={{
+					headerShown: false,
 
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-        }}
-      >
-        <Stack.Screen
-          name="index"
-          options={{
-            headerShown: true,
-            headerShadowVisible: false,
-            headerTitle: "",
-            headerStyle: {
-              backgroundColor: "#F2F3F3",
-            },
-            headerRight: () => {
-              if (!currentUser) return;
+					headerTitleStyle: {
+						fontWeight: "bold",
+					},
+				}}
+			>
+				<Stack.Screen
+					name="index"
+					options={{
+						headerShown: true,
+						headerShadowVisible: false,
+						headerTitle: "",
+						headerStyle: {
+							backgroundColor: "#F2F3F3",
+						},
+						headerRight: () => {
+							if (!currentUser) return
 
-              return (
-                <TouchableOpacity
-                  className={"size-10"}
-                  onPress={async () => {
-                    await handleSignOut();
-                  }}
-                >
-                  <MaterialCommunityIcons
-                    name="logout-variant"
-                    color="black"
-                    size={32}
-                  />
-                </TouchableOpacity>
-              );
-            },
-          }}
-        />
-        <Stack.Screen
-          name="auth"
-          options={{
-            presentation:
-              pathname === "/auth/verification" ? "transparentModal" : "modal",
-            headerShadowVisible: false,
-            headerBlurEffect: "light",
-            headerStyle: {
-              backgroundColor:
-                pathname === "/auth/verification" ? "#F9FAFB" : "#6D28D9",
-            },
-            headerShown: true,
-            headerTitle: "",
-            headerRight: () => (
-              <TouchableOpacity
-                className={"size-10"}
-                onPress={() => {
-                  clear();
-                  router.back();
-                }}
-              >
-                <MaterialCommunityIcons
-                  name="close"
-                  color={pathname === "/auth/verification" ? "black" : "white"}
-                  size={32}
-                />
-              </TouchableOpacity>
-            ),
-          }}
-        />
-      </Stack>
-      <StatusBar />
-    </AmplifyProvider>
-  );
-};
+							return (
+								<TouchableOpacity
+									className={"size-10"}
+									onPress={async () => {
+										await handleSignOut()
+									}}
+								>
+									<MaterialCommunityIcons
+										name="logout-variant"
+										color="black"
+										size={32}
+									/>
+								</TouchableOpacity>
+							)
+						},
+					}}
+				/>
+				<Stack.Screen
+					name="auth"
+					options={{
+						presentation:
+							pathname === "/auth/verification"
+								? "transparentModal"
+								: "modal",
+						headerShadowVisible: false,
+						headerBlurEffect: "light",
+						headerStyle: {
+							backgroundColor:
+								pathname === "/auth/verification"
+									? "#F9FAFB"
+									: "#6D28D9",
+						},
+						headerShown: true,
+						headerTitle: "",
+						headerRight: () => (
+							<TouchableOpacity
+								className={"size-10"}
+								onPress={() => {
+									clear()
+									router.back()
+								}}
+							>
+								<MaterialCommunityIcons
+									name="close"
+									color={
+										pathname === "/auth/verification"
+											? "black"
+											: "white"
+									}
+									size={32}
+								/>
+							</TouchableOpacity>
+						),
+					}}
+				/>
+			</Stack>
+			<StatusBar />
+		</AmplifyProvider>
+	)
+}
 
-export default RootLayout;
+export default RootLayout

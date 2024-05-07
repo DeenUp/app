@@ -13,14 +13,14 @@ import Timer from "./Timer"
 
 export {
 	Button,
-	Gap,
-	Spacer,
-	Timer,
-	InputField,
 	EmailInputField,
+	Gap,
+	InputField,
 	NameInputField,
 	ParticipantsList,
 	PasswordInputField,
 	PlayerAvatar,
 	SegmentedProgressBar,
+	Spacer,
+	Timer,
 }
