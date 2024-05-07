@@ -28,11 +28,11 @@ export default function Auth() {
 	const [isVerified, setVerified] = useState(false)
 
 	const styles = {
-		body: tw`bg-base-200 h-full w-full flex-col items-center justify-start gap-6 p-6 pt-24`,
+		body: tw`h-full w-full flex-col items-center justify-start gap-6 bg-base-200 p-6 pt-24`,
 		headerContainer: tw`items-center justify-center gap-4`,
 		header: tw`text-4xl font-bold`,
 		subheader: tw`text-lg font-light text-gray-500`,
-		logo: tw`text-base-100 text-2xl font-bold`,
+		logo: tw`text-2xl font-bold text-base-100`,
 		closeButton: tw`absolute right-5 top-5 size-10`,
 		submitButton: tw`absolute bottom-12 w-11/12`,
 	}

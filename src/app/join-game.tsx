@@ -127,7 +127,7 @@ export default function CreateGame() {
 		codeText: tw`text-xl font-bold`,
 		buttonContainer: tw`flex w-full flex-col items-center justify-center gap-6`,
 		backButton: tw`flex h-16 items-center justify-center rounded-full p-4`,
-		shareButton: tw`bg-base-100 flex items-center justify-center rounded-full border border-primary p-4`,
+		shareButton: tw`flex items-center justify-center rounded-full border border-primary bg-base-100 p-4`,
 		codeInputContainer: tw`flex flex-row items-center justify-center gap-2`,
 		codeDigitBox: tw`m-1 rounded-md bg-gray-200 p-4`,
 		joinGameButton: tw`w-2/3`,

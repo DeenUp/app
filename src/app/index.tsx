@@ -23,7 +23,7 @@ export default function Page(): ReactNode {
 		logoPrimary: tw`text-8xl font-bold text-primary`,
 		buttonsContainer: tw`flex w-full flex-row items-center justify-center gap-2 px-1`,
 		joinGameButton: tw`w-1/2 rounded-r-none`,
-		createGameButton: tw`border-base-300 w-1/2 rounded-l-none`,
+		createGameButton: tw`w-1/2 rounded-l-none border-base-300`,
 		motiLogo: twr`flex flex-col items-center justify-center text-center text-8xl font-bold`,
 		motiContainer: twr`w-full justify-end gap-2`,
 	}

@@ -50,7 +50,7 @@ export default function Auth() {
 
 	const styles = {
 		header: tw`h-1/2 flex-1 items-center justify-center bg-primary`,
-		logo: tw`text-base-100 text-6xl font-bold`,
+		logo: tw`text-6xl font-bold text-base-100`,
 		closeButton: tw`absolute right-10 top-12 size-10`,
 	}
 

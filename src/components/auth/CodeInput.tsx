@@ -21,7 +21,7 @@ const CodeInput = ({
 	const styles = {
 		container: twMerge("flex flex-row  items-center justify-center gap-2"),
 		input: twMerge(
-			"bg-base-200 rounded-lg border border-gray-300 bg-white text-center text-xl shadow-sm",
+			"rounded-lg border border-gray-300 bg-base-200 bg-white text-center text-xl shadow-sm",
 			inputClass,
 		),
 	}
