@@ -6,6 +6,7 @@ A brief description of your project.
 
 -   [Installation](#installation)
 -   [Usage](#usage)
+-   [Building](#building)
 -   [Features](#features)
 -   [Contributing](#contributing)
 -   [License](#license)
@@ -39,9 +40,9 @@ A brief description of your project.
     pnpm dev:android
     ```
 
-#### Building the apps
+## Building
 
-#### iOS
+### iOS
 
 1. Run the following in the `root` directory
 
@@ -49,7 +50,7 @@ A brief description of your project.
     pnpm ios
     ```
 
-## Android
+### Android
 
 1. Run the following in the `root` directory
 
@@ -57,7 +58,7 @@ A brief description of your project.
     pnpm android
     ```
 
-### Features
+## Features
 
 -   List the key features of your project here.
 
