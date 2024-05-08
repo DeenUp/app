@@ -4,9 +4,10 @@
 		"target": "ES2022",
 		"lib": ["dom", "dom.iterable", "ES2022"],
 		"strict": true,
-		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"moduleDetection": "force",
+		"incremental": true,
+		"noUncheckedIndexedAccess": true,
 		"paths": {
 			"~/*": ["./src/*"],
 			"~apis/*": ["./src/apis/*"],
@@ -26,7 +27,7 @@
 			"~utils/*": ["./src/utils/*"],
 			"~helpers/*": ["./src/helpers/*"]
 		},
-		"jsx": "react-native",
+
 		"types": ["nativewind/types"]
 	},
 
@@ -36,6 +37,7 @@
 		".expo/types/**/*.ts",
 		"expo-env.d.ts",
 		"prettier.config.js",
-		"eslint.config.js"
+		"eslint.config.js",
+		"amplifyconfiguation.json"
 	]
 }

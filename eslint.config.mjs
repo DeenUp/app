@@ -21,7 +21,6 @@ export default [
 			"**/*.config.mjs",
 			"**/*.config.cjs",
 			"**/.eslintrc.cjs",
-			".next",
 			".expo",
 			"dist",
 			"pnpm-lock.yaml",

@@ -1,5 +1,3 @@
-// import { fileURLToPath } from "url"
-
 /** @typedef {import("prettier").Config} PrettierConfig */
 /** @typedef {import("prettier-plugin-tailwindcss").PluginOptions} TailwindConfig */
 /** @typedef {import("@ianvs/prettier-plugin-sort-imports").PluginConfig} SortImportsConfig */
@@ -44,5 +42,3 @@ module.exports = {
 	importOrderParserPlugins: ["typescript", "jsx", "decorators-legacy"],
 	importOrderTypeScriptVersion: "4.4.0",
 }
-
-// export default config;

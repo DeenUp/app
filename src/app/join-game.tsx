@@ -123,7 +123,7 @@ export default function CreateGame() {
 		headerContainer: tw`absolute left-10 top-4 flex w-2/3 flex-row gap-6`,
 		headerText: tw`text-3xl font-bold text-white`,
 		subheaderText: tw`text-base-200`,
-		codeContainer: tw`mt-72 flex h-full items-center justify-start gap-8  rounded-lg rounded-t-3xl bg-gray-100 bg-white pt-20`,
+		codeContainer: tw`mt-72 flex h-full items-center justify-start gap-8  rounded-lg rounded-t-3xl bg-gray-100 pt-20`,
 		codeText: tw`text-xl font-bold`,
 		buttonContainer: tw`flex w-full flex-col items-center justify-center gap-6`,
 		backButton: tw`flex h-16 items-center justify-center rounded-full p-4`,
