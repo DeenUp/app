@@ -17,6 +17,8 @@ import type {
 	Participant,
 	ParticipantsByLobbyIdQuery,
 	ParticipantsByLobbyIdQueryVariables,
+	ParticipantsByUserIdQuery,
+	ParticipantsByUserIdQueryVariables,
 } from "../graphql/api"
 import type {
 	GraphQLService,
@@ -26,12 +28,13 @@ import type {
 	ListByIdQueryParams,
 	ListResponse,
 	NeverEmpty,
+	Subscription,
 	SubscriptionParams,
 	SubscriptionResponse,
 } from "../types"
 
 import { createParticipant, deleteParticipant } from "../graphql/mutations"
-import { participantsByLobbyId } from "../graphql/queries"
+import { participantsByLobbyId, participantsByUserId } from "../graphql/queries"
 import {
 	onCreateParticipant,
 	onDeleteParticipant,
@@ -44,6 +47,42 @@ export default class ParticipantApi implements IParticipantApi {
 
 	constructor(graphqlService?: GraphQLService) {
 		this.graphqlService = graphqlService ?? new AmplifyGraphqlService()
+	}
+
+	async findActiveParticipant(
+		userId: string,
+	): Promise<ItemResponse<Participant>> {
+		const response = await this.graphqlService.query<
+			typeof participantsByUserId,
+			ParticipantsByUserIdQueryVariables,
+			GraphQLResult<ParticipantsByUserIdQuery>
+		>(participantsByUserId, {
+			userId,
+		})
+
+		if (response.errors) {
+			return {
+				error: new Error(response.errors[0]!.message),
+				hasError: true,
+				hasData: false,
+			}
+		}
+
+		const connection = response.data
+			.participantsByUserId as ModelParticipantConnection
+
+		const participants = connection.items
+		const activeLobby = participants
+			.map((participant) => participant?.lobby)
+			.find((lobby) => lobby?.isActive === true)
+
+		return {
+			hasError: false,
+			hasData: !!activeLobby,
+			item: participants.find(
+				(participant) => participant?.lobbyId === activeLobby?.id,
+			),
+		}
 	}
 
 	async listById(
@@ -113,7 +152,7 @@ export default class ParticipantApi implements IParticipantApi {
 			ModelParticipantFilterInput | null | undefined
 		>,
 		onResponse: (response: SubscriptionResponse<Participant>) => void,
-	): { unsubscribe: () => void } {
+	): Subscription {
 		const createStream = this.graphqlService
 			.subscribe<
 				typeof onCreateParticipant,

@@ -169,6 +169,14 @@ const randomQuestions = (n: number): Question[] => {
 	return shuffledQuestions.slice(0, n)
 }
 
+const randomQuestion = (previousQuestions: Question[]): Question => {
+	const shuffledQuestions = questions.sort(() => Math.random() - 0.5)
+
+	return shuffledQuestions.find(
+		(question) => !previousQuestions.includes(question),
+	) as Question
+}
+
 export default questions
 
-export { randomQuestions }
+export { randomQuestion, randomQuestions }

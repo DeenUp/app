@@ -272,7 +272,7 @@ const participantDocument = (include: {
 		document += `lobby {
             ${lobbyDocument({
 				includeCreator: false,
-				includeParticipants: false,
+				includeParticipants: true,
 				includeGameSession: false,
 			})}
         }`

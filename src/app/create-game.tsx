@@ -18,15 +18,25 @@ import { useGameStore, useSettingsStore } from "~/stores"
 export default function CreateGame(): ReactNode {
 	const translate = useSettingsStore((state) => state.translate)
 
-	const { participants, destroy, createLobby, leaveLobby, code, error } =
-		useGameStore((state: GameStore) => ({
-			participants: state.participants,
-			code: state.lobbyCode,
-			error: state.error,
-			destroy: state.destroy,
-			createLobby: state.createLobby,
-			leaveLobby: state.leaveLobby,
-		}))
+	const {
+		gameSessionID,
+		participants,
+		destroy,
+		createLobby,
+		leaveLobby,
+		startGame,
+		code,
+		error,
+	} = useGameStore((state: GameStore) => ({
+		gameSessionID: state.gameSessionID,
+		participants: state.participants,
+		code: state.lobbyCode,
+		error: state.error,
+		destroy: state.destroy,
+		createLobby: state.createLobby,
+		startGame: state.startGame,
+		leaveLobby: state.leaveLobby,
+	}))
 
 	useEffect(() => {
 		void createLobby()
@@ -35,6 +45,12 @@ export default function CreateGame(): ReactNode {
 			destroy()
 		}
 	}, [])
+
+	useEffect(() => {
+		if (gameSessionID) {
+			router.navigate("/friends-mode/")
+		}
+	}, [gameSessionID])
 
 	const handleExit = async () => {
 		await leaveLobby()
@@ -54,9 +70,9 @@ export default function CreateGame(): ReactNode {
 		subheaderText: tw`text-base-200`,
 		codeContainer: tw`mt-72 flex h-full items-center justify-start gap-8  rounded-lg rounded-t-3xl bg-gray-100 pt-20`,
 		codeText: tw`text-xl font-bold`,
-		buttonContainer: tw`flex w-full flex-col items-center justify-center gap-6 `,
+		buttonContainer: tw`flex w-full flex-row items-center justify-center gap-6 `,
 		backButton: tw``,
-		shareButton: tw`rounded-full p-6`,
+		shareButton: tw``,
 		codeTextContainer: tw`flex flex-row items-center justify-center`,
 		codeDigitBox: tw`m-1 rounded-md bg-gray-200 p-4`,
 		createGameButton: tw`w-2/3`,
@@ -99,30 +115,23 @@ export default function CreateGame(): ReactNode {
 					</View>
 					<View className={styles.buttonContainer}>
 						<Button
-							iconName="share-variant"
-							iconSize={24}
-							color="secondary"
-							buttonStyle={styles.shareButton}
-							size="xl"
-							onPress={handleShare}
-						/>
-
-						<Button
-							onPress={handleExit}
+							onPress={startGame}
 							buttonStyle={styles.createGameButton}
 							size="lg"
 							color="primary"
 							label={translate("createGamePage.button")}
 						/>
+						<Button
+							iconName="share-variant"
+							iconSize={24}
+							color="secondary"
+							size="md"
+							buttonStyle={styles.shareButton}
+							onPress={handleShare}
+						/>
 					</View>
 					{error && <Text>{error}</Text>}
-					{participants.length > 0 && (
-						<ParticipantsList
-							users={participants.map(
-								(participant) => participant.user,
-							)}
-						/>
-					)}
+					{participants.length > 0 && <ParticipantsList />}
 				</View>
 			</View>
 		</SafeAreaView>

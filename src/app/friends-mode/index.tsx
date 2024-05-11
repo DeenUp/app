@@ -31,59 +31,28 @@ export default function Page(): ReactNode {
 		}),
 	)
 
-	const {
-		currentQuestionIndex,
-		questions,
-		userAnswer,
-		hasSubmitted,
-		hasSelectedAnswer,
-		waitingForPlayers,
-		loading,
-		showRoundResult,
-		initializeSessionQuestions,
-		submitPossibleAnswer,
-		submitAnswer,
-		reset,
-	} = useGameStore((state: GameStore) => ({
-		currentQuestionIndex: state.currentSessionQuestionIndex,
-		hasSubmitted: state.hasSubmittedAnswer,
-		questions: state.questions,
-		userAnswer: state.userAnswer,
-		hasSelectedAnswer: state.hasSelectedAnswer,
-		waitingForPlayers: state.waitingForPlayers,
-		showRoundResult: state.showRoundResult,
-		loading: state.loading,
-		error: state.error,
-		submitPossibleAnswer: state.submitPossibleAnswer.bind(state),
-		selectPossibleAnswer: state.selectPossibleAnswer.bind(state),
-		setUserAnswer: state.setUserAnswer.bind(state),
-		submitAnswer: state.submitAnswer.bind(state),
-		initializeSessionQuestions:
-			state.initializeSessionQuestions.bind(state),
-		reset: state.reset.bind(state),
-	}))
+	const { gameRound, loading, initializeGameRound, submitAnswer } =
+		useGameStore((state: GameStore) => ({
+			gameRound: state.gameRound,
+			loading: state.loading,
+			error: state.error,
+			initializeGameRound: state.initializeGameRound,
+			submitAnswer: state.submitAnswer,
+			nextRound: state.nextRound,
+		}))
 
 	useEffect(() => {
 		stop()
 		settime(0, 5)
 		countdown()
-		initializeSessionQuestions()
+		initializeGameRound()
 
 		return stop
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	const handleSubmit = () => {
-		if (!hasSubmitted) {
-			submitPossibleAnswer("Tester", userAnswer)
-		}
-		if (hasSelectedAnswer) {
-			submitAnswer()
-		}
-	}
-
 	const styles = {
-		body: tw`shadow-offset-x-10 shadow-offset-y-5 mx-6 mb-2 flex flex h-72 flex-col items-stretch justify-around rounded-md bg-white p-12 shadow-md`,
+		body: tw`shadow-offset-x-10 shadow-offset-y-5 mx-6 mb-2 flex h-72 flex-col items-stretch justify-around rounded-md bg-white p-12 shadow-md`,
 		question: tw`text-center text-2xl font-bold`,
 		options: tw`gap-6`,
 		buttonsContainer: tw`flex flex-row justify-between px-6`,
@@ -106,25 +75,24 @@ export default function Page(): ReactNode {
 			<TouchableOpacity
 				className={styles.closeButton}
 				onPress={() => {
-					reset()
 					router.dismissAll()
 				}}
 			>
 				<AntIcons name="closecircle" color={"white"} size={32} />
 			</TouchableOpacity>
-			{!showRoundResult && (
+			{!gameRound?.isComplete && (
 				<QuestionHeader
-					index={currentQuestionIndex + 1}
-					length={questions.length}
+					index={gameRound?.index ?? 0}
+					length={10}
 					minutes={minutes}
 					seconds={seconds}
 				/>
 			)}
 
 			<AnimatePresence exitBeforeEnter>
-				{showRoundResult ? <Scores /> : <QuestionAndAnswer />}
+				{gameRound?.isComplete ? <Scores /> : <QuestionAndAnswer />}
 			</AnimatePresence>
-			{!waitingForPlayers && !showRoundResult && (
+			{!gameRound?.isComplete && (
 				<MotiView
 					key="button"
 					from={{
@@ -147,7 +115,7 @@ export default function Page(): ReactNode {
 					<Button
 						isLoading={loading}
 						label={"Submit Answer"}
-						onPress={() => handleSubmit()}
+						onPress={() => submitAnswer()}
 						color="accent"
 						buttonStyle="shadow-md px-6 mt-10 w-full"
 						size="lg"

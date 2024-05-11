@@ -1,6 +1,12 @@
 import lottieBlueCheck from "~/assets/lottie/blue-check.json"
 
 import SpaceMonoRegular from "./fonts/SpaceMono-Regular.ttf"
-import questions, { randomQuestions } from "./trivia"
+import questions, { randomQuestion, randomQuestions } from "./trivia"
 
-export { SpaceMonoRegular, lottieBlueCheck, questions, randomQuestions }
+export {
+	SpaceMonoRegular,
+	lottieBlueCheck,
+	questions,
+	randomQuestion,
+	randomQuestions,
+}

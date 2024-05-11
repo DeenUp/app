@@ -6,7 +6,7 @@ import twr from "twrnc"
 
 import type { GameStore, SettingsStore } from "~/stores"
 
-import { InputField } from "~/components/ui"
+import { questions } from "~/assets"
 import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
 
@@ -14,30 +14,25 @@ import QuestionOption from "./QuestionOption"
 
 export default function QuestionAndAnswer() {
 	const theme = useSettingsStore((state: SettingsStore) => state.theme)
+
 	const {
-		questions,
-		currentQuestionIndex,
-		waitingForPlayers,
-		hasSubmitted,
-		userAnswer,
-		setUserAnswer,
-		error,
-		possibleAnswers,
-		selectedAnswer,
-		hasSelectedAnswer,
+		gameRound,
 		selectPossibleAnswer,
+		selectedPossibleAnswer,
+		submittedAnswers,
+		participants,
 	} = useGameStore((state: GameStore) => ({
-		questions: state.questions,
-		currentQuestionIndex: state.currentSessionQuestionIndex,
-		waitingForPlayers: state.waitingForPlayers,
-		hasSubmitted: state.hasSubmittedAnswer,
-		userAnswer: state.userAnswer,
-		setUserAnswer: state.setUserAnswer.bind(state),
+		gameRound: state.gameRound,
+		loading: state.loading,
 		error: state.error,
-		possibleAnswers: state.possibleAnswers,
-		selectedAnswer: state.selectedAnswer,
-		hasSelectedAnswer: state.hasSelectedAnswer,
-		selectPossibleAnswer: state.selectPossibleAnswer.bind(state),
+		initializeGameRound: state.initializeGameRound,
+		selectPossibleAnswer: state.selectPossibleAnswer,
+		selectedPossibleAnswer: state.selectedPossibleAnswer,
+		submittedAnswers: state.submittedAnswers,
+		submitAnswer: state.submitAnswer,
+		nextRound: state.nextRound,
+		participants: state.participants,
+		sessionQuestions: state.sessionQuestions,
 	}))
 
 	const styles = {
@@ -73,10 +68,8 @@ export default function QuestionAndAnswer() {
 				duration: 2000,
 			}}
 		>
-			<Text className={styles.question}>
-				{questions[currentQuestionIndex]?.question}
-			</Text>
-			{waitingForPlayers ? (
+			<Text className={styles.question}>{gameRound?.question}</Text>
+			{participants.length == submittedAnswers.length ? (
 				<MotiView
 					key={"waiting-for-players"}
 					style={styles.card}
@@ -124,31 +117,6 @@ export default function QuestionAndAnswer() {
 						</View>
 					</View>
 				</MotiView>
-			) : !hasSubmitted ? (
-				<MotiView
-					key={"answer"}
-					from={{
-						opacity: 0,
-					}}
-					animate={{
-						opacity: 1,
-					}}
-					exit={{
-						opacity: 0,
-					}}
-					transition={{
-						type: "spring",
-						duration: 500,
-					}}
-					style={styles.card}
-				>
-					<InputField
-						value={userAnswer}
-						onChangeText={setUserAnswer}
-						placeholder="Enter your answer"
-						error={error}
-					/>
-				</MotiView>
 			) : (
 				<MotiView
 					key={"options"}
@@ -161,21 +129,26 @@ export default function QuestionAndAnswer() {
 					}}
 					className={styles.options}
 				>
-					{possibleAnswers.map((option, index) => (
-						<QuestionOption
-							key={index}
-							label={option.answer}
-							isSelected={
-								possibleAnswers[index]?.answer ===
-									selectedAnswer && hasSelectedAnswer
-							}
-							showResult={false}
-							onPress={() => {
-								possibleAnswers[index]!.answer = option.answer
-								selectPossibleAnswer(option)
-							}}
-						/>
-					))}
+					{gameRound &&
+						questions
+							.find(
+								(question) =>
+									question.question === gameRound?.question,
+							)
+							?.options.map((option, index) => (
+								<QuestionOption
+									key={index}
+									label={option}
+									isSelected={
+										selectedPossibleAnswer?.answer ===
+										option
+									}
+									showResult={false}
+									onPress={() => {
+										selectPossibleAnswer(option)
+									}}
+								/>
+							))}
 				</MotiView>
 			)}
 		</MotiView>

@@ -1,14 +1,17 @@
 import type { StateCreator } from "zustand"
 
-import type { GameStore } from "."
-import type { Participant } from "../../../graphql/api"
-import type { Subscription } from "../../../types"
+import useUserStore from "~stores/user/useUserStore"
 
-import { LobbyApi, ParticipantApi } from "../../../apis"
-import useUserStore from "../../../stores/user/useUserStore"
+import type { GameStore } from "."
+import type { Subscription } from "~/types"
+import type { Participant } from "~graphql/api"
+
+import { GameSessionApi, LobbyApi, ParticipantApi } from "~/apis"
 
 type LobbyStates = {
 	lobbyCode: string | null
+	lobbyID: string | null
+	gameSessionID: string | null
 	participants: Participant[]
 	isCreator: boolean
 	loading: boolean
@@ -18,8 +21,10 @@ type LobbyStates = {
 type LobbyActions = {
 	setIsCreator: (isCreator: boolean) => void
 	createLobby: () => Promise<void>
+	joinExistingLobby: () => Promise<void>
 	joinLobby: (lobbyCode: string) => Promise<void>
 	leaveLobby: () => Promise<void>
+	startGame: () => Promise<void>
 	destroy: () => void
 }
 
@@ -31,11 +36,13 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 ) => {
 	const lobbyApi = new LobbyApi()
 	const participantApi = new ParticipantApi()
+	const gameSessionApi = new GameSessionApi()
 
-	let subscription: Subscription | null = null
+	let participantSubscription: Subscription | null = null
+	let gameSessionSubscription: Subscription | null = null
 
-	const onUpdateSubscription = (lobbyId: string) => {
-		subscription = participantApi.subscribe(
+	const onParticipantSubscription = (lobbyId: string) => {
+		participantSubscription = participantApi.subscribe(
 			{
 				filter: {
 					id: { eq: lobbyId },
@@ -43,9 +50,6 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 			},
 
 			({ type, data: participant }) => {
-				console.log("====Subscription====\n")
-				console.log(type, participant)
-				console.log("====Subscription====\n")
 				if (type === "deleted") {
 					set({
 						participants: get().participants.filter(
@@ -81,11 +85,34 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 			},
 		)
 
-		return subscription
+		return participantSubscription
+	}
+
+	const onGameSessionSubscription = (lobbyId: string) => {
+		gameSessionSubscription = gameSessionApi.subscribe(
+			{
+				filter: {
+					lobbyID: { eq: lobbyId },
+				},
+			},
+			({ type, data: gameSession }) => {
+				console.log("====Subscription====\n")
+				console.log(type, gameSession)
+				console.log("====Subscription====\n")
+
+				if (type === "created") {
+					set({ gameSessionID: gameSession.id })
+				}
+			},
+		)
+
+		return gameSessionSubscription
 	}
 
 	return {
 		lobbyCode: null,
+		lobbyID: null,
+		gameSessionID: null,
 		participants: [],
 		isCreator: false,
 		loading: false,
@@ -97,10 +124,10 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 
 		createLobby: async (): Promise<void> => {
 			if (get().loading) return
-			const currentUser = useUserStore.getState().currentUser
 
 			set({ loading: true })
 
+			const currentUser = useUserStore.getState().currentUser
 			const lobbyCode = (): string => {
 				const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 				let code = ""
@@ -135,6 +162,7 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 
 					set({
 						lobbyCode: lobby.code,
+						lobbyID: lobby.id,
 						isCreator: true,
 						loading: false,
 						participants: Array.from(
@@ -148,7 +176,7 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 							),
 					})
 
-					onUpdateSubscription(lobby.id)
+					onParticipantSubscription(lobby.id)
 
 					return
 				}
@@ -167,19 +195,63 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 
 				set({
 					lobbyCode: lobby.code,
+					lobbyID: lobby.id,
 					isCreator: true,
 					loading: false,
 					participants: [participantResponse.item!],
 				})
 
-				onUpdateSubscription(lobby.id)
+				onParticipantSubscription(lobby.id)
+				onGameSessionSubscription(lobby.id)
 			} catch (error) {
 				set({ loading: false, error: error as string })
 				console.log("catch", error)
 			}
 		},
 
-		joinLobby: async (lobbyCode): Promise<void> => {
+		joinExistingLobby: async (): Promise<void> => {
+			if (get().loading) return
+
+			set({ loading: true })
+
+			const currentUser = useUserStore.getState().currentUser
+
+			if (currentUser === null) {
+				set({ loading: false })
+
+				return
+			}
+
+			try {
+				const response = await participantApi.findActiveParticipant(
+					currentUser!.id,
+				)
+
+				if (!response.hasData) {
+					set({ loading: false })
+
+					return
+				}
+
+				const lobby = response.item!.lobby!
+				const participants = lobby.participants!.items.filter(
+					(item): item is Participant => item !== null,
+				)
+
+				set({
+					lobbyCode: lobby.code,
+					lobbyID: lobby.id,
+					isCreator: false,
+					loading: false,
+					participants,
+				})
+			} catch (error) {
+				set({ loading: false, error: error as string })
+				console.log("catch", error)
+			}
+		},
+
+		joinLobby: async (lobbyCode: string): Promise<void> => {
 			if (get().loading) return
 
 			set({ loading: true })
@@ -197,29 +269,19 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 
 				const lobby = lobbies.items![0]!
 
-				console.log("====Found lobby====lobby", lobby)
-
 				const participants = lobby.participants!.items.filter(
 					(item): item is Participant => item !== null,
 				)
-				console.log("====Found lobby====participants", participants)
 
 				let participant = participants.find((participant) => {
 					return participant.userId === currentUser!.id
 				})
-
-				console.log(
-					"---Checking participant---participant",
-					participant,
-				)
 
 				if (!participant) {
 					const response = await participantApi.joinLobby(
 						lobby.id,
 						currentUser!.id,
 					)
-
-					console.log("====Joining====participant", response)
 
 					if (response.hasError) {
 						set({ loading: false, error: response.error!.message })
@@ -247,16 +309,49 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 
 				const allParticipants = [...participants, participant]
 
-				console.log("====Joining====allParticipants", allParticipants)
-
 				set({
 					lobbyCode: lobby.code,
+					lobbyID: lobby.id,
 					isCreator: false,
 					loading: false,
 					participants: removeDuplicates(allParticipants),
 				})
 
-				onUpdateSubscription(lobby.id)
+				onParticipantSubscription(lobby.id)
+				onGameSessionSubscription(lobby.id)
+			} catch (error) {
+				set({ loading: false, error: error as string })
+				console.log("catch", error)
+			}
+		},
+
+		startGame: async (): Promise<void> => {
+			if (get().loading) return
+			if (!get().lobbyID) return
+
+			if (get().participants.length < 2) {
+				set({ loading: false, error: "Not enough participants" })
+
+				return
+			}
+
+			set({ loading: true })
+			try {
+				const response = await gameSessionApi.create({
+					lobbyID: get().lobbyID!,
+				})
+
+				if (response.hasError) {
+					set({ loading: false, error: response.error!.message })
+
+					return
+				}
+
+				if (!response.hasData) {
+					return
+				}
+
+				set({ loading: false, gameSessionID: response.item?.id })
 			} catch (error) {
 				set({ loading: false, error: error as string })
 				console.log("catch", error)
@@ -284,6 +379,7 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 
 				set({
 					lobbyCode: null,
+					lobbyID: null,
 					isCreator: false,
 					loading: false,
 					participants: [],
@@ -295,8 +391,12 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 		},
 
 		destroy: () => {
-			if (subscription) {
-				subscription.unsubscribe()
+			if (participantSubscription) {
+				participantSubscription.unsubscribe()
+			}
+
+			if (gameSessionSubscription) {
+				gameSessionSubscription.unsubscribe()
 			}
 		},
 	}

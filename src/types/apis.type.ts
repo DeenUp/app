@@ -1,11 +1,22 @@
 import type {
+	CreateGameRoundInput,
+	CreateGameSessionInput,
+	CreateLobbyInput,
+	CreateSubmittedAnswerInput,
+	GameRound,
 	GameSession,
 	Lobby,
+	ModelGameRoundFilterInput,
 	ModelGameSessionFilterInput,
 	ModelLobbyFilterInput,
 	ModelParticipantFilterInput,
+	ModelSubmittedAnswerFilterInput,
 	ModelUserFilterInput,
 	Participant,
+	SubmittedAnswer,
+	UpdateGameRoundInput,
+	UpdateLobbyInput,
+	UpdateUserInput,
 	User,
 } from "../graphql/api"
 import type {
@@ -17,12 +28,12 @@ import type {
 	SubscriptionResponse,
 } from "./helpers.type"
 
-export type CompleteApi<T, P> = QueryApi<T, P> &
-	MutationApi<T> &
+export type CompleteApi<C, U, T, P> = QueryApi<T, P> &
+	MutationApi<C, U, T> &
 	SubscriptionApi<T, P>
 
-export type CreateMutationApi<T> = {
-	create(input: T): Promise<ItemResponse<T>>
+export type CreateMutationApi<C, T> = {
+	create(input: C): Promise<ItemResponse<T>>
 }
 
 export type CreateWithImageMutationApi<T> = {
@@ -37,15 +48,19 @@ export type GetQueryApi<T> = {
 	get(id: string): Promise<ItemResponse<T>>
 }
 
+export type IGameRoundApi = CreateMutationApi<CreateGameRoundInput, GameRound> &
+	UpdateMutationApi<UpdateGameRoundInput, GameRound> &
+	SubscriptionApi<GameRound, ModelGameRoundFilterInput | null | undefined>
+
 export type IGameSessionApi = ListByIdQueryApi<
 	GameSession,
 	ModelGameSessionFilterInput | null | undefined
 > &
-	CreateMutationApi<GameSession> &
+	CreateMutationApi<CreateGameSessionInput, GameSession> &
 	SubscriptionApi<GameSession, ModelGameSessionFilterInput | null | undefined>
 
-export type ILobbyApi = CreateMutationApi<Lobby> &
-	UpdateMutationApi<Lobby> &
+export type ILobbyApi = CreateMutationApi<CreateLobbyInput, Lobby> &
+	UpdateMutationApi<UpdateLobbyInput, Lobby> &
 	ListByIdQueryApi<Lobby, ModelLobbyFilterInput | null | undefined> & {
 		listByCode(code: string): Promise<ListResponse<Lobby>>
 	}
@@ -59,14 +74,25 @@ export type IParticipantApi = ListByIdQueryApi<
 		Participant,
 		ModelParticipantFilterInput | null | undefined
 	> & {
+		findActiveParticipant(
+			userId: string,
+		): Promise<ItemResponse<Participant>>
 		joinLobby(
 			lobbyId: string,
 			userId: string,
 		): Promise<ItemResponse<Participant>>
 	}
+export type ISubmittedAnswer = CreateMutationApi<
+	CreateSubmittedAnswerInput,
+	SubmittedAnswer
+> &
+	SubscriptionApi<
+		SubmittedAnswer,
+		ModelSubmittedAnswerFilterInput | null | undefined
+	>
 
 export type IUserApi = QueryApi<User, ModelUserFilterInput | null | undefined> &
-	UpdateWithImageMutationApi<User>
+	UpdateWithImageMutationApi<UpdateUserInput, User>
 
 export type ListByIdQueryApi<T, P> = {
 	listById(params: ListByIdQueryParams<P>): Promise<ListResponse<T>>
@@ -76,8 +102,8 @@ export type ListQueryApi<T, P> = {
 	list(params: ListQueryParams<P>): Promise<ListResponse<T>>
 }
 
-export type MutationApi<T> = CreateMutationApi<T> &
-	UpdateMutationApi<T> &
+export type MutationApi<C, U, T> = CreateMutationApi<C, T> &
+	UpdateMutationApi<U, T> &
 	DeleteMutationApi<T>
 
 export type QueryApi<T, P> = GetQueryApi<T> & ListQueryApi<T, P>
@@ -89,10 +115,10 @@ export type SubscriptionApi<T, P> = {
 	): { unsubscribe: () => void }
 }
 
-export type UpdateMutationApi<T> = {
-	update(input: T): Promise<ItemResponse<T>>
+export type UpdateMutationApi<U, T> = {
+	update(input: U): Promise<ItemResponse<T>>
 }
 
-export type UpdateWithImageMutationApi<T> = {
-	update(input: T, image?: File | null): Promise<ItemResponse<T>>
+export type UpdateWithImageMutationApi<U, T> = {
+	update(input: U, image?: File | null): Promise<ItemResponse<T>>
 }

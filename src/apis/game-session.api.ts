@@ -1,5 +1,5 @@
 import type { GraphQLResult } from "aws-amplify/api"
-import type { Observable, Subscription } from "rxjs"
+import type { Observable } from "rxjs"
 
 import {
 	createGameSession,
@@ -7,10 +7,11 @@ import {
 	updateGameSession,
 } from "~graphql/mutations"
 import { getGameSession, listGameSessions } from "~graphql/queries"
-import { onUpdateGameSession } from "~graphql/subscriptions"
+import { onCreateGameSession } from "~graphql/subscriptions"
 import { AmplifyGraphqlService } from "~services/index"
 
 import type {
+	CreateGameSessionInput,
 	CreateGameSessionMutation,
 	CreateGameSessionMutationVariables,
 	DeleteGameSessionMutation,
@@ -22,8 +23,9 @@ import type {
 	ListGameSessionsQueryVariables,
 	ModelGameSessionConnection,
 	ModelGameSessionFilterInput,
-	OnUpdateGameSessionSubscription,
-	OnUpdateGameSessionSubscriptionVariables,
+	OnCreateGameSessionSubscription,
+	OnCreateGameSessionSubscriptionVariables,
+	UpdateGameSessionInput,
 	UpdateGameSessionMutation,
 	UpdateGameSessionMutationVariables,
 } from "~graphql/api"
@@ -35,6 +37,7 @@ import type {
 	ListQueryParams,
 	ListResponse,
 	NeverEmpty,
+	Subscription,
 	SubscriptionParams,
 	SubscriptionResponse,
 } from "~types/index"
@@ -42,6 +45,8 @@ import type {
 export default class GameSessionApi
 	implements
 		CompleteApi<
+			CreateGameSessionInput,
+			UpdateGameSessionInput,
 			GameSession,
 			ModelGameSessionFilterInput | null | undefined
 		>
@@ -58,27 +63,34 @@ export default class GameSessionApi
 		>,
 		onResponse: (response: SubscriptionResponse<GameSession>) => void,
 	): Subscription {
-		const stream = this.graphqlService
+		const createStream = this.graphqlService
 			.subscribe<
-				typeof onUpdateGameSession,
-				OnUpdateGameSessionSubscriptionVariables,
+				typeof onCreateGameSession,
+				OnCreateGameSessionSubscriptionVariables,
 				Observable<
 					GraphqlSubscriptionMessage<
-						NeverEmpty<OnUpdateGameSessionSubscription>
+						NeverEmpty<OnCreateGameSessionSubscription>
 					>
 				>
-			>(onUpdateGameSession, {
-				filter: params.filter,
-			})
+			>(onCreateGameSession, {})
 			.subscribe({
-				next: ({ data }) =>
+				next: ({ data }) => {
+					console.log("Created GameSession")
 					onResponse({
-						type: "updated",
-						data: data.onUpdateGameSession as GameSession,
-					}),
+						type: "created",
+						data: data.onCreateGameSession as GameSession,
+					})
+				},
+				error: (error) => {
+					console.error("Error subscribing to participants", error)
+				},
 			})
 
-		return stream
+		return {
+			unsubscribe: () => {
+				createStream.unsubscribe()
+			},
+		}
 	}
 
 	async get(id: string): Promise<ItemResponse<GameSession>> {
@@ -138,7 +150,9 @@ export default class GameSessionApi
 		}
 	}
 
-	async create(input: GameSession): Promise<ItemResponse<GameSession>> {
+	async create(
+		input: CreateGameSessionInput,
+	): Promise<ItemResponse<GameSession>> {
 		const response = await this.graphqlService.mutate<
 			typeof createGameSession,
 			CreateGameSessionMutationVariables,

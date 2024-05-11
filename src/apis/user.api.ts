@@ -7,6 +7,7 @@ import type {
 	ListUsersQueryVariables,
 	ModelUserConnection,
 	ModelUserFilterInput,
+	UpdateUserInput,
 	UpdateUserMutation,
 	UpdateUserMutationVariables,
 	User,
@@ -109,7 +110,7 @@ export default class UserApi implements IUserApi {
 	}
 
 	async update(
-		input: User,
+		input: UpdateUserInput,
 		image?: File | null,
 	): Promise<ItemResponse<User>> {
 		if (image) {

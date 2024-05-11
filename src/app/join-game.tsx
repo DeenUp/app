@@ -23,20 +23,37 @@ export default function CreateGame() {
 	const CODE_LENGTH = 8
 	const translate = useSettingsStore((state) => state.translate)
 
-	const { participants, error, leaveLobby, joinLobby, destroy } =
-		useGameStore((state: GameStore) => ({
-			participants: state.participants,
-			error: state.error,
-			destroy: state.destroy,
-			leaveLobby: state.leaveLobby,
-			joinLobby: state.joinLobby,
-		}))
+	const {
+		gameSessionID,
+		joinExistingLobby,
+		participants,
+		error,
+		leaveLobby,
+		joinLobby,
+		destroy,
+	} = useGameStore((state: GameStore) => ({
+		participants: state.participants,
+		error: state.error,
+		destroy: state.destroy,
+		leaveLobby: state.leaveLobby,
+		joinLobby: state.joinLobby,
+		joinExistingLobby: state.joinExistingLobby,
+		gameSessionID: state.gameSessionID,
+	}))
 
 	useEffect(() => {
+		joinExistingLobby()
+
 		return () => {
 			destroy()
 		}
-	})
+	}, [])
+
+	useEffect(() => {
+		if (gameSessionID) {
+			router.navigate("/friends-mode/")
+		}
+	}, [gameSessionID])
 
 	const [states, setStates] = useState<States>({
 		inputCode: Array(CODE_LENGTH).fill("") as string[],
@@ -123,7 +140,7 @@ export default function CreateGame() {
 		headerContainer: tw`absolute left-10 top-4 flex w-2/3 flex-row gap-6`,
 		headerText: tw`text-3xl font-bold text-white`,
 		subheaderText: tw`text-base-200`,
-		codeContainer: tw`mt-72 flex h-full items-center justify-start gap-8  rounded-lg rounded-t-3xl bg-gray-100 pt-20`,
+		codeContainer: tw`mt-72 flex h-full items-center justify-start gap-8  rounded-lg rounded-t-3xl bg-white pt-20`,
 		codeText: tw`text-xl font-bold`,
 		buttonContainer: tw`flex w-full flex-col items-center justify-center gap-6`,
 		backButton: tw`flex h-16 items-center justify-center rounded-full p-4`,
@@ -169,29 +186,30 @@ export default function CreateGame() {
 							inputClass="w-11 h-16"
 						/>
 					</View>
-					<View className={styles.buttonContainer}>
-						<Button
-							color="base"
-							size="sm"
-							label={translate("joinGamePage.pasteFromClipboard")}
-							onPress={handlePasteFromClipboard}
-						/>
-						<Button
-							color="primary"
-							size="lg"
-							label={translate("joinGamePage.joinGameButton")}
-							onPress={handleContinue}
-							buttonStyle={styles.joinGameButton}
-						/>
-					</View>
-					{error && <Text>{error}</Text>}
-					{participants.length > 0 && (
-						<ParticipantsList
-							users={participants.map(
-								(participant) => participant.user,
-							)}
-						/>
+					{participants.length ? (
+						<ParticipantsList />
+					) : (
+						<View className={styles.buttonContainer}>
+							<Button
+								color="base"
+								size="sm"
+								label={translate(
+									"joinGamePage.pasteFromClipboard",
+								)}
+								onPress={handlePasteFromClipboard}
+							/>
+
+							<Button
+								color="primary"
+								size="lg"
+								label={translate("joinGamePage.joinGameButton")}
+								onPress={handleContinue}
+								buttonStyle={styles.joinGameButton}
+							/>
+						</View>
 					)}
+
+					{error && <Text>{error}</Text>}
 				</View>
 			</View>
 		</SafeAreaView>

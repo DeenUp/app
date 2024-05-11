@@ -440,7 +440,7 @@ export const participantsByUserId = /* GraphQL */ `query ParticipantsByUserId(
     nextToken: $nextToken
   ) {
     items {
-      ${participantDocument({ includeUser: true, includeLobby: false })}
+      ${participantDocument({ includeUser: true, includeLobby: true })}
     }
     nextToken
     __typename
