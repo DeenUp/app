@@ -1,15 +1,13 @@
 import type { StateCreator } from "zustand"
 
 import type { GameStore } from "."
-import type { PossibleAnswer, Question } from "../../../types"
 import type { GameRound, SubmittedAnswer } from "~/graphql/api"
-import type { Subscription } from "~/types"
+import type { PossibleAnswer, Question, Subscription } from "~/types"
 
 import { SubmittedAnswerApi } from "~/apis"
 import GameRoundApi from "~/apis/game-round.api"
+import { randomQuestion } from "~/assets"
 import { useUserStore } from "~/stores"
-
-import { randomQuestion } from "../../../assets"
 
 type MultiplayerSessionStates = {
 	sessionQuestions: Question[]
@@ -44,9 +42,6 @@ const createMultiplayerSessionSlice: StateCreator<
 	let submittedAnswerSubscription: Subscription | null = null
 
 	const onGameRoundSubscription = (gameSessionId: string) => {
-		//Log current user email
-		console.log(useUserStore.getState().currentUser?.email)
-
 		gameRoundSubscription = gameRoundApi.subscribe(
 			{
 				filter: {
@@ -57,8 +52,10 @@ const createMultiplayerSessionSlice: StateCreator<
 				console.log(type, gameRound)
 
 				if (type === "created") {
+					console.log("Game round created", gameRound)
 					set({
 						gameRound,
+						submittedAnswers: [],
 					})
 					onSubmittedAnswerSubscription(gameRound.id)
 				}
@@ -80,13 +77,27 @@ const createMultiplayerSessionSlice: StateCreator<
 				},
 			},
 			({ type, data: submittedAnswer }) => {
-				console.log(type, submittedAnswer)
+				const removeDuplicates = (
+					submittedAnswers: SubmittedAnswer[],
+				) => {
+					const ids = new Set()
+
+					return submittedAnswers.filter((item: SubmittedAnswer) => {
+						if (!ids.has(item.id)) {
+							ids.add(item.id)
+
+							return true
+						}
+
+						return false
+					})
+				}
 
 				set({
-					submittedAnswers: [
+					submittedAnswers: removeDuplicates([
 						...get().submittedAnswers,
 						submittedAnswer,
-					],
+					]),
 				})
 			},
 		)
@@ -151,6 +162,7 @@ const createMultiplayerSessionSlice: StateCreator<
 				})
 
 				onGameRoundSubscription(get().gameSessionID!)
+				onSubmittedAnswerSubscription(response.item!.id)
 			} catch (error) {
 				set({
 					error: "Failed to create game round",
@@ -173,6 +185,20 @@ const createMultiplayerSessionSlice: StateCreator<
 
 			set({ loading: true })
 
+			if (
+				get().submittedAnswers.find(
+					(answer) =>
+						answer.userID ===
+						useUserStore.getState().currentUser!.id,
+				)
+			) {
+				set({
+					loading: false,
+				})
+
+				return
+			}
+
 			try {
 				const response = await submittedAnswerApi.create({
 					answer: get().selectedPossibleAnswer!.answer,
@@ -189,8 +215,28 @@ const createMultiplayerSessionSlice: StateCreator<
 					return
 				}
 
+				const removeDuplicates = (
+					submittedAnswers: SubmittedAnswer[],
+				) => {
+					const ids = new Set()
+
+					return submittedAnswers.filter((item: SubmittedAnswer) => {
+						if (!ids.has(item.id)) {
+							ids.add(item.id)
+
+							return true
+						}
+
+						return false
+					})
+				}
+
 				set({
 					loading: false,
+					submittedAnswers: removeDuplicates([
+						...get().submittedAnswers,
+						response.item!,
+					]),
 				})
 			} catch (error) {
 				set({
@@ -235,6 +281,8 @@ const createMultiplayerSessionSlice: StateCreator<
 				set({
 					loading: false,
 				})
+
+				get().initializeGameRound()
 			} catch (error) {
 				set({
 					error: "Failed to update game round",

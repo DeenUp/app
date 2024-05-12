@@ -209,7 +209,7 @@ export default function CreateGame() {
 						</View>
 					)}
 
-					{error && <Text>{error}</Text>}
+					{/* {error && <Text>{error as string}</Text>} */}
 				</View>
 			</View>
 		</SafeAreaView>

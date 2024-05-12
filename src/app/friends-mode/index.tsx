@@ -30,16 +30,24 @@ export default function Page(): ReactNode {
 			settime: state.setTime,
 		}),
 	)
-
-	const { gameRound, loading, initializeGameRound, submitAnswer } =
-		useGameStore((state: GameStore) => ({
-			gameRound: state.gameRound,
-			loading: state.loading,
-			error: state.error,
-			initializeGameRound: state.initializeGameRound,
-			submitAnswer: state.submitAnswer,
-			nextRound: state.nextRound,
-		}))
+	const {
+		submittedAnswers,
+		participants,
+		gameRound,
+		loading,
+		initializeGameRound,
+		submitAnswer,
+		nextRound,
+	} = useGameStore((state: GameStore) => ({
+		gameRound: state.gameRound,
+		loading: state.loading,
+		error: state.error,
+		initializeGameRound: state.initializeGameRound,
+		submitAnswer: state.submitAnswer,
+		nextRound: state.nextRound,
+		submittedAnswers: state.submittedAnswers,
+		participants: state.participants,
+	}))
 
 	useEffect(() => {
 		stop()
@@ -115,7 +123,15 @@ export default function Page(): ReactNode {
 					<Button
 						isLoading={loading}
 						label={"Submit Answer"}
-						onPress={() => submitAnswer()}
+						onPress={() => {
+							let answers = submittedAnswers.map(
+								(answer) =>
+									answer.gameRoundID === gameRound?.id,
+							)
+							answers.length !== participants.length
+								? submitAnswer()
+								: nextRound()
+						}}
 						color="accent"
 						buttonStyle="shadow-md px-6 mt-10 w-full"
 						size="lg"

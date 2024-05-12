@@ -4,16 +4,18 @@ import { Avatar } from "react-native-paper"
 import { MotiView } from "moti"
 import twr from "twrnc"
 
-import type { GameStore, SettingsStore } from "~/stores"
+import type { GameStore, SettingsStore, UserStore } from "~/stores"
 
 import { questions } from "~/assets"
 import { tw } from "~/helpers"
-import { useGameStore, useSettingsStore } from "~/stores"
+import { useGameStore, useSettingsStore, useUserStore } from "~/stores"
 
 import QuestionOption from "./QuestionOption"
 
 export default function QuestionAndAnswer() {
 	const theme = useSettingsStore((state: SettingsStore) => state.theme)
+
+	const currentUser = useUserStore((state: UserStore) => state.currentUser)
 
 	const {
 		gameRound,
@@ -69,7 +71,11 @@ export default function QuestionAndAnswer() {
 			}}
 		>
 			<Text className={styles.question}>{gameRound?.question}</Text>
-			{participants.length == submittedAnswers.length ? (
+			{submittedAnswers.find(
+				(answer) =>
+					answer.userID === currentUser?.id &&
+					answer.gameRoundID === gameRound?.id,
+			) ? (
 				<MotiView
 					key={"waiting-for-players"}
 					style={styles.card}
@@ -86,34 +92,24 @@ export default function QuestionAndAnswer() {
 							Waiting for other players to submit their answers
 						</Text>
 						<View className="flex flex-row items-center justify-center gap-2">
-							<Avatar.Icon
-								size={40}
-								icon="account"
-								style={{
-									backgroundColor: theme.colors.surface,
-								}}
-							/>
-							<Avatar.Icon
-								size={40}
-								icon="account"
-								style={{
-									backgroundColor: theme.colors.accent,
-								}}
-							/>
-							<Avatar.Icon
-								size={40}
-								icon="account"
-								style={{
-									backgroundColor: theme.colors.surface,
-								}}
-							/>
-							<Avatar.Icon
-								size={40}
-								icon="account"
-								style={{
-									backgroundColor: theme.colors.surface,
-								}}
-							/>
+							{participants.map((participant) => (
+								<Avatar.Icon
+									key={participant.id}
+									size={40}
+									icon="account"
+									style={{
+										backgroundColor: submittedAnswers.find(
+											(answer) =>
+												answer.userID ===
+													participant.userId &&
+												answer.gameRoundID ===
+													gameRound?.id,
+										)
+											? theme.colors.accent
+											: theme.colors.surface,
+									}}
+								/>
+							))}
 						</View>
 					</View>
 				</MotiView>

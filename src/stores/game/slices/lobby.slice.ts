@@ -96,10 +96,6 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 				},
 			},
 			({ type, data: gameSession }) => {
-				console.log("====Subscription====\n")
-				console.log(type, gameSession)
-				console.log("====Subscription====\n")
-
 				if (type === "created") {
 					set({ gameSessionID: gameSession.id })
 				}

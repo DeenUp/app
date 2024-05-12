@@ -79,7 +79,6 @@ export default class SubmittedAnswerApi implements ISubmittedAnswer {
 			>(onCreateSubmittedAnswer, {})
 			.subscribe({
 				next: ({ data }) => {
-					console.log("Created participant")
 					onResponse({
 						type: "created",
 						data: data.onCreateSubmittedAnswer as SubmittedAnswer,
