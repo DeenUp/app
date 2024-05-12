@@ -32,7 +32,6 @@ export default function QuestionAndAnswer() {
 		selectedPossibleAnswer: state.selectedPossibleAnswer,
 		submittedAnswers: state.submittedAnswers,
 		submitAnswer: state.submitAnswer,
-		nextRound: state.nextRound,
 		participants: state.participants,
 		sessionQuestions: state.sessionQuestions,
 	}))

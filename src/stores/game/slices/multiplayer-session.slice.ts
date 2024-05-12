@@ -7,13 +7,15 @@ import type { PossibleAnswer, Question, Subscription } from "~/types"
 import { SubmittedAnswerApi } from "~/apis"
 import GameRoundApi from "~/apis/game-round.api"
 import { randomQuestion } from "~/assets"
-import { useUserStore } from "~/stores"
+
+import useUserStore from "../../user/useUserStore"
 
 type MultiplayerSessionStates = {
 	sessionQuestions: Question[]
 	gameRound: GameRound | null
 	submittedAnswers: SubmittedAnswer[]
 	selectedPossibleAnswer: PossibleAnswer | null
+	scores: Record<string, number>
 	loading: boolean
 	error: string | null
 }
@@ -22,7 +24,7 @@ type MultiplayerSessionActions = {
 	initializeGameRound(): Promise<void>
 	selectPossibleAnswer(answer: string): void
 	submitAnswer(): Promise<void>
-	nextRound(): Promise<void>
+	completeRound(): Promise<void>
 	destroy(): void
 }
 
@@ -49,15 +51,16 @@ const createMultiplayerSessionSlice: StateCreator<
 				},
 			},
 			({ type, data: gameRound }) => {
-				console.log(type, gameRound)
-
 				if (type === "created") {
-					console.log("Game round created", gameRound)
 					set({
 						gameRound,
-						submittedAnswers: [],
 					})
 					onSubmittedAnswerSubscription(gameRound.id)
+				}
+				if (type === "updated") {
+					set({
+						gameRound,
+					})
 				}
 			},
 		)
@@ -76,7 +79,7 @@ const createMultiplayerSessionSlice: StateCreator<
 					gameRoundID: { eq: gameRoundID },
 				},
 			},
-			({ type, data: submittedAnswer }) => {
+			({ data: submittedAnswer }) => {
 				const removeDuplicates = (
 					submittedAnswers: SubmittedAnswer[],
 				) => {
@@ -99,6 +102,27 @@ const createMultiplayerSessionSlice: StateCreator<
 						submittedAnswer,
 					]),
 				})
+
+				let answers = get().submittedAnswers.filter(
+					(answer) => answer.gameRoundID === get().gameRound?.id,
+				)
+
+				if (answers.length === get().participants.length) {
+					answers.map((answer) => {
+						if (answer.answer === get().gameRound?.correctAnswer) {
+							set({
+								scores: {
+									...get().scores,
+									[answer.userID]: get().scores[answer.userID]
+										? get().scores[answer.userID]! + 1
+										: 1,
+								},
+							})
+						}
+					})
+
+					get().completeRound()
+				}
 			},
 		)
 
@@ -110,6 +134,7 @@ const createMultiplayerSessionSlice: StateCreator<
 		gameRound: null,
 		submittedAnswers: [],
 		selectedPossibleAnswer: null,
+		scores: {},
 		loading: false,
 		error: null,
 
@@ -164,6 +189,7 @@ const createMultiplayerSessionSlice: StateCreator<
 				onGameRoundSubscription(get().gameSessionID!)
 				onSubmittedAnswerSubscription(response.item!.id)
 			} catch (error) {
+				console.error(error)
 				set({
 					error: "Failed to create game round",
 					loading: false,
@@ -189,7 +215,8 @@ const createMultiplayerSessionSlice: StateCreator<
 				get().submittedAnswers.find(
 					(answer) =>
 						answer.userID ===
-						useUserStore.getState().currentUser!.id,
+							useUserStore.getState().currentUser!.id &&
+						answer.gameRoundID === get().gameRound?.id,
 				)
 			) {
 				set({
@@ -239,6 +266,7 @@ const createMultiplayerSessionSlice: StateCreator<
 					]),
 				})
 			} catch (error) {
+				console.error(error)
 				set({
 					error: "Failed to submit answer",
 					loading: false,
@@ -246,7 +274,7 @@ const createMultiplayerSessionSlice: StateCreator<
 			}
 		},
 
-		nextRound: async (): Promise<void> => {
+		completeRound: async (): Promise<void> => {
 			if (!get().isCreator) return
 
 			if (get().loading) return
@@ -280,9 +308,8 @@ const createMultiplayerSessionSlice: StateCreator<
 
 				set({
 					loading: false,
+					gameRound: response.item,
 				})
-
-				get().initializeGameRound()
 			} catch (error) {
 				set({
 					error: "Failed to update game round",

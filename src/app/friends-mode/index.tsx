@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 
 import { useEffect } from "react"
-import { SafeAreaView, TouchableOpacity } from "react-native"
+import { SafeAreaView, Text, TouchableOpacity } from "react-native"
 
 import { router } from "expo-router"
 import { StatusBar } from "expo-status-bar"
@@ -10,16 +10,21 @@ import AntIcons from "@expo/vector-icons/AntDesign"
 import { AnimatePresence, MotiView } from "moti"
 import twr from "twrnc"
 
-import type { GameStore, SettingsStore } from "~/stores"
+import type { SubmittedAnswer } from "~/graphql/api"
+import type { GameStore, SettingsStore, UserStore } from "~/stores"
 
 import { QuestionAndAnswer, Scores } from "~/components/gameplay"
 import QuestionHeader from "~/components/gameplay/QuestionHeader"
 import { Button } from "~/components/ui"
 import { tw } from "~/helpers"
-import { useGameStore, useSettingsStore } from "~/stores"
+import { useGameStore, useSettingsStore, useUserStore } from "~/stores"
 
 export default function Page(): ReactNode {
 	const theme = useSettingsStore((state: SettingsStore) => state.theme)
+
+	const { currentUser } = useUserStore((state: UserStore) => ({
+		currentUser: state.currentUser,
+	}))
 
 	const { minutes, seconds, countdown, settime, stop } = useGameStore(
 		(state: GameStore) => ({
@@ -30,21 +35,19 @@ export default function Page(): ReactNode {
 			settime: state.setTime,
 		}),
 	)
+
 	const {
-		submittedAnswers,
-		participants,
 		gameRound,
 		loading,
 		initializeGameRound,
 		submitAnswer,
-		nextRound,
+		submittedAnswers,
 	} = useGameStore((state: GameStore) => ({
 		gameRound: state.gameRound,
 		loading: state.loading,
 		error: state.error,
 		initializeGameRound: state.initializeGameRound,
 		submitAnswer: state.submitAnswer,
-		nextRound: state.nextRound,
 		submittedAnswers: state.submittedAnswers,
 		participants: state.participants,
 	}))
@@ -97,6 +100,46 @@ export default function Page(): ReactNode {
 				/>
 			)}
 
+			{gameRound?.isComplete && (
+				<MotiView
+					from={{
+						opacity: 0,
+						scale: 0.5,
+					}}
+					animate={{
+						opacity: 1,
+						scale: 1,
+					}}
+					exit={{
+						opacity: 0,
+						scale: 0,
+					}}
+					transition={{
+						delay: 100,
+					}}
+					exitTransition={{
+						delay: 400,
+					}}
+					style={twr`mt-18 absolute w-2/3`}
+				>
+					<Text style={twr`text-center text-2xl text-white`}>
+						{submittedAnswers.find(
+							(answer: SubmittedAnswer) =>
+								answer.userID === currentUser?.id &&
+								answer.gameRoundID === gameRound?.id &&
+								gameRound.correctAnswer === answer.answer,
+						)
+							? "Correct!"
+							: "Incorrect!"}
+					</Text>
+
+					<Text
+						style={twr`mt-4 text-center text-3xl font-bold text-white`}
+					>
+						{gameRound.correctAnswer}
+					</Text>
+				</MotiView>
+			)}
 			<AnimatePresence exitBeforeEnter>
 				{gameRound?.isComplete ? <Scores /> : <QuestionAndAnswer />}
 			</AnimatePresence>
@@ -124,13 +167,7 @@ export default function Page(): ReactNode {
 						isLoading={loading}
 						label={"Submit Answer"}
 						onPress={() => {
-							let answers = submittedAnswers.map(
-								(answer) =>
-									answer.gameRoundID === gameRound?.id,
-							)
-							answers.length !== participants.length
-								? submitAnswer()
-								: nextRound()
+							submitAnswer()
 						}}
 						color="accent"
 						buttonStyle="shadow-md px-6 mt-10 w-full"

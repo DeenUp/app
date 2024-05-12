@@ -211,7 +211,6 @@ export default class ParticipantApi implements IParticipantApi {
 			>(onDeleteParticipant, {})
 			.subscribe({
 				next: ({ data }) => {
-					console.log("Deleted participant")
 					onResponse({
 						type: "deleted",
 						data: data.onDeleteParticipant as Participant,

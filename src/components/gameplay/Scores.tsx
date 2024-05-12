@@ -14,24 +14,24 @@ import { Button } from "../ui"
 
 const Scores = () => {
 	const theme = useSettingsStore((state: SettingsStore) => state.theme)
-	const { loading, nextRound } = useGameStore((state: GameStore) => ({
-		loading: state.loading,
-		error: state.error,
-		nextRound: state.nextRound.bind(state),
-	}))
 
-	const players = [
-		{ name: "Player 1", score: 0, color: theme.colors.surface },
-		{ name: "Player 2", score: 10, color: theme.colors.accent },
-		{ name: "Player 3", score: 0, color: theme.colors.surface },
-		{ name: "Player 4", score: 0, color: theme.colors.surface },
-	]
+	const { isCreator, loading, initializeGameRound, participants, scores } =
+		useGameStore((state: GameStore) => ({
+			isCreator: state.isCreator,
+			participants: state.participants,
+			scores: state.scores,
+			submittedAnswers: state.submittedAnswers,
+			gameRound: state.gameRound,
+			loading: state.loading,
+			error: state.error,
+			initializeGameRound: state.initializeGameRound,
+		}))
 
 	const styles = {
-		roundResult: twr`mt-50 flex h-[90%] w-[98%] flex-col items-center justify-start gap-6 rounded-md rounded-xl bg-gray-100 px-3 py-6 shadow-md`,
+		roundResult: twr`mt-50 flex h-[80%] w-[98%] flex-grow flex-col items-center justify-start gap-6 rounded-md bg-gray-100 px-3 py-6 shadow-md`,
 		playerScoreContainer: twr`flex w-full flex-row items-center justify-start gap-4 rounded-2xl bg-white p-4 shadow`,
 		crownIcon: twr`absolute bottom-4 right-0 my-2 mr-4 h-12 w-12`,
-		roundResultText: twr`text-center text-3xl font-bold`,
+		roundResultText: twr`my-auto text-center text-xl font-semibold`,
 		playerName: twr`text-lg font-semibold`,
 		playerScore: twr`text-sm font-light text-gray-400`,
 		playerDetails: twr`flex flex-col items-start justify-center gap-1`,
@@ -63,12 +63,9 @@ const Scores = () => {
 			}}
 		>
 			<View className="absolute top-0 size-20 rotate-45 rounded-2xl bg-gray-100" />
-			<View
-				//Purple dot at the left corner
-				className="absolute top-0 size-2 rounded-full bg-primary"
-			/>
+			<View className="absolute top-0 size-2 rounded-full bg-primary" />
 
-			{players.map((player, index) => (
+			{participants.map((participant, index) => (
 				<MotiView
 					key={index}
 					style={styles.playerScoreContainer}
@@ -98,14 +95,21 @@ const Scores = () => {
 						size={60}
 						icon="account"
 						style={{
-							backgroundColor: player.color,
+							backgroundColor: theme.colors.surface,
 						}}
 					/>
 					<View style={styles.playerDetails}>
-						<Text style={styles.playerName}>{player.name}</Text>
-						<Text style={styles.playerScore}>{player.score}</Text>
+						<Text style={styles.playerName}>
+							{participant.user.name}
+						</Text>
+						<Text style={styles.playerScore}>
+							Score: {scores[participant.user.id] ?? 0}
+						</Text>
 					</View>
-					{player.score == 10 && (
+
+					{Object.values(scores).every(
+						(score) => scores[participant.user.id]! >= score,
+					) && (
 						<LottieView
 							source={crown}
 							autoPlay
@@ -115,14 +119,18 @@ const Scores = () => {
 					)}
 				</MotiView>
 			))}
-			<Button
-				isLoading={loading}
-				label="Next Round"
-				onPress={() => nextRound()}
-				color="primary"
-				buttonStyle="shadow-md px-6 mt-2 w-2/3"
-				size="lg"
-			/>
+			{isCreator ? (
+				<Button
+					isLoading={loading}
+					label="Next Round"
+					onPress={initializeGameRound}
+					color="primary"
+					buttonStyle="shadow-md px-6 mt-2 w-2/3"
+					size="lg"
+				/>
+			) : (
+				<Text style={styles.roundResultText}>Waiting for host...</Text>
+			)}
 		</MotiView>
 	)
 }

@@ -111,7 +111,6 @@ export default class GameRoundApi implements IGameRoundApi {
 			>(onCreateGameRound, {})
 			.subscribe({
 				next: ({ data }) => {
-					console.log("Created GameRound")
 					onResponse({
 						type: "created",
 						data: data.onCreateGameRound as GameRound,
@@ -134,7 +133,6 @@ export default class GameRoundApi implements IGameRoundApi {
 			>(onUpdateGameRound, {})
 			.subscribe({
 				next: ({ data }) => {
-					console.log("Updated GameRound")
 					onResponse({
 						type: "updated",
 						data: data.onUpdateGameRound as GameRound,
