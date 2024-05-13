@@ -7,13 +7,14 @@ import type { PossibleAnswer, Question, Subscription } from "~/types"
 import { SubmittedAnswerApi } from "~/apis"
 import GameRoundApi from "~/apis/game-round.api"
 import { randomQuestion } from "~/assets"
+import { removeDuplicates } from "~/utils"
 
 import useUserStore from "../../user/useUserStore"
 
 type MultiplayerSessionStates = {
 	sessionQuestions: Question[]
 	gameRound: GameRound | null
-	submittedAnswers: SubmittedAnswer[]
+	submittedAnswers: Record<string, SubmittedAnswer[]>
 	selectedPossibleAnswer: PossibleAnswer | null
 	scores: Record<string, number>
 	loading: boolean
@@ -51,12 +52,18 @@ const createMultiplayerSessionSlice: StateCreator<
 				},
 			},
 			({ type, data: gameRound }) => {
+				onSubmittedAnswerSubscription(gameRound.id)
+
 				if (type === "created") {
 					set({
 						gameRound,
+						submittedAnswers: {
+							...get().submittedAnswers,
+							[gameRound.id]: [],
+						},
 					})
-					onSubmittedAnswerSubscription(gameRound.id)
 				}
+
 				if (type === "updated") {
 					set({
 						gameRound,
@@ -80,46 +87,37 @@ const createMultiplayerSessionSlice: StateCreator<
 				},
 			},
 			({ data: submittedAnswer }) => {
-				const removeDuplicates = (
-					submittedAnswers: SubmittedAnswer[],
-				) => {
-					const ids = new Set()
-
-					return submittedAnswers.filter((item: SubmittedAnswer) => {
-						if (!ids.has(item.id)) {
-							ids.add(item.id)
-
-							return true
-						}
-
-						return false
-					})
-				}
+				const currentRoundAnswers = get().submittedAnswers[gameRoundID]!
 
 				set({
-					submittedAnswers: removeDuplicates([
+					submittedAnswers: {
 						...get().submittedAnswers,
-						submittedAnswer,
-					]),
+						[gameRoundID]: removeDuplicates<SubmittedAnswer>([
+							...currentRoundAnswers,
+							submittedAnswer,
+						]),
+					},
 				})
 
-				let answers = get().submittedAnswers.filter(
-					(answer) => answer.gameRoundID === get().gameRound?.id,
-				)
+				if (
+					get().submittedAnswers[gameRoundID]!.length ===
+					get().participants.length
+				) {
+					get().submittedAnswers[gameRoundID]!.forEach(
+						({ isCorrect, userID }) => {
+							const { scores } = get()
+							const userScore = scores[userID] ?? 0
 
-				if (answers.length === get().participants.length) {
-					answers.map((answer) => {
-						if (answer.answer === get().gameRound?.correctAnswer) {
 							set({
 								scores: {
-									...get().scores,
-									[answer.userID]: get().scores[answer.userID]
-										? get().scores[answer.userID]! + 1
-										: 1,
+									...scores,
+									[userID]: isCorrect
+										? userScore + 10
+										: userScore,
 								},
 							})
-						}
-					})
+						},
+					)
 
 					get().completeRound()
 				}
@@ -132,7 +130,7 @@ const createMultiplayerSessionSlice: StateCreator<
 	return {
 		sessionQuestions: [],
 		gameRound: null,
-		submittedAnswers: [],
+		submittedAnswers: {},
 		selectedPossibleAnswer: null,
 		scores: {},
 		loading: false,
@@ -141,18 +139,15 @@ const createMultiplayerSessionSlice: StateCreator<
 		initializeGameRound: async (): Promise<void> => {
 			set({
 				selectedAnswer: null,
-				submittedAnswers: [],
 				selectedPossibleAnswer: null,
 				error: null,
 			})
 
-			if (!get().isCreator) {
-				const gameSessionID = get().gameSessionID
+			const gameSessionID = get().gameSessionID!
 
-				onGameRoundSubscription(gameSessionID!)
+			onGameRoundSubscription(gameSessionID)
 
-				return
-			}
+			if (!get().isCreator) return
 
 			if (get().loading) return
 
@@ -161,11 +156,11 @@ const createMultiplayerSessionSlice: StateCreator<
 			const newQuestion = randomQuestion(get().sessionQuestions)
 
 			try {
-				const gameRound = get().gameRound
+				const currentGameRound = get().gameRound
 
 				const response = await gameRoundApi.create({
-					gameSessionID: get().gameSessionID!,
-					index: gameRound ? gameRound.index + 1 : 0,
+					gameSessionID,
+					index: currentGameRound ? currentGameRound.index + 1 : 1,
 					question: newQuestion.question,
 					correctAnswer: newQuestion.correctAnswer,
 					isComplete: false,
@@ -180,13 +175,18 @@ const createMultiplayerSessionSlice: StateCreator<
 					return
 				}
 
+				const newGameRound = response.item!
+
 				set({
 					sessionQuestions: [...get().sessionQuestions, newQuestion],
+					submittedAnswers: {
+						...get().submittedAnswers,
+						[newGameRound.id]: [],
+					},
 					loading: false,
-					gameRound: response.item,
+					gameRound: newGameRound,
 				})
 
-				onGameRoundSubscription(get().gameSessionID!)
 				onSubmittedAnswerSubscription(response.item!.id)
 			} catch (error) {
 				console.error(error)
@@ -211,14 +211,15 @@ const createMultiplayerSessionSlice: StateCreator<
 
 			set({ loading: true })
 
-			if (
-				get().submittedAnswers.find(
-					(answer) =>
-						answer.userID ===
-							useUserStore.getState().currentUser!.id &&
-						answer.gameRoundID === get().gameRound?.id,
-				)
-			) {
+			const { id, correctAnswer } = get().gameRound!
+			const { answer } = get().selectedPossibleAnswer!
+			const currentRoundAnswers = get().submittedAnswers[id]
+			const didSubmitAnswer = currentRoundAnswers?.find(
+				(answer) =>
+					answer.userID === useUserStore.getState().currentUser!.id,
+			)
+
+			if (didSubmitAnswer) {
 				set({
 					loading: false,
 				})
@@ -228,9 +229,10 @@ const createMultiplayerSessionSlice: StateCreator<
 
 			try {
 				const response = await submittedAnswerApi.create({
-					answer: get().selectedPossibleAnswer!.answer,
+					answer,
+					isCorrect: answer === correctAnswer,
 					userID: useUserStore.getState().currentUser!.id,
-					gameRoundID: get().gameRound!.id,
+					gameRoundID: id,
 				})
 
 				if (response.hasError) {
@@ -242,28 +244,15 @@ const createMultiplayerSessionSlice: StateCreator<
 					return
 				}
 
-				const removeDuplicates = (
-					submittedAnswers: SubmittedAnswer[],
-				) => {
-					const ids = new Set()
-
-					return submittedAnswers.filter((item: SubmittedAnswer) => {
-						if (!ids.has(item.id)) {
-							ids.add(item.id)
-
-							return true
-						}
-
-						return false
-					})
-				}
-
 				set({
 					loading: false,
-					submittedAnswers: removeDuplicates([
+					submittedAnswers: {
 						...get().submittedAnswers,
-						response.item!,
-					]),
+						[id]: removeDuplicates<SubmittedAnswer>([
+							...get().submittedAnswers[id]!,
+							response.item!,
+						]),
+					},
 				})
 			} catch (error) {
 				console.error(error)
@@ -275,8 +264,6 @@ const createMultiplayerSessionSlice: StateCreator<
 		},
 
 		completeRound: async (): Promise<void> => {
-			if (!get().isCreator) return
-
 			if (get().loading) return
 
 			set({ loading: true })

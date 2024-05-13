@@ -75,7 +75,6 @@ export default class GameSessionApi
 			>(onCreateGameSession, {})
 			.subscribe({
 				next: ({ data }) => {
-					console.log("Created GameSession")
 					onResponse({
 						type: "created",
 						data: data.onCreateGameSession as GameSession,

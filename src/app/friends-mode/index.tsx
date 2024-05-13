@@ -123,7 +123,7 @@ export default function Page(): ReactNode {
 					style={twr`mt-18 absolute w-2/3`}
 				>
 					<Text style={twr`text-center text-2xl text-white`}>
-						{submittedAnswers.find(
+						{submittedAnswers[gameRound?.id]?.find(
 							(answer: SubmittedAnswer) =>
 								answer.userID === currentUser?.id &&
 								answer.gameRoundID === gameRound?.id &&

@@ -165,7 +165,6 @@ export default class ParticipantApi implements IParticipantApi {
 			>(onCreateParticipant, {})
 			.subscribe({
 				next: ({ data }) => {
-					console.log("Created participant")
 					onResponse({
 						type: "created",
 						data: data.onCreateParticipant as Participant,

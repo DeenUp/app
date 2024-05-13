@@ -1,3 +1,6 @@
-export function removeDuplicates(arr: any[]): any[] {
-	return arr.filter((value, index) => arr.indexOf(value) === index)
+export function removeDuplicates<T>(array: T[]): T[] {
+	return array.filter(
+		(v, i, a) =>
+			a.findIndex((t) => JSON.stringify(t) === JSON.stringify(v)) === i,
+	)
 }

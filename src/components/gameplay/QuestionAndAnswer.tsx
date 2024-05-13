@@ -70,7 +70,8 @@ export default function QuestionAndAnswer() {
 			}}
 		>
 			<Text className={styles.question}>{gameRound?.question}</Text>
-			{submittedAnswers.find(
+			{gameRound &&
+			submittedAnswers[gameRound!.id]?.find(
 				(answer) =>
 					answer.userID === currentUser?.id &&
 					answer.gameRoundID === gameRound?.id,
@@ -97,7 +98,9 @@ export default function QuestionAndAnswer() {
 									size={40}
 									icon="account"
 									style={{
-										backgroundColor: submittedAnswers.find(
+										backgroundColor: submittedAnswers[
+											gameRound!.id
+										]!.find(
 											(answer) =>
 												answer.userID ===
 													participant.userId &&
