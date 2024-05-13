@@ -1,6 +1,8 @@
 import { Text, View } from "react-native"
 import { Avatar } from "react-native-paper"
 
+import { router } from "expo-router"
+
 import LottieView from "lottie-react-native"
 import { MotiView } from "moti"
 import twr from "twrnc"
@@ -15,17 +17,23 @@ import { Button } from "../ui"
 const Scores = () => {
 	const theme = useSettingsStore((state: SettingsStore) => state.theme)
 
-	const { isCreator, loading, initializeGameRound, participants, scores } =
-		useGameStore((state: GameStore) => ({
-			isCreator: state.isCreator,
-			participants: state.participants,
-			scores: state.scores,
-			submittedAnswers: state.submittedAnswers,
-			gameRound: state.gameRound,
-			loading: state.loading,
-			error: state.error,
-			initializeGameRound: state.initializeGameRound,
-		}))
+	const {
+		isCreator,
+		loading,
+		initializeGameRound,
+		participants,
+		scores,
+		gameRound,
+	} = useGameStore((state: GameStore) => ({
+		isCreator: state.isCreator,
+		participants: state.participants,
+		scores: state.scores,
+		submittedAnswers: state.submittedAnswers,
+		gameRound: state.gameRound,
+		loading: state.loading,
+		error: state.error,
+		initializeGameRound: state.initializeGameRound,
+	}))
 
 	const styles = {
 		roundResult: twr`mt-50 flex h-[80%] w-[98%] flex-grow flex-col items-center justify-start gap-6 rounded-md bg-gray-100 px-3 py-6 shadow-md`,
@@ -122,8 +130,18 @@ const Scores = () => {
 			{isCreator ? (
 				<Button
 					isLoading={loading}
-					label="Next Round"
-					onPress={initializeGameRound}
+					label={
+						gameRound?.index === 10 ? "View Results" : "Next Round"
+					}
+					onPress={
+						gameRound?.index === 10
+							? () => {
+									router.push("/friends-mode/result")
+								}
+							: () => {
+									initializeGameRound()
+								}
+					}
 					color="primary"
 					buttonStyle="shadow-md px-6 mt-2 w-2/3"
 					size="lg"
