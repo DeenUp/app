@@ -1,8 +1,6 @@
 import { Text, View } from "react-native"
 import { Avatar } from "react-native-paper"
 
-import { router } from "expo-router"
-
 import LottieView from "lottie-react-native"
 import { MotiView } from "moti"
 import twr from "twrnc"
@@ -12,19 +10,10 @@ import type { GameStore, SettingsStore } from "~/stores"
 import crown from "~/assets/lottie/player-crown.json"
 import { useGameStore, useSettingsStore } from "~/stores"
 
-import { Button } from "../ui"
-
 const Scores = () => {
 	const theme = useSettingsStore((state: SettingsStore) => state.theme)
 
-	const {
-		isCreator,
-		loading,
-		initializeGameRound,
-		participants,
-		scores,
-		gameRound,
-	} = useGameStore((state: GameStore) => ({
+	const { participants, scores } = useGameStore((state: GameStore) => ({
 		isCreator: state.isCreator,
 		participants: state.participants,
 		scores: state.scores,
@@ -36,10 +25,9 @@ const Scores = () => {
 	}))
 
 	const styles = {
-		roundResult: twr`mt-50 flex h-[80%] w-[98%] flex-grow flex-col items-center justify-start gap-6 rounded-md bg-gray-100 px-3 py-6 shadow-md`,
+		roundResult: twr`mt-72 flex h-[80%] w-[98%] flex-grow flex-col items-center justify-start gap-6 rounded-md bg-gray-100 px-3 py-6 shadow-md`,
 		playerScoreContainer: twr`flex w-full flex-row items-center justify-start gap-4 rounded-2xl bg-white p-4 shadow`,
 		crownIcon: twr`absolute bottom-4 right-0 my-2 mr-4 h-12 w-12`,
-		roundResultText: twr`my-auto text-center text-xl font-semibold`,
 		playerName: twr`text-lg font-semibold`,
 		playerScore: twr`text-sm font-light text-gray-400`,
 		playerDetails: twr`flex flex-col items-start justify-center gap-1`,
@@ -127,28 +115,6 @@ const Scores = () => {
 					)}
 				</MotiView>
 			))}
-			{isCreator ? (
-				<Button
-					isLoading={loading}
-					label={
-						gameRound?.index === 10 ? "View Results" : "Next Round"
-					}
-					onPress={
-						gameRound?.index === 10
-							? () => {
-									router.push("/friends-mode/result")
-								}
-							: () => {
-									initializeGameRound()
-								}
-					}
-					color="primary"
-					buttonStyle="shadow-md px-6 mt-2 w-2/3"
-					size="lg"
-				/>
-			) : (
-				<Text style={styles.roundResultText}>Waiting for host...</Text>
-			)}
 		</MotiView>
 	)
 }

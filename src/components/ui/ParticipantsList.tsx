@@ -39,7 +39,7 @@ const ParticipantsList = () => {
 						selfie={user.selfie}
 						color={"#6D28D9"}
 						size={60}
-						className="flex items-center gap-2"
+						className="flex items-center justify-center gap-4"
 					/>
 				))}
 			</View>

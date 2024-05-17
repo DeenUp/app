@@ -42,6 +42,7 @@ export default function Page(): ReactNode {
 		initializeGameRound,
 		submitAnswer,
 		submittedAnswers,
+		isCreator,
 	} = useGameStore((state: GameStore) => ({
 		gameRound: state.gameRound,
 		loading: state.loading,
@@ -50,6 +51,7 @@ export default function Page(): ReactNode {
 		submitAnswer: state.submitAnswer,
 		submittedAnswers: state.submittedAnswers,
 		participants: state.participants,
+		isCreator: state.isCreator,
 	}))
 
 	useEffect(() => {
@@ -69,6 +71,7 @@ export default function Page(): ReactNode {
 		buttonsContainer: tw`flex flex-row justify-between px-6`,
 		buttons: tw`w-1/4`,
 		closeButton: tw`absolute right-10 top-14 z-20 size-10`,
+		roundResultText: twr`absolute bottom-12 my-auto text-center text-xl font-semibold`,
 	}
 
 	return (
@@ -143,7 +146,7 @@ export default function Page(): ReactNode {
 			<AnimatePresence exitBeforeEnter>
 				{gameRound?.isComplete ? <Scores /> : <QuestionAndAnswer />}
 			</AnimatePresence>
-			{!gameRound?.isComplete && (
+			{!gameRound?.isComplete ? (
 				<MotiView
 					key="button"
 					from={{
@@ -173,6 +176,67 @@ export default function Page(): ReactNode {
 						buttonStyle="shadow-md px-6 mt-10 w-full"
 						size="lg"
 					/>
+				</MotiView>
+			) : isCreator ? (
+				<MotiView
+					key="button"
+					from={{
+						opacity: 0,
+						scale: 0.5,
+					}}
+					animate={{
+						opacity: 1,
+						scale: 1,
+					}}
+					exit={{
+						opacity: 0,
+						scale: 0,
+					}}
+					transition={{
+						delay: 4000,
+					}}
+					style={twr`absolute bottom-12 flex w-full items-center justify-center `}
+				>
+					<Button
+						isLoading={loading}
+						label={
+							gameRound?.index === 10
+								? "View Results"
+								: "Next Round"
+						}
+						onPress={
+							gameRound?.index === 10
+								? () => router.push("/friends-mode/result")
+								: () => initializeGameRound()
+						}
+						color="primary"
+						buttonStyle="shadow-md px-6 mt-2 w-2/3"
+						size="lg"
+					/>
+				</MotiView>
+			) : (
+				<MotiView
+					key="button"
+					from={{
+						opacity: 0,
+						scale: 0.5,
+					}}
+					animate={{
+						opacity: 1,
+						scale: 1,
+					}}
+					exit={{
+						opacity: 0,
+						scale: 0,
+					}}
+					transition={{
+						delay: 4000,
+					}}
+					style={twr`absolute bottom-12 flex w-full items-center justify-center `}
+				>
+					<Text style={styles.roundResultText}>
+						Waiting for host...
+					</Text>
 				</MotiView>
 			)}
 		</SafeAreaView>

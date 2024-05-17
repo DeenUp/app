@@ -92,14 +92,6 @@ export default function Page(): ReactNode {
 					<Button
 						color="primary"
 						size="xl"
-						label="Friends Mode"
-						onPress={() => {
-							router.push("/friends-mode/")
-						}}
-					/>
-					<Button
-						color="primary"
-						size="xl"
 						label="Friends Mode Result"
 						onPress={() => {
 							router.push("/friends-mode/result")

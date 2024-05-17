@@ -23,8 +23,9 @@ import { TouchableOpacity } from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 import { SpaceMonoRegular } from "~/assets"
+import { PlayerAvatar } from "~/components/ui"
 import { AmplifyProvider } from "~/providers"
-import { useAuthStore } from "~/stores"
+import { useAuthStore, useUserStore } from "~/stores"
 
 Amplify.configure(config as ResourcesConfig)
 
@@ -42,7 +43,8 @@ preventAutoHideAsync().catch((error) => {
 })
 
 const RootLayout = () => {
-	const { clear, handleSignOut, currentUser } = useAuthStore()
+	const { clear } = useAuthStore()
+	const { currentUser } = useUserStore()
 
 	const [loaded, error] = useFonts({
 		SpaceMono: SpaceMonoRegular,
@@ -91,20 +93,30 @@ const RootLayout = () => {
 							if (!currentUser) return
 
 							return (
-								<TouchableOpacity
-									className={"size-10"}
-									onPress={async () => {
-										await handleSignOut()
+								<PlayerAvatar
+									selfie={currentUser.selfie}
+									onPress={() => {
+										router.push("/profile")
 									}}
-								>
-									<MaterialCommunityIcons
-										name="logout-variant"
-										color="black"
-										size={32}
-									/>
-								</TouchableOpacity>
+									color={"#6D28D9"}
+									size={40}
+									className="flex items-center gap-2"
+								/>
 							)
 						},
+						headerLeft: () => (
+							<TouchableOpacity
+								onPress={() => {
+									router.push("/settings")
+								}}
+							>
+								<FontAwesome
+									name="gear"
+									color={"#6D28D9"}
+									size={24}
+								/>
+							</TouchableOpacity>
+						),
 					}}
 				/>
 				<Stack.Screen
@@ -139,7 +151,58 @@ const RootLayout = () => {
 											? "black"
 											: "white"
 									}
-									size={32}
+									size={24}
+								/>
+							</TouchableOpacity>
+						),
+					}}
+				/>
+				<Stack.Screen
+					name="profile"
+					options={{
+						presentation: "modal",
+						headerShown: true,
+						headerShadowVisible: false,
+						headerBlurEffect: "light",
+						headerTitle: "Profile",
+						headerStyle: {
+							backgroundColor: "#F2F3F3",
+						},
+						headerLeft: () => (
+							<TouchableOpacity
+								onPress={() => {
+									router.back()
+								}}
+							>
+								<FontAwesome
+									name="chevron-left"
+									color={"#6D28D9"}
+									size={24}
+								/>
+							</TouchableOpacity>
+						),
+					}}
+				/>
+				<Stack.Screen
+					name="settings"
+					options={{
+						presentation: "modal",
+						headerShown: true,
+						headerShadowVisible: false,
+						headerTitle: "Settings",
+						headerStyle: {
+							backgroundColor: "#F2F3F3",
+						},
+						headerLeft: () => (
+							<TouchableOpacity
+								onPress={() => {
+									router.back()
+								}}
+							>
+								<FontAwesome
+									name="chevron-left"
+									color={"#6D28D9"}
+									size={24}
 								/>
 							</TouchableOpacity>
 						),

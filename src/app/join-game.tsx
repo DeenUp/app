@@ -27,7 +27,6 @@ export default function CreateGame() {
 		gameSessionID,
 		joinExistingLobby,
 		participants,
-		error,
 		leaveLobby,
 		joinLobby,
 		destroy,

@@ -9,7 +9,7 @@ import { UserApi } from "../../../apis"
 type UserState = {
 	currentUser: User | null
 	loadingUser: boolean
-	errorUser: unknown
+	errorUser: string
 }
 
 type UserActions = {

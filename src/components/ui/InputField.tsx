@@ -2,6 +2,8 @@ import type { FC } from "react"
 
 import { Text, TextInput, View } from "react-native"
 
+import twr from "twrnc"
+
 import { tw } from "~/helpers"
 
 type Props = {
@@ -11,6 +13,7 @@ type Props = {
 	error: string | null
 	secureTextEntry?: boolean
 	autoCorrect?: boolean
+	className?: string
 	keyboardType?:
 		| "default"
 		| "number-pad"
@@ -31,6 +34,7 @@ const InputField = ({
 	secureTextEntry,
 	autoCorrect,
 	keyboardType,
+	className,
 }: Props) => {
 	const styles = {
 		body: tw`bg-outline flex h-20 w-full flex-row items-center justify-start gap-2 rounded-xl border border-gray-200 bg-white px-4 shadow-md`,
@@ -42,7 +46,7 @@ const InputField = ({
 
 			<TextInput
 				value={value!}
-				style={{ flex: 1, marginLeft: 10, fontSize: 18 }}
+				style={className ? twr`${className}` : twr`ml-2 flex-1 text-lg`}
 				placeholder={placeholder}
 				keyboardType={keyboardType}
 				secureTextEntry={secureTextEntry}
