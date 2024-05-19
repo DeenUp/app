@@ -3,7 +3,7 @@
 	"private": true,
 	"main": "expo-router/entry",
 	"version": "1.0.0",
-	"packageManager": "pnpm@9.0.6",
+	"packageManager": "pnpm@9.1.1",
 	"scripts": {
 		"start": "expo start",
 		"android": "expo run:android",
@@ -20,7 +20,10 @@
 		"prepare": "husky"
 	},
 	"jest": {
-		"preset": "jest-expo"
+		"preset": "jest-expo",
+		"transformIgnorePatterns": [
+    "node_modules/(?!(?:.pnpm/)?((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg))"
+  ]
 	},
 	"dependencies": {
 		"@aws-amplify/react-native": "^1.0.24",
@@ -43,7 +46,7 @@
 		"expo-system-ui": "~2.9.3",
 		"i18n-js": "^4.4.3",
 		"lottie-react-native": "6.5.1",
-		"moti": "^0.28.1",
+		"moti": "^0.29.0",
 		"nativewind": "^4.0.1",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",

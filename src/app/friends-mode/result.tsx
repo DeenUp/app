@@ -77,7 +77,7 @@ export default function Page(): ReactNode {
 				<MotiView
 					from={{ opacity: 0, scale: 0.5 }}
 					animate={{ opacity: 1, scale: 1 }}
-					transition={{ type: "timing", duration: 500 }}
+					transition={{ duration: 500, delay: 70 }}
 					style={twr`absolute bottom-12 flex w-full flex-row items-center justify-center gap-4 px-6`}
 				>
 					<Button
@@ -86,7 +86,7 @@ export default function Page(): ReactNode {
 						size="lg"
 						label="Exit"
 						onPress={() => {
-							router.push("/")
+							router.dismissAll()
 						}}
 					/>
 					<Button
@@ -95,7 +95,7 @@ export default function Page(): ReactNode {
 						size="lg"
 						label="New Game"
 						onPress={() => {
-							router.push("/")
+							router.navigate("/create-game")
 						}}
 					/>
 
