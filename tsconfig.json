@@ -8,6 +8,7 @@
 		"moduleDetection": "force",
 		"incremental": true,
 		"noUncheckedIndexedAccess": true,
+		"resolveJsonModule": true,
 		"paths": {
 			"~/*": ["./src/*"],
 			"~apis/*": ["./src/apis/*"],
