@@ -9,7 +9,7 @@ import { StatusBar } from "expo-status-bar"
 
 import { Amplify } from "aws-amplify"
 
-import config from "../amplifyconfiguration.json"
+import * as config from "../amplifyconfiguration.json"
 
 import "react-native-reanimated"
 import "react-native-gesture-handler"
