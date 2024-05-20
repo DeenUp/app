@@ -9,6 +9,7 @@ import { StatusBar } from "expo-status-bar"
 
 import { Amplify } from "aws-amplify"
 
+// @ts-ignore
 import * as config from "../amplifyconfiguration.json"
 
 import "react-native-reanimated"
