@@ -62,3 +62,8 @@ apps/expo/.gitignore
 
 # testing
 coverage
+artifacts
+
+# build
+ios
+android

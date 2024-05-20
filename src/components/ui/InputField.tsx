@@ -14,6 +14,7 @@ type Props = {
 	secureTextEntry?: boolean
 	autoCorrect?: boolean
 	className?: string
+	testID?: string
 	keyboardType?:
 		| "default"
 		| "number-pad"
@@ -35,6 +36,7 @@ const InputField = ({
 	autoCorrect,
 	keyboardType,
 	className,
+	testID,
 }: Props) => {
 	const styles = {
 		body: tw`bg-outline flex h-20 w-full flex-row items-center justify-start gap-2 rounded-xl border border-gray-200 bg-white px-4 shadow-md`,
@@ -45,6 +47,7 @@ const InputField = ({
 			{prefix && <Text className="text-lg font-bold">{prefix}</Text>}
 
 			<TextInput
+				testID={testID}
 				value={value!}
 				style={className ? twr`${className}` : twr`ml-2 flex-1 text-lg`}
 				placeholder={placeholder}
@@ -75,6 +78,7 @@ const EmailInputField: FC<InputFieldProps> = (props) => {
 	return (
 		<InputField
 			{...props}
+			testID="email-input"
 			prefix="📧"
 			placeholder="Email"
 			keyboardType="email-address"
@@ -86,6 +90,7 @@ const PasswordInputField: FC<InputFieldProps> = (props) => {
 	return (
 		<InputField
 			{...props}
+			testID="password-input"
 			prefix="🔒"
 			placeholder="Password"
 			secureTextEntry
@@ -97,6 +102,7 @@ const NameInputField: FC<InputFieldProps> = (props) => {
 	return (
 		<InputField
 			{...props}
+			testID="name-input"
 			prefix="🥸"
 			placeholder="Name"
 			keyboardType="default"

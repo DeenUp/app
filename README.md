@@ -58,6 +58,28 @@ A brief description of your project.
     pnpm android
     ```
 
+## Testing
+
+1. Run the following in the `root` directory
+
+    ```shell
+    pnpm test:e2e:ios
+    ```
+
+    or
+
+    ```shell
+    pnpm test:e2e:android
+    ```
+
+    > **NOTE:** You can also run `pnpm test:e2e` to run the tests on both platforms.
+
+    > **NOTE:** You can also run `pnpm test:e2e:ios:record` or `pnpm test:e2e:android:record` to record the tests.
+
+    > **NOTE:** You can also run `pnpm test:e2e:ios:play` or `pnpm test:e2e:android:play` to play the recorded tests.
+
+    > **NOTE:** You can also run `pnpm test:e2e:ios:build` or `pnpm test:e2e:android:build` to build the debug build of the app.
+
 ## Features
 
 -   List the key features of your project here.

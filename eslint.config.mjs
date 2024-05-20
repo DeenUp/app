@@ -17,18 +17,22 @@ const __dirname = path.dirname(__filename)
 export default [
 	{
 		ignores: [
+			"dist/**/*",
 			"**/*.config.js",
 			"**/*.config.mjs",
 			"**/*.config.cjs",
 			"**/.eslintrc.cjs",
+			".detoxrc.js",
 			".expo",
 			"dist",
 			"pnpm-lock.yaml",
+			"ios",
+			"android",
+			"coverage",
 		],
 	},
 	{
 		files: ["**/*.{js,jsx,mjs,cjs,ts,tsx}"],
-		ignores: ["dist/**/*"],
 		...reactRecommended,
 		settings: {
 			version: "detect",

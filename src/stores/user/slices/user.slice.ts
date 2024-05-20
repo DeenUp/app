@@ -9,7 +9,7 @@ import { UserApi } from "../../../apis"
 type UserState = {
 	currentUser: User | null
 	loadingUser: boolean
-	errorUser: string
+	errorUser: string | null
 }
 
 type UserActions = {
@@ -46,7 +46,7 @@ const createUserSlice: StateCreator<UserStore, [], [], UserSlice> = (set) => {
 					loadingUser: false,
 				}))
 			} catch (error) {
-				set({ loadingUser: false, errorUser: error })
+				set({ loadingUser: false, errorUser: error as string })
 			}
 		},
 
@@ -79,8 +79,8 @@ const createUserSlice: StateCreator<UserStore, [], [], UserSlice> = (set) => {
 				}))
 
 				return { value: updatedUser! }
-			} catch (errorUser) {
-				set({ loadingUser: false, errorUser })
+			} catch (error) {
+				set({ loadingUser: false, errorUser: error as string })
 
 				return { error: Error("Failed to update user") }
 			}

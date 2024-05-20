@@ -28,7 +28,7 @@
 			"~helpers/*": ["./src/helpers/*"]
 		},
 
-		"types": ["nativewind/types"]
+		"types": ["nativewind/types", "jest", "node", "detox"]
 	},
 
 	"include": [
@@ -37,7 +37,7 @@
 		".expo/types/**/*.ts",
 		"expo-env.d.ts",
 		"prettier.config.js",
-		"eslint.config.js",
+		"eslint.config.mjs",
 		"amplifyconfiguation.json"
 	]
 }

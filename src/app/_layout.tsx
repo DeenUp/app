@@ -157,7 +157,7 @@ const RootLayout = () => {
 						),
 					}}
 				/>
-				{/* <Stack.Screen
+				<Stack.Screen
 					name="profile"
 					options={{
 						presentation: "modal",
@@ -207,7 +207,7 @@ const RootLayout = () => {
 							</TouchableOpacity>
 						),
 					}}
-				/> */}
+				/>
 			</Stack>
 			<StatusBar />
 		</AmplifyProvider>

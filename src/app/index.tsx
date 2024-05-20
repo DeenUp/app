@@ -41,8 +41,6 @@ export default function Page(): ReactNode {
 							from={{ opacity: 0, translateY: 200, scale: 0.5 }}
 							animate={{ opacity: 1, translateY: 0, scale: 1 }}
 							transition={{
-								type: "timing",
-								duration: 350,
 								scale: { type: "spring", delay: 350 },
 							}}
 						>
@@ -55,7 +53,7 @@ export default function Page(): ReactNode {
 					from={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					style={styles.motiContainer}
-					transition={{ type: "timing", delay: 500 }}
+					delay={500}
 				>
 					<View className={styles.buttonsContainer}>
 						<Button
