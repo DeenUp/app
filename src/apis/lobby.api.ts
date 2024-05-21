@@ -14,6 +14,7 @@ import type {
 	ModelLobbyFilterInput,
 	OnUpdateLobbySubscription,
 	OnUpdateLobbySubscriptionVariables,
+	UpdateLobbyInput,
 	UpdateLobbyMutation,
 	UpdateLobbyMutationVariables,
 } from "../graphql/api"
@@ -99,7 +100,7 @@ export default class LobbyApi implements ILobbyApi {
 		}
 	}
 
-	async update(input: Lobby): Promise<ItemResponse<Lobby>> {
+	async update(input: UpdateLobbyInput): Promise<ItemResponse<Lobby>> {
 		const response = await this.graphqlService.mutate<
 			typeof updateLobby,
 			UpdateLobbyMutationVariables,

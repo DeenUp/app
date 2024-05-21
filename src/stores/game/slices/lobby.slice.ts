@@ -25,7 +25,7 @@ type LobbyActions = {
 	joinLobby: (lobbyCode: string) => Promise<void>
 	leaveLobby: () => Promise<void>
 	startGame: () => Promise<void>
-	destroy: () => void
+	destroy: () => Promise<void>
 }
 
 export type LobbySlice = LobbyStates & LobbyActions
@@ -386,7 +386,7 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 			}
 		},
 
-		destroy: () => {
+		destroy: async (): Promise<void> => {
 			if (participantSubscription) {
 				participantSubscription.unsubscribe()
 			}
@@ -394,6 +394,23 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 			if (gameSessionSubscription) {
 				gameSessionSubscription.unsubscribe()
 			}
+
+			if (get().isCreator) {
+				await lobbyApi.update({
+					id: get().lobbyID!,
+					isActive: false,
+				})
+			}
+
+			set({
+				lobbyCode: null,
+				lobbyID: null,
+				isCreator: false,
+				loading: false,
+				participants: [],
+				gameSessionID: null,
+				error: null,
+			})
 		},
 	}
 }

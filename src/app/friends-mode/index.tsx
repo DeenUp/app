@@ -26,16 +26,6 @@ export default function Page(): ReactNode {
 		currentUser: state.currentUser,
 	}))
 
-	const { minutes, seconds, countdown, settime, stop } = useGameStore(
-		(state: GameStore) => ({
-			minutes: state.minutes,
-			seconds: state.seconds,
-			stop: state.stop,
-			countdown: state.countdown,
-			settime: state.setTime,
-		}),
-	)
-
 	const {
 		gameRound,
 		loading,
@@ -43,6 +33,7 @@ export default function Page(): ReactNode {
 		submitAnswer,
 		submittedAnswers,
 		isCreator,
+		destroy,
 	} = useGameStore((state: GameStore) => ({
 		gameRound: state.gameRound,
 		loading: state.loading,
@@ -52,15 +43,16 @@ export default function Page(): ReactNode {
 		submittedAnswers: state.submittedAnswers,
 		participants: state.participants,
 		isCreator: state.isCreator,
+		destroy: state.destroy,
 	}))
 
 	useEffect(() => {
-		stop()
-		settime(0, 5)
-		countdown()
 		initializeGameRound()
 
-		return stop
+		return () => {
+			destroy()
+		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
@@ -98,8 +90,7 @@ export default function Page(): ReactNode {
 				<QuestionHeader
 					index={gameRound?.index ?? 0}
 					length={10}
-					minutes={minutes}
-					seconds={seconds}
+					timed={false}
 				/>
 			)}
 
@@ -192,9 +183,7 @@ export default function Page(): ReactNode {
 						opacity: 0,
 						scale: 0,
 					}}
-					transition={{
-						delay: 4000,
-					}}
+					delay={4000}
 					style={twr`absolute bottom-12 flex w-full items-center justify-center `}
 				>
 					<Button
@@ -229,9 +218,7 @@ export default function Page(): ReactNode {
 						opacity: 0,
 						scale: 0,
 					}}
-					transition={{
-						delay: 4000,
-					}}
+					delay={4000}
 					style={twr`absolute bottom-12 flex w-full items-center justify-center `}
 				>
 					<Text style={styles.roundResultText}>

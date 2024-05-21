@@ -67,3 +67,8 @@ artifacts
 # build
 ios
 android
+
+# ide
+.idea
+.vscode
+

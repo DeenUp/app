@@ -33,7 +33,7 @@ export default function Page(): ReactNode {
 		doneButton: tw`w-2/4`,
 		roundResultText: tw`absolute top-24 text-center text-4xl font-semibold text-white`,
 	}
-	//Type 'Record<string, number>' must have a '[Symbol.iterator]()' method that returns an iterator.
+
 	const highestScore = Math.max(...Object.values(scores))
 	const winners = Object.keys(scores).filter(
 		(key) => scores[key] === highestScore,
@@ -98,10 +98,6 @@ export default function Page(): ReactNode {
 							router.navigate("/create-game")
 						}}
 					/>
-
-					{/* <Pressable className={styles.shareButton}>
-						<AntIcons name="sharealt" color={"black"} size={25} />
-					</Pressable> */}
 				</MotiView>
 			</View>
 		</SafeAreaView>

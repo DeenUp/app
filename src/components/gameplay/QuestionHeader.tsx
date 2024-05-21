@@ -11,11 +11,13 @@ const QuestionHeader = ({
 	length,
 	minutes,
 	seconds,
+	timed,
 }: {
 	index: number
-	length: number
-	minutes: number
-	seconds: number
+	length?: number
+	minutes?: number
+	seconds?: number
+	timed: boolean
 }): ReactNode => {
 	const styles = {
 		base: tw`flex-col items-stretch px-10 py-12`,
@@ -28,11 +30,11 @@ const QuestionHeader = ({
 		<View className={styles.base}>
 			<View className={styles.row}>
 				<Text className={styles.text}>Question {index}</Text>
-				<Timer minute={minutes} second={seconds} />
+				{timed && <Timer minute={minutes!} second={seconds!} />}
 			</View>
 			<ProgressBar
 				color="#03dac6"
-				progress={index / length}
+				progress={index / length!}
 				className={styles.progressBar}
 			/>
 		</View>
