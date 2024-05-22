@@ -1,5 +1,5 @@
 import type { GraphQLResult } from "aws-amplify/api"
-import type { Observable, Subscription } from "rxjs"
+import type { Observable } from "rxjs"
 
 import type {
 	CreateLobbyInput,
@@ -26,6 +26,7 @@ import type {
 	ListByIdQueryParams,
 	ListResponse,
 	NeverEmpty,
+	Subscription,
 	SubscriptionParams,
 	SubscriptionResponse,
 } from "../types"
@@ -166,7 +167,7 @@ export default class LobbyApi implements ILobbyApi {
 		params: SubscriptionParams<ModelLobbyFilterInput | null | undefined>,
 		onResponse: (response: SubscriptionResponse<Lobby>) => void,
 	): Subscription {
-		const stream = this.graphqlService
+		const updateStream = this.graphqlService
 			.subscribe<
 				typeof onUpdateLobby,
 				OnUpdateLobbySubscriptionVariables,
@@ -179,13 +180,21 @@ export default class LobbyApi implements ILobbyApi {
 				filter: params.filter,
 			})
 			.subscribe({
-				next: ({ data }) =>
+				next: ({ data }) => {
 					onResponse({
 						type: "updated",
 						data: data.onUpdateLobby as Lobby,
-					}),
+					})
+				},
+				error: (error) => {
+					console.error("Error in lobby subscription", error)
+				},
 			})
 
-		return stream
+		return {
+			unsubscribe: () => {
+				updateStream.unsubscribe()
+			},
+		}
 	}
 }

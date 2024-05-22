@@ -33,7 +33,7 @@ export default function Page(): ReactNode {
 		submitAnswer,
 		submittedAnswers,
 		isCreator,
-		destroy,
+		deactivateLoby,
 	} = useGameStore((state: GameStore) => ({
 		gameRound: state.gameRound,
 		loading: state.loading,
@@ -44,13 +44,15 @@ export default function Page(): ReactNode {
 		participants: state.participants,
 		isCreator: state.isCreator,
 		destroy: state.destroy,
+		deactivateLoby: state.deactivateLobby,
 	}))
 
 	useEffect(() => {
 		initializeGameRound()
 
 		return () => {
-			destroy()
+			//	destroy()
+			deactivateLoby()
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,7 +64,7 @@ export default function Page(): ReactNode {
 		options: tw`gap-6`,
 		buttonsContainer: tw`flex flex-row justify-between px-6`,
 		buttons: tw`w-1/4`,
-		closeButton: tw`absolute right-10 top-14 z-20 size-10`,
+		closeButton: tw`absolute right-10 top-14 z-20 size-10 bg-transparent`,
 		roundResultText: twr`absolute bottom-12 my-auto text-center text-xl font-semibold`,
 	}
 
@@ -78,14 +80,15 @@ export default function Page(): ReactNode {
 		>
 			<StatusBar style="light" />
 
-			<TouchableOpacity
-				className={styles.closeButton}
+			<Button
+				buttonStyle={styles.closeButton}
+				size="lg"
+				iconSize={32}
+				iconName="close"
 				onPress={() => {
 					router.dismissAll()
 				}}
-			>
-				<AntIcons name="closecircle" color={"white"} size={32} />
-			</TouchableOpacity>
+			/>
 			{!gameRound?.isComplete && (
 				<QuestionHeader
 					index={gameRound?.index ?? 0}
@@ -168,40 +171,6 @@ export default function Page(): ReactNode {
 						size="lg"
 					/>
 				</MotiView>
-			) : isCreator ? (
-				<MotiView
-					from={{
-						opacity: 0,
-						scale: 0.5,
-					}}
-					animate={{
-						opacity: 1,
-						scale: 1,
-					}}
-					exit={{
-						opacity: 0,
-						scale: 0,
-					}}
-					delay={4000}
-					style={twr`absolute bottom-12 flex w-full items-center justify-center `}
-				>
-					<Button
-						isLoading={loading}
-						label={
-							gameRound?.index === 10
-								? "View Results"
-								: "Next Round"
-						}
-						onPress={
-							gameRound?.index === 10
-								? () => router.push("/friends-mode/result")
-								: () => initializeGameRound()
-						}
-						color="primary"
-						buttonStyle="shadow-md px-6 mt-2 w-2/3"
-						size="lg"
-					/>
-				</MotiView>
 			) : (
 				<MotiView
 					from={{
@@ -216,12 +185,31 @@ export default function Page(): ReactNode {
 						opacity: 0,
 						scale: 0,
 					}}
-					delay={4000}
+					delay={1000}
 					style={twr`absolute bottom-12 flex w-full items-center justify-center `}
 				>
-					<Text style={styles.roundResultText}>
-						Waiting for host...
-					</Text>
+					{isCreator ? (
+						<Button
+							isLoading={loading}
+							label={
+								gameRound?.index === 10
+									? "View Results"
+									: "Next Round"
+							}
+							onPress={
+								gameRound?.index === 10
+									? () => router.push("/friends-mode/result")
+									: () => initializeGameRound()
+							}
+							color="primary"
+							buttonStyle="shadow-md px-6 mt-2 w-2/3"
+							size="lg"
+						/>
+					) : (
+						<Text style={styles.roundResultText}>
+							Waiting for host...
+						</Text>
+					)}
 				</MotiView>
 			)}
 		</SafeAreaView>
