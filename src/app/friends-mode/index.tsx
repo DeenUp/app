@@ -170,7 +170,6 @@ export default function Page(): ReactNode {
 				</MotiView>
 			) : isCreator ? (
 				<MotiView
-					key="button"
 					from={{
 						opacity: 0,
 						scale: 0.5,
@@ -205,7 +204,6 @@ export default function Page(): ReactNode {
 				</MotiView>
 			) : (
 				<MotiView
-					key="button"
 					from={{
 						opacity: 0,
 						scale: 0.5,

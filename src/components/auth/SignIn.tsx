@@ -1,9 +1,17 @@
 import React, { useState } from "react"
-import { Alert, Text, TouchableOpacity, View } from "react-native"
+import {
+	Alert,
+	KeyboardAvoidingView,
+	Platform,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native"
 
 import { router } from "expo-router"
 
 import { MotiView } from "moti"
+import twr from "twrnc"
 
 import { Button, EmailInputField, PasswordInputField } from "~/components/ui"
 import { tw } from "~/helpers"
@@ -112,6 +120,7 @@ const SignIn = ({ handleToggleSignUp, onBackPress }: Props) => {
 					error={error ? (error as string) : errors.email}
 					onChangeText={(value) => handleInputChange("email", value)}
 				/>
+
 				<PasswordInputField
 					value={password}
 					error={errors.password}

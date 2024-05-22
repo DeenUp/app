@@ -1,12 +1,11 @@
 import type { ReactNode } from "react"
 
-import { Pressable, Text, View } from "react-native"
+import { Text, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
-import { Link, router, Stack } from "expo-router"
+import { router, Stack } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
-import AntIcons from "@expo/vector-icons/AntDesign"
 import { MotiView } from "moti"
 import twr from "twrnc"
 
@@ -32,6 +31,7 @@ export default function Page(): ReactNode {
 		animationContainerBackground: tw`absolute top-40 size-96 rounded-3xl bg-primary`,
 		doneButton: tw`w-2/4`,
 		roundResultText: tw`absolute top-24 text-center text-4xl font-semibold text-white`,
+		closeButton: tw`bg-trabsparent absolute right-10 top-2`,
 	}
 
 	const highestScore = Math.max(...Object.values(scores))
@@ -55,29 +55,27 @@ export default function Page(): ReactNode {
 		>
 			<Stack.Screen options={{ title: "Results" }} />
 			<StatusBar style="light" />
-
 			<View className={styles.body}>
-				<View className={styles.headerContainer}>
-					<View></View>
-					<Link href="/" asChild>
-						<Pressable>
-							<AntIcons name="close" color={"white"} size={25} />
-						</Pressable>
-					</Link>
-				</View>
-
+				<Button
+					buttonStyle={styles.closeButton}
+					size="lg"
+					iconSize={32}
+					iconName="close"
+					onPress={() => {
+						router.dismissAll()
+					}}
+				/>
 				<View>
 					<Text className={styles.headerText}>Results</Text>
-
 					<Text className={styles.roundResultText}>
 						{roundResultText}
 					</Text>
 				</View>
 				<Scores />
 				<MotiView
-					from={{ opacity: 0, scale: 0.5 }}
-					animate={{ opacity: 1, scale: 1 }}
-					transition={{ duration: 500, delay: 70 }}
+					from={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ type: "timing", duration: 500, delay: 1000 }}
 					style={twr`absolute bottom-12 flex w-full flex-row items-center justify-center gap-4 px-6`}
 				>
 					<Button

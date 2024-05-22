@@ -1435,8 +1435,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AmplifyRTNCore: a274cd13fb1bde5fdbad50aeb25b7b40776ec122
-  boost: d3f49c53809116a5d38da093a8aa78bf551aed09
-  DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
+  boost: 6cd2e3daf6fccdd2d64a29507ea8043d725182a2
+  DoubleConversion: 3cfc8530f0ef95ed5f99205bebc622a62fa7892e
   EXConstants: a5f6276e565d98f9eb4280f81241fc342d641590
   EXFont: f20669cb266ef48b004f1eb1f2b20db96cd1df9f
   EXJSONUtils: 5c42959e87be238b045ef37cc5268b16a6c0ad4a
@@ -1458,12 +1458,12 @@ SPEC CHECKSUMS:
   FBLazyVector: df34a309e356a77581809834f6ec3fbe7153f620
   FBReactNativeSpec: bbe8b686178e5ce03d1d8a356789f211f91f31b8
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 035f1e36e53b355cf70f6434d161b36e7d21fecd
-  hermes-engine: b12d9bb1b7cee546f5e48212e7ea7e3c1665a367
+  glog: f976c22caddce143e0217c07e3b4e1cd18e457e8
+  hermes-engine: 06cf2379d79b6c0daf766bdae0f494a360bc2f27
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   lottie-ios: 3d98679b41fa6fd6aff2352b3953dbd3df8a397e
   lottie-react-native: 8b5721400977e2dde148ca23efcf48e668940dbc
-  RCT-Folly: 7169b2b1c44399c76a47b5deaaba715eeeb476c0
+  RCT-Folly: b257c1594d3e252d00672d152efbabda4ecba999
   RCTRequired: 0c7f03a41ee32dec802c74c341e317a4165973d5
   RCTTypeSafety: 57698bb7fcde424922e201dab377f496a08a63e3
   React: 64c0c83924460a3d34fa5857ca2fd3ed2a69b581
