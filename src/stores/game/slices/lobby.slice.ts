@@ -50,11 +50,12 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 		participantSubscription = participantApi.subscribe(
 			{
 				filter: {
-					id: { eq: lobbyId },
+					lobbyId: { eq: lobbyId },
 				},
 			},
 
 			({ type, data: participant }) => {
+				console.log(useUserStore!.getState()!.currentUser!.email)
 				if (type === "deleted") {
 					set({
 						participants: get().participants.filter(
@@ -111,7 +112,6 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 	}
 
 	const onLobbySubscription = (lobbyId: string) => {
-		console.log("Subscribed to lobby", lobbyId)
 		lobbySubscription = lobbyApi.subscribe(
 			{ filter: { id: { eq: lobbyId } } },
 			({ type, data: lobby }) => {
@@ -169,7 +169,7 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 				const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 				let code = ""
 
-				for (let i = 0; i < 8; i++) {
+				for (let i = 0; i < 6; i++) {
 					code += characters.charAt(
 						Math.floor(Math.random() * characters.length),
 					)
@@ -192,6 +192,7 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 					const participants = lobby.participants!.items.filter(
 						(item): item is Participant => item !== null,
 					)
+
 					const allParticipants = [
 						...get().participants,
 						...participants,

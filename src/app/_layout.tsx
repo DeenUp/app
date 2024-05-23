@@ -90,34 +90,6 @@ const RootLayout = () => {
 						headerStyle: {
 							backgroundColor: "#F2F3F3",
 						},
-						headerRight: () => {
-							if (!currentUser) return
-
-							return (
-								<PlayerAvatar
-									selfie={currentUser.selfie}
-									onPress={() => {
-										router.push("/profile")
-									}}
-									color={"#6D28D9"}
-									size={40}
-									className="flex items-center gap-2"
-								/>
-							)
-						},
-						headerLeft: () => (
-							<TouchableOpacity
-								onPress={() => {
-									router.push("/settings")
-								}}
-							>
-								<FontAwesome
-									name="gear"
-									color={"#6D28D9"}
-									size={24}
-								/>
-							</TouchableOpacity>
-						),
 					}}
 				/>
 				<Stack.Screen

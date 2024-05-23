@@ -20,7 +20,7 @@ type States = {
 }
 
 export default function CreateGame() {
-	const CODE_LENGTH = 8
+	const CODE_LENGTH = 6
 	const translate = useSettingsStore((state) => state.translate)
 
 	const {
@@ -45,6 +45,7 @@ export default function CreateGame() {
 
 		return () => {
 			destroy()
+			leaveLobby()
 		}
 	}, [])
 
@@ -59,11 +60,6 @@ export default function CreateGame() {
 	})
 
 	const inputRefs = useRef<(TextInput | null)[]>([])
-
-	const handleExit = async () => {
-		await leaveLobby()
-		router.dismiss()
-	}
 
 	const handleCodeChange = (text: string, index: number) => {
 		const newCode = [...states.inputCode]
@@ -164,7 +160,7 @@ export default function CreateGame() {
 						iconColor="white"
 						color="link"
 						buttonStyle={styles.backButton}
-						onPress={handleExit}
+						onPress={() => router.dismissAll()}
 						size="sm"
 					/>
 					<View>

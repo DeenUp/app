@@ -33,7 +33,7 @@ export default function Page(): ReactNode {
 		submitAnswer,
 		submittedAnswers,
 		isCreator,
-		deactivateLoby,
+		destroy,
 	} = useGameStore((state: GameStore) => ({
 		gameRound: state.gameRound,
 		loading: state.loading,
@@ -51,8 +51,7 @@ export default function Page(): ReactNode {
 		initializeGameRound()
 
 		return () => {
-			//	destroy()
-			deactivateLoby()
+			destroy()
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -188,7 +187,8 @@ export default function Page(): ReactNode {
 					delay={1000}
 					style={twr`absolute bottom-12 flex w-full items-center justify-center `}
 				>
-					{isCreator ? (
+					{isCreator ||
+					(gameRound.isComplete && gameRound.index === 10) ? (
 						<Button
 							isLoading={loading}
 							label={

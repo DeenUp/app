@@ -1,4 +1,5 @@
 import Button from "./Button"
+import CodeComponent from "./CodeComponent"
 import Gap from "./Gap"
 import InputField, {
 	EmailInputField,
@@ -13,6 +14,7 @@ import Timer from "./Timer"
 
 export {
 	Button,
+	CodeComponent,
 	EmailInputField,
 	Gap,
 	InputField,
