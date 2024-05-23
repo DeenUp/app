@@ -1,14 +1,13 @@
 import type { ReactNode } from "react"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Text, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
-import * as Clipboard from "expo-clipboard"
+// import * as Clipboard from "expo-clipboard"
 import { router } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
-import { AnimatePresence, MotiText, MotiView } from "moti"
 import twr from "twrnc"
 
 import type { GameStore } from "~/stores"
@@ -29,7 +28,6 @@ export default function CreateGame(): ReactNode {
 		leaveLobby,
 		startGame,
 		code,
-		error,
 	} = useGameStore((state: GameStore) => ({
 		gameSessionID: state.gameSessionID,
 		participants: state.participants,
@@ -60,11 +58,11 @@ export default function CreateGame(): ReactNode {
 		router.dismiss()
 	}
 
-	const handleShare = async () => {
-		if (!code) return
+	// const handleShare = async () => {
+	// 	if (!code) return
 
-		await Clipboard.setStringAsync(code)
-	}
+	// 	await Clipboard.setStringAsync(code)
+	// }
 
 	const styles = {
 		container: tw`flex justify-center bg-primary`,

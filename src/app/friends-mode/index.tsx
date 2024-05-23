@@ -1,12 +1,11 @@
 import type { ReactNode } from "react"
 
 import { useEffect } from "react"
-import { SafeAreaView, Text, TouchableOpacity } from "react-native"
+import { SafeAreaView, Text } from "react-native"
 
 import { router } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
-import AntIcons from "@expo/vector-icons/AntDesign"
 import { AnimatePresence, MotiView } from "moti"
 import twr from "twrnc"
 

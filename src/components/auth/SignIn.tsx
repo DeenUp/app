@@ -1,17 +1,9 @@
 import React, { useState } from "react"
-import {
-	Alert,
-	KeyboardAvoidingView,
-	Platform,
-	Text,
-	TouchableOpacity,
-	View,
-} from "react-native"
+import { Alert, Text, TouchableOpacity, View } from "react-native"
 
 import { router } from "expo-router"
 
 import { MotiView } from "moti"
-import twr from "twrnc"
 
 import { Button, EmailInputField, PasswordInputField } from "~/components/ui"
 import { tw } from "~/helpers"

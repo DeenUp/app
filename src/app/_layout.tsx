@@ -24,9 +24,8 @@ import { TouchableOpacity } from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 import { SpaceMonoRegular } from "~/assets"
-import { PlayerAvatar } from "~/components/ui"
 import { AmplifyProvider } from "~/providers"
-import { useAuthStore, useUserStore } from "~/stores"
+import { useAuthStore } from "~/stores"
 
 Amplify.configure(config as ResourcesConfig)
 
@@ -45,7 +44,6 @@ preventAutoHideAsync().catch((error) => {
 
 const RootLayout = () => {
 	const { clear } = useAuthStore()
-	const { currentUser } = useUserStore()
 
 	const [loaded, error] = useFonts({
 		SpaceMono: SpaceMonoRegular,
