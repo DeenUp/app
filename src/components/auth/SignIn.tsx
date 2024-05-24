@@ -9,12 +9,7 @@ import { Button, EmailInputField, PasswordInputField } from "~/components/ui"
 import { tw } from "~/helpers"
 import { useAuthStore, useSettingsStore } from "~/stores"
 
-type Props = {
-	handleToggleSignUp: () => void
-	onBackPress: () => void
-}
-
-const SignIn = ({ handleToggleSignUp, onBackPress }: Props) => {
+const SignIn = () => {
 	const translate = useSettingsStore((state) => state.translate)
 	const {
 		email,
@@ -23,19 +18,21 @@ const SignIn = ({ handleToggleSignUp, onBackPress }: Props) => {
 		handleSignIn,
 		setUsername,
 		setPassword,
-		setError,
 		clear,
+		setIsSignUp,
+		setIsForgotPassword,
 	} = useAuthStore((state) => ({
 		setName: state.setName,
 		setUsername: state.setUsername,
 		setPassword: state.setPassword,
 		handleSignIn: state.handleSignIn,
-		setError: state.setError,
 		clear: state.clear,
 		email: state.username,
 		name: state.name,
 		password: state.password,
 		error: state.error,
+		setIsSignUp: state.setIsSignUp,
+		setIsForgotPassword: state.setIsForgotPassword,
 	}))
 	const { loading } = useAuthStore()
 
@@ -80,10 +77,12 @@ const SignIn = ({ handleToggleSignUp, onBackPress }: Props) => {
 	}
 
 	const handleInputChange = (field: string, value: string) => {
-		setError(null)
+		if (error) clear()
+
 		if (field === "password" && value === "Enter") {
 			return
 		}
+
 		switch (field) {
 			case "email":
 				setUsername(value)
@@ -127,7 +126,7 @@ const SignIn = ({ handleToggleSignUp, onBackPress }: Props) => {
 				color="link"
 				size="md"
 				label={translate("authPage.signIn.forgotPassword")}
-				onPress={onBackPress}
+				onPress={() => setIsForgotPassword(true)}
 			/>
 			<Button
 				buttonStyle="w-full"
@@ -139,7 +138,7 @@ const SignIn = ({ handleToggleSignUp, onBackPress }: Props) => {
 			/>
 			<View className={styles.footer}>
 				<Text>{translate("authPage.signIn.noAccount")}</Text>
-				<TouchableOpacity onPress={handleToggleSignUp}>
+				<TouchableOpacity onPress={() => setIsSignUp(true)}>
 					<Text className={styles.signUpText}>
 						{translate("authPage.signIn.signUp")}
 					</Text>
