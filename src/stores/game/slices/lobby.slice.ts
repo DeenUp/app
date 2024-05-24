@@ -1,5 +1,9 @@
 import type { StateCreator } from "zustand"
 
+import { Alert } from "react-native"
+
+import { router } from "expo-router"
+
 import useUserStore from "~stores/user/useUserStore"
 
 import type { GameStore } from "."
@@ -25,7 +29,7 @@ type LobbyActions = {
 	joinLobby: (lobbyCode: string) => Promise<void>
 	leaveLobby: () => Promise<void>
 	startGame: () => Promise<void>
-	destroy: () => Promise<void>
+	deactivateLobby: () => Promise<void>
 }
 
 export type LobbySlice = LobbyStates & LobbyActions
@@ -40,16 +44,18 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 
 	let participantSubscription: Subscription | null = null
 	let gameSessionSubscription: Subscription | null = null
+	let lobbySubscription: Subscription | null = null
 
 	const onParticipantSubscription = (lobbyId: string) => {
 		participantSubscription = participantApi.subscribe(
 			{
 				filter: {
-					id: { eq: lobbyId },
+					lobbyId: { eq: lobbyId },
 				},
 			},
 
 			({ type, data: participant }) => {
+				console.log(useUserStore!.getState()!.currentUser!.email)
 				if (type === "deleted") {
 					set({
 						participants: get().participants.filter(
@@ -105,6 +111,41 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 		return gameSessionSubscription
 	}
 
+	const onLobbySubscription = (lobbyId: string) => {
+		lobbySubscription = lobbyApi.subscribe(
+			{ filter: { id: { eq: lobbyId } } },
+			({ type, data: lobby }) => {
+				if (type === "updated") {
+					lobby.isActive === false &&
+						set({
+							lobbyCode: null,
+							lobbyID: null,
+							gameSessionID: null,
+							participants: [],
+							isCreator: false,
+							loading: false,
+							error: null,
+						})
+
+					Alert.alert(
+						"Lobby closed",
+						"The lobby has been closed by creator",
+						[
+							{
+								text: "OK",
+								onPress: () => {
+									router.dismissAll()
+								},
+							},
+						],
+					)
+				}
+			},
+		)
+
+		return lobbySubscription
+	}
+
 	return {
 		lobbyCode: null,
 		lobbyID: null,
@@ -128,7 +169,7 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 				const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 				let code = ""
 
-				for (let i = 0; i < 8; i++) {
+				for (let i = 0; i < 6; i++) {
 					code += characters.charAt(
 						Math.floor(Math.random() * characters.length),
 					)
@@ -151,6 +192,7 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 					const participants = lobby.participants!.items.filter(
 						(item): item is Participant => item !== null,
 					)
+
 					const allParticipants = [
 						...get().participants,
 						...participants,
@@ -199,6 +241,7 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 
 				onParticipantSubscription(lobby.id)
 				onGameSessionSubscription(lobby.id)
+				onLobbySubscription(lobby.id)
 			} catch (error) {
 				set({ loading: false, error: error as string })
 				console.log("catch", error)
@@ -241,6 +284,8 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 					loading: false,
 					participants,
 				})
+
+				onLobbySubscription(lobby.id)
 			} catch (error) {
 				set({ loading: false, error: error as string })
 				console.log("catch", error)
@@ -315,6 +360,7 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 
 				onParticipantSubscription(lobby.id)
 				onGameSessionSubscription(lobby.id)
+				onLobbySubscription(lobby.id)
 			} catch (error) {
 				set({ loading: false, error: error as string })
 				console.log("catch", error)
@@ -386,7 +432,7 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 			}
 		},
 
-		destroy: async (): Promise<void> => {
+		deactivateLobby: async (): Promise<void> => {
 			if (participantSubscription) {
 				participantSubscription.unsubscribe()
 			}
@@ -395,11 +441,20 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 				gameSessionSubscription.unsubscribe()
 			}
 
+			if (lobbySubscription) {
+				lobbySubscription.unsubscribe()
+			}
+
 			if (get().isCreator) {
 				await lobbyApi.update({
 					id: get().lobbyID!,
 					isActive: false,
 				})
+
+				const participants = get().participants
+				for (let i = 0; i < participants.length; i++) {
+					await participantApi.delete(participants[i]!.id)
+				}
 			}
 
 			set({

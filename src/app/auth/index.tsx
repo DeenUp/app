@@ -1,9 +1,18 @@
 import { useState } from "react"
-import { StyleSheet, Text, View } from "react-native"
+import {
+	Keyboard,
+	KeyboardAvoidingView,
+	Platform,
+	StyleSheet,
+	Text,
+	TouchableWithoutFeedback,
+	View,
+} from "react-native"
 
 import { StatusBar } from "expo-status-bar"
 
 import { AnimatePresence, MotiView } from "moti"
+import twr from "twrnc"
 
 import { AuthHeader, ForgotPassword, SignIn, SignUp } from "~/components/auth"
 import { tw } from "~/helpers"
@@ -73,14 +82,17 @@ export default function Auth() {
 	}
 
 	return (
-		<>
+		<KeyboardAvoidingView
+			style={twr` flex-1`}
+			behavior={Platform.OS === "ios" ? "padding" : "height"}
+		>
 			<StatusBar style="light" />
 			<View className={styles.header}>
 				{!isSignUp && !isForgotPassword && (
 					<Text className={styles.logo}>DeenUp</Text>
 				)}
 			</View>
-			<AnimatePresence>
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 				<MotiView
 					delay={200}
 					from={{ height: "0%" }}
@@ -143,7 +155,7 @@ export default function Auth() {
 						)}
 					</AnimatePresence>
 				</MotiView>
-			</AnimatePresence>
-		</>
+			</TouchableWithoutFeedback>
+		</KeyboardAvoidingView>
 	)
 }

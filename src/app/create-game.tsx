@@ -4,13 +4,15 @@ import { useEffect } from "react"
 import { Text, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
-import * as Clipboard from "expo-clipboard"
+// import * as Clipboard from "expo-clipboard"
 import { router } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
+import twr from "twrnc"
+
 import type { GameStore } from "~/stores"
 
-import { Button } from "~/components/ui"
+import { Button, CodeComponent } from "~/components/ui"
 import ParticipantsList from "~/components/ui/ParticipantsList"
 import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
@@ -26,7 +28,6 @@ export default function CreateGame(): ReactNode {
 		leaveLobby,
 		startGame,
 		code,
-		error,
 	} = useGameStore((state: GameStore) => ({
 		gameSessionID: state.gameSessionID,
 		participants: state.participants,
@@ -57,11 +58,11 @@ export default function CreateGame(): ReactNode {
 		router.dismiss()
 	}
 
-	const handleShare = async () => {
-		if (!code) return
+	// const handleShare = async () => {
+	// 	if (!code) return
 
-		await Clipboard.setStringAsync(code)
-	}
+	// 	await Clipboard.setStringAsync(code)
+	// }
 
 	const styles = {
 		container: tw`flex justify-center bg-primary`,
@@ -69,10 +70,10 @@ export default function CreateGame(): ReactNode {
 		headerText: tw`text-3xl font-bold text-white`,
 		subheaderText: tw`text-base-200`,
 		codeContainer: tw`mt-72 flex h-full items-center justify-start gap-8  rounded-lg rounded-t-3xl bg-gray-100 pt-20`,
-		codeText: tw`text-xl font-bold`,
+		codeText: twr`text-xl font-bold`,
 		buttonContainer: tw`flex w-full flex-row items-center justify-center gap-6 `,
 		backButton: tw``,
-		shareButton: tw``,
+		copyButton: tw`m-1 flex h-14 w-10 items-center rounded-md border border-gray-300 bg-primary px-2`,
 		codeTextContainer: tw`flex flex-row items-center justify-center`,
 		codeDigitBox: tw`m-1 rounded-md bg-gray-200 p-4`,
 		createGameButton: tw`w-2/3`,
@@ -107,11 +108,7 @@ export default function CreateGame(): ReactNode {
 				</View>
 				<View className={styles.codeContainer}>
 					<View className={styles.codeTextContainer}>
-						{code?.split("").map((digit, index) => (
-							<View key={index} className={styles.codeDigitBox}>
-								<Text className={styles.codeText}>{digit}</Text>
-							</View>
-						))}
+						<CodeComponent code={code} />
 					</View>
 					<View className={styles.buttonContainer}>
 						<Button
@@ -121,16 +118,8 @@ export default function CreateGame(): ReactNode {
 							color="primary"
 							label={translate("createGamePage.button")}
 						/>
-						<Button
-							iconName="share-variant"
-							iconSize={24}
-							color="secondary"
-							size="md"
-							buttonStyle={styles.shareButton}
-							onPress={handleShare}
-						/>
 					</View>
-					{error && <Text>{error}</Text>}
+					{/* {error && <Text>{error}</Text>} */}
 					{participants.length > 0 && <ParticipantsList />}
 				</View>
 			</View>

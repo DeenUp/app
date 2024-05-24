@@ -162,7 +162,7 @@ export default class ParticipantApi implements IParticipantApi {
 						NeverEmpty<OnCreateParticipantSubscription>
 					>
 				>
-			>(onCreateParticipant, {})
+			>(onCreateParticipant, params)
 			.subscribe({
 				next: ({ data }) => {
 					onResponse({

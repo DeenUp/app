@@ -80,6 +80,7 @@ export default function Page(): ReactNode {
 				length={questions.length}
 				minutes={minutes}
 				seconds={seconds}
+				timed={true}
 			/>
 			<View className={styles.body}>
 				<Text className={styles.question}>

@@ -17,15 +17,15 @@ export default function Page(): ReactNode {
 	const currentUser = useAuthStore((state) => state.currentUser)
 
 	const styles = {
-		body: tw`flex h-full flex-col p-4`,
+		body: tw`flex h-full flex-col `,
 		logoContainer: tw`items-center`,
 		logo: tw`text-8xl font-bold`,
 		logoPrimary: tw`text-8xl font-bold text-primary`,
-		buttonsContainer: tw`flex w-full flex-row items-center justify-center gap-2 px-1`,
-		joinGameButton: tw`w-1/2 rounded-r-none`,
-		createGameButton: tw`w-1/2 rounded-l-none border-base-300`,
+		playButtonsContainer: tw`flex w-full flex-row items-center justify-center gap-2 px-1`,
+		joinGameButton: tw`w-1/2 rounded-3xl rounded-r-none`,
+		createGameButton: tw`w-1/2 rounded-3xl rounded-l-none border-base-300`,
 		motiLogo: twr`flex flex-col items-center justify-center text-center text-8xl font-bold`,
-		motiContainer: twr`w-full justify-end gap-2`,
+		motiContainer: twr`-mb-12 flex h-72 w-full justify-start gap-2 gap-4 rounded-3xl bg-gray-300 p-6`,
 	}
 
 	return (
@@ -50,12 +50,15 @@ export default function Page(): ReactNode {
 				</View>
 				<Spacer />
 				<MotiView
-					from={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
+					from={{ opacity: 0, translateY: 250 }}
+					animate={{ opacity: 1, translateY: 0 }}
 					style={styles.motiContainer}
-					delay={500}
+					transition={{
+						type: "timing",
+						delay: 200,
+					}}
 				>
-					<View className={styles.buttonsContainer}>
+					<View className={styles.playButtonsContainer}>
 						<Button
 							color="primary"
 							size="xl"
@@ -86,15 +89,32 @@ export default function Page(): ReactNode {
 						onPress={() => {
 							router.push("/solo-mode")
 						}}
+						buttonStyle="rounded-3xl"
 					/>
-					<Button
+					{/* <Button
 						color="primary"
 						size="xl"
 						label="Friends Mode Result"
 						onPress={() => {
 							router.push("/friends-mode/result")
 						}}
-					/>
+					/> */}
+					<View className="flex flex-row items-center justify-between px-3">
+						<Button
+							color="primary"
+							size="sm"
+							onPress={() => {}}
+							buttonStyle="rounded-full size-12"
+							iconName="gamepad-circle-outline"
+						/>
+						<Button
+							color="primary"
+							size="xl"
+							onPress={() => router.push("/profile")}
+							buttonStyle="rounded-full size-12"
+							iconName="face-man-profile"
+						/>
+					</View>
 				</MotiView>
 			</View>
 		</SafeAreaView>

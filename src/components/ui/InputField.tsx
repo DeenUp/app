@@ -39,7 +39,7 @@ const InputField = ({
 	testID,
 }: Props) => {
 	const styles = {
-		body: tw`bg-outline flex h-20 w-full flex-row items-center justify-start gap-2 rounded-xl border border-gray-200 bg-white px-4 shadow-md`,
+		body: tw`bg-outline flex h-20 w-full flex-row items-center justify-start gap-2 rounded-full border border-gray-200 bg-white px-4 shadow-md`,
 	}
 
 	return (
@@ -49,7 +49,11 @@ const InputField = ({
 			<TextInput
 				testID={testID}
 				value={value!}
-				style={className ? twr`${className}` : twr`ml-2 flex-1 text-lg`}
+				style={
+					className
+						? twr`${className}`
+						: twr`mb-2 ml-2 flex-1 text-lg`
+				}
 				placeholder={placeholder}
 				keyboardType={keyboardType}
 				secureTextEntry={secureTextEntry}

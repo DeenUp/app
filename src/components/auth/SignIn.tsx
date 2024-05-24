@@ -112,6 +112,7 @@ const SignIn = ({ handleToggleSignUp, onBackPress }: Props) => {
 					error={error ? (error as string) : errors.email}
 					onChangeText={(value) => handleInputChange("email", value)}
 				/>
+
 				<PasswordInputField
 					value={password}
 					error={errors.password}
