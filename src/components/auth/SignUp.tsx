@@ -3,8 +3,6 @@ import { useState } from "react"
 import LottieView from "lottie-react-native"
 import { AnimatePresence, MotiView } from "moti"
 
-import type { States } from "~/app/auth"
-
 import { lottieBlueCheck } from "~/assets"
 import Verify from "~/components/auth/Verify"
 import {
@@ -20,13 +18,7 @@ export enum UserType {
 	PLAYER = "PLAYER",
 }
 
-type Props = {
-	step: number
-	setStep: React.Dispatch<React.SetStateAction<States>>
-	handleToggleSignUp: () => void
-}
-
-const SignUp = ({ step, setStep, handleToggleSignUp }: Props) => {
+const SignUp = () => {
 	const translate = useSettingsStore((state) => state.translate)
 	const {
 		name,
@@ -39,6 +31,9 @@ const SignUp = ({ step, setStep, handleToggleSignUp }: Props) => {
 		setPassword,
 		handleSignUp,
 		handleConfirmSignUp,
+		step,
+		handleNextStep,
+		setIsSignUp,
 	} = useAuthStore((state) => ({
 		name: state.name,
 		email: state.username,
@@ -50,6 +45,11 @@ const SignUp = ({ step, setStep, handleToggleSignUp }: Props) => {
 		setPassword: state.setPassword,
 		handleSignUp: state.handleSignUp,
 		handleConfirmSignUp: state.handleConfirmSignUp,
+		setStep: state.setStep,
+		handleNextStep: state.handleNextStep,
+		handlePrevStep: state.handlePrevStep,
+		setIsSignUp: state.setIsSignUp,
+		step: state.step,
 	}))
 
 	const [codeError, setCodeError] = useState("")
@@ -78,10 +78,7 @@ const SignUp = ({ step, setStep, handleToggleSignUp }: Props) => {
 			console.debug("signingup")
 			await handleSignUp({
 				onVerificationRequired: () => {
-					setStep((prevState) => ({
-						...prevState,
-						step: prevState.step + 1,
-					}))
+					handleNextStep()
 				},
 			})
 		}
@@ -93,12 +90,10 @@ const SignUp = ({ step, setStep, handleToggleSignUp }: Props) => {
 
 			return
 		}
+
 		await handleConfirmSignUp({
 			onSuccess: () => {
-				setStep((prevState) => ({
-					...prevState,
-					step: prevState.step + 1,
-				}))
+				handleNextStep()
 			},
 		})
 	}
@@ -116,10 +111,7 @@ const SignUp = ({ step, setStep, handleToggleSignUp }: Props) => {
 			return
 		}
 
-		setStep((prevState) => ({
-			...prevState,
-			step: prevState.step + 1,
-		}))
+		handleNextStep()
 	}
 
 	const handleInputChange = (field: string, value: string) => {
@@ -250,7 +242,7 @@ const SignUp = ({ step, setStep, handleToggleSignUp }: Props) => {
 						: step === 3
 							? handleVerifySubmit
 							: step === 4
-								? handleToggleSignUp
+								? () => setIsSignUp(false)
 								: handleContinue
 				}
 			/>

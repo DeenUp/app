@@ -6,65 +6,19 @@ import { SegmentedProgressBar } from "~/components/ui"
 import { tw } from "~/helpers"
 import { useAuthStore, useSettingsStore } from "~/stores"
 
-type Step = {
-	header: string
-	subheader: string
-}
-
-type Props = {
-	step: number
-	handleBack: () => void
-	handleToggle: () => void
-	isSignUp: boolean
-}
-
-const signUpSteps: Record<number, Step> = {
-	0: {
-		header: "authPage.signUp.nameHeader",
-		subheader: "authPage.signUp.nameSubheader",
-	},
-	1: {
-		header: "authPage.signUp.emailHeader",
-		subheader: "authPage.signUp.emailSubheader",
-	},
-	2: {
-		header: "authPage.signUp.passwordHeader",
-		subheader: "authPage.signUp.passwordSubheader",
-	},
-	3: {
-		header: "authPage.verify.header",
-		subheader: "authPage.verify.subheader",
-	},
-	4: {
-		header: "authPage.signUp.successHeader",
-		subheader: "authPage.signUp.successSubheader",
-	},
-}
-
-const forgotPasswordSteps: Record<number, Step> = {
-	0: {
-		header: "authPage.forgotPassword.header",
-		subheader: "authPage.forgotPassword.subheader",
-	},
-	1: {
-		header: "authPage.verify.header",
-		subheader: "authPage.verify.subheader",
-	},
-	2: {
-		header: "authPage.forgotPassword.passwordHeader",
-		subheader: "authPage.forgotPassword.passwordSubheader",
-	},
-	3: {
-		header: "authPage.forgotPassword.successHeader",
-		subheader: "authPage.forgotPassword.successSubheader",
-	},
-}
-
-const AuthHeader = ({ step, handleBack, handleToggle, isSignUp }: Props) => {
+const AuthHeader = () => {
 	const translate = useSettingsStore((state) => state.translate)
-	const { name, username } = useAuthStore()
-	const steps = isSignUp ? signUpSteps : forgotPasswordSteps
-	const currentStep = steps[step]!
+	const {
+		name,
+		username,
+		step,
+		steps,
+		isSignUp,
+		handlePrevStep,
+		handleReset,
+	} = useAuthStore()
+
+	const currentStep = steps![step]!
 
 	const styles = {
 		body: tw`flex w-full gap-6`,
@@ -80,7 +34,13 @@ const AuthHeader = ({ step, handleBack, handleToggle, isSignUp }: Props) => {
 			<View className={styles.buttonsContainer}>
 				<TouchableOpacity
 					className={styles.backButton}
-					onPress={step === 0 ? handleToggle : handleBack}
+					onPress={
+						step === 0
+							? () => {
+									handleReset()
+								}
+							: () => handlePrevStep()
+					}
 				>
 					<MaterialCommunityIcons
 						name="chevron-left"

@@ -1,9 +1,7 @@
-import { useState } from "react"
 import {
 	Keyboard,
 	KeyboardAvoidingView,
 	Platform,
-	StyleSheet,
 	Text,
 	TouchableWithoutFeedback,
 	View,
@@ -16,90 +14,39 @@ import twr from "twrnc"
 
 import { AuthHeader, ForgotPassword, SignIn, SignUp } from "~/components/auth"
 import { tw } from "~/helpers"
-
-export type States = {
-	isSignUp: boolean
-	isForgotPassword: boolean
-	step: number
-}
+import { useAuthStore } from "~/stores"
 
 export default function Auth() {
-	const [state, setState] = useState<States>({
-		isSignUp: false,
-		isForgotPassword: false,
-		step: 0,
-	})
-	const { isSignUp, isForgotPassword, step } = state
-
-	const motiStyle = StyleSheet.create({
-		container: {
-			backgroundColor: "#F9FAFB",
-			marginTop: -20,
-			width: "100%",
-			flexDirection: "column",
-			alignItems: "center",
-			justifyContent: "flex-start",
-			gap: 6,
-			borderRadius: 20,
-			borderTopWidth: 1,
-			borderColor: "#D1D5DB",
-			paddingTop: 26,
-			padding: 24,
-			shadowColor: "#000",
-			shadowOffset: {
-				width: 0,
-				height: 4,
-			},
-			shadowOpacity: 0.3,
-			shadowRadius: 4.65,
-			elevation: 8,
-			position: "relative",
-		},
-	})
+	const { isSignUp, isForgotPassword } = useAuthStore()
 
 	const styles = {
 		header: tw`h-1/2 flex-1 items-center justify-center bg-primary`,
 		logo: tw`text-6xl font-bold text-base-100`,
 		closeButton: tw`absolute right-10 top-12 size-10`,
-	}
-
-	const handleToggleSignUp = () => {
-		setState((prevState) => ({
-			...prevState,
-			step: 0,
-			isSignUp: !prevState.isSignUp,
-			isForgotPassword: false,
-		}))
-	}
-
-	const handleToggleForgotPassword = () => {
-		setState((prevState) => ({
-			...prevState,
-			step: 0,
-			isForgotPassword: !prevState.isForgotPassword,
-			isSignUp: false,
-		}))
+		motiStyle: twr`relative w-full flex-col items-center justify-start  overflow-hidden rounded-t-3xl bg-[#F9FAFB] p-4 shadow-sm`,
 	}
 
 	return (
-		<KeyboardAvoidingView
-			style={twr` flex-1`}
-			behavior={Platform.OS === "ios" ? "padding" : "height"}
-		>
-			<StatusBar style="light" />
-			<View className={styles.header}>
-				{!isSignUp && !isForgotPassword && (
-					<Text className={styles.logo}>DeenUp</Text>
-				)}
-			</View>
-			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+			<KeyboardAvoidingView
+				style={twr`flex-1 bg-[#6D28D9]`}
+				behavior={Platform.OS === "ios" ? "padding" : "padding"}
+			>
+				<StatusBar style="light" />
+
+				<View className={styles.header}>
+					{!isSignUp && !isForgotPassword && (
+						<Text className={styles.logo}>DeenUp</Text>
+					)}
+				</View>
+
 				<MotiView
 					delay={200}
 					from={{ height: "0%" }}
 					animate={{
 						height: isSignUp || isForgotPassword ? "98%" : "60%",
 					}}
-					style={motiStyle.container}
+					style={styles.motiStyle}
 				>
 					<AnimatePresence>
 						{(isSignUp || isForgotPassword) && (
@@ -116,46 +63,15 @@ export default function Auth() {
 							>
 								<AuthHeader
 									key={isSignUp ? "signup" : "forgotpassword"}
-									step={step}
-									handleBack={() =>
-										setState((prevState) => ({
-											...prevState,
-											step: Math.max(
-												0,
-												prevState.step - 1,
-											),
-										}))
-									}
-									handleToggle={() =>
-										isSignUp
-											? handleToggleSignUp()
-											: handleToggleForgotPassword()
-									}
-									isSignUp={state.isSignUp}
 								/>
 							</MotiView>
 						)}
-						{isSignUp ? (
-							<SignUp
-								handleToggleSignUp={handleToggleSignUp}
-								step={step}
-								setStep={setState}
-							/>
-						) : isForgotPassword ? (
-							<ForgotPassword
-								onBackPress={handleToggleForgotPassword}
-								step={step}
-								setStep={setState}
-							/>
-						) : (
-							<SignIn
-								handleToggleSignUp={handleToggleSignUp}
-								onBackPress={handleToggleForgotPassword}
-							/>
-						)}
+						{isSignUp && <SignUp />}
+						{isForgotPassword && <ForgotPassword />}
+						{!isSignUp && !isForgotPassword && <SignIn />}
 					</AnimatePresence>
 				</MotiView>
-			</TouchableWithoutFeedback>
-		</KeyboardAvoidingView>
+			</KeyboardAvoidingView>
+		</TouchableWithoutFeedback>
 	)
 }

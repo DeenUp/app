@@ -15,7 +15,7 @@ type States = {
 	inputCode: string[]
 }
 type Props = {
-	error: string
+	error?: string | null
 }
 
 const Verify = ({ error }: Props) => {
@@ -84,6 +84,7 @@ const Verify = ({ error }: Props) => {
 			console.error("Error pasting from clipboard:", error)
 		}
 	}
+
 	const styles = {
 		signUpText: tw`font-bold text-primary`,
 		errorText: tw`text-red-500`,

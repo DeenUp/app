@@ -1,0 +1,14 @@
+{
+	"recommendations": [
+		"expo.vscode-expo-tools",
+		"christian-kohler.path-intellisense",
+		"coenraads.bracket-pair-colorizer-2",
+		"2gua.rainbow-brackets",
+		"msjsdiag.debugger-for-chrome",
+		"christian-kohler.npm-intellisense",
+		"yzhang.markdown-all-in-one",
+		"jpoissonnier.vscode-styled-components",
+		"graphql.vscode-graphql",
+		"orta.vscode-jest"
+	]
+}

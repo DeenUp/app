@@ -1,5 +1,3 @@
-import type { ResourcesConfig } from "aws-amplify"
-
 import { useEffect } from "react"
 
 import { useFonts } from "expo-font"
@@ -8,9 +6,6 @@ import { hideAsync, preventAutoHideAsync } from "expo-splash-screen"
 import { StatusBar } from "expo-status-bar"
 
 import { Amplify } from "aws-amplify"
-
-// @ts-ignore
-import * as config from "../amplifyconfiguration.json"
 
 import "react-native-reanimated"
 import "react-native-gesture-handler"
@@ -24,10 +19,11 @@ import { TouchableOpacity } from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 import { SpaceMonoRegular } from "~/assets"
+import { getAmplifyConfig } from "~/configs"
 import { AmplifyProvider } from "~/providers"
 import { useAuthStore } from "~/stores"
 
-Amplify.configure(config as ResourcesConfig)
+Amplify.configure(getAmplifyConfig())
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -73,7 +69,6 @@ const RootLayout = () => {
 			<Stack
 				screenOptions={{
 					headerShown: false,
-
 					headerTitleStyle: {
 						fontWeight: "bold",
 					},

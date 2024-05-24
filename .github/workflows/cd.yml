@@ -1,0 +1,183 @@
+name: Continuous Deployment
+
+on:
+    pull_request:
+        types: [closed]
+        branches:
+            - production
+            - dev
+    push:
+        branches:
+            - staging
+
+jobs:
+    build-ios:
+        runs-on: macOS-latest
+        environment: ${{ github.ref_name}}
+
+        steps:
+            - name: 📂 Checkout code
+              uses: actions/checkout@v4
+
+            - name: 🚀 Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: latest
+
+            - name: Install pnpm
+              run: npm install -g pnpm --unsafe-perm=true
+
+            - name: 📦 Install dependencies
+              run: pnpm install
+
+            - name: 🖊️📜 Generate .env
+              run: |
+                  touch .env
+                  echo "FLAVOR=${{ github.ref_name }}" > .env
+                  echo "EXPO_PROJECT_ID=${{ secrets.EXPO_PROJECT_ID }}" >> .env
+
+            - name: 🖊️📜 Generate Amplify config
+              run: |
+                  echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > amplify.json
+
+            - name: 🔍 Check if .env & Amplify config exists
+              run: |
+                  if [ ! -f  amplify.json ]; then
+                    echo "Amplify config does not exist"
+                    exit 1
+                  fi
+                  if [ ! -f .env ]; then
+                    echo ".env file does not exist"
+                    exit 1
+                  fi
+
+            - name: 🧰 Setup Expo and EAS
+              uses: expo/expo-github-action@v8
+              with:
+                  token: ${{ secrets.EXPO_TOKEN }}
+                  expo-version: latest
+                  eas-version: latest
+                  expo-cache: true
+
+            - name: 👷 Build iOS app
+              run: |
+                  eas build --local \
+                    --non-interactive \
+                    --output=./app-build \
+                    --platform=ios \
+                    --profile=${{ github.ref_name}}
+
+            - name: 📱 Upload artifact
+              uses: actions/upload-artifact@v4
+              id: upload-artifact
+              if: success()
+              with:
+                  name: app-ios
+                  path: app-build
+
+            - name: 📣 Notify Discord about iOS build and share the artifact URL
+              uses: sarisia/actions-status-discord@v1
+              if: failure() || success()
+              with:
+                  webhook: ${{ secrets.DISCORD_WEBHOOK_DEPLOYMENT_DEV }}
+                  title: "iOS Build"
+                  description: |
+                      ${{ job.status == 'success' && 'iOS build has been completed :white_check_mark:' || 'iOS build has failed :x:'}}
+                      ${{ job.status == 'success' && steps.upload-artifact.outputs.artifact-url || ''}}
+                  status: ${{ job.status }}
+                  color: ${{ job.status == 'success' && '00FF00' || 'FF0000' }}
+
+    build-android:
+        runs-on: ubuntu-latest
+        environment: ${{ github.ref_name}}
+
+        steps:
+            - name: 📂 Checkout code
+              uses: actions/checkout@v4
+
+            - name: ⚙️ Setup Java
+              uses: actions/setup-java@v4
+              with:
+                  distribution: "temurin"
+                  java-version: "17"
+
+            - name: ⚙️ Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: latest
+
+            - name: 🛠️ Install pnpm
+              run: npm install -g pnpm --unsafe-perm=true
+
+            - name: 📦 Install dependencies
+              run: pnpm install
+
+            - name: 🖊️📜 Generate .env
+              run: |
+                  touch .env
+                  echo "FLAVOR=${{ github.ref_name }}" > .env
+                  echo "EXPO_PROJECT_ID=${{ secrets.EXPO_PROJECT_ID }}" >> .env
+
+            - name: 🖊️📜 Generate Amplify config
+              run: |
+                  echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > amplify.json
+
+            - name: 🔍 Check if .env & Amplify config exists
+              run: |
+                  if [ ! -f amplify.json ]; then
+                    echo "Amplify config does not exist"
+                    exit 1
+                  fi
+                  if [ ! -f .env ]; then
+                    echo ".env file does not exist"
+                    exit 1
+                  fi
+
+            - name: 🧰 Setup Expo and EAS
+              uses: expo/expo-github-action@v8
+              with:
+                  token: ${{ secrets.EXPO_TOKEN }}
+                  expo-version: latest
+                  eas-version: latest
+                  expo-cache: true
+
+            - name: 👷 Build Android app
+              run: |
+                  eas build --local \
+                    --output=./app-build \
+                    --platform=android \
+                    --profile=${{ github.ref_name}}
+
+            - name: 📱 Upload artifact
+              id: upload-artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: app-android
+                  path: app-build
+                  retention-days: 1
+                  overwrite: true
+
+            - name: 📣 Notify Discord about Android build and share the artifact URL
+              uses: sarisia/actions-status-discord@v1
+              if: failure() || success()
+              with:
+                  webhook: ${{ secrets.DISCORD_WEBHOOK_DEPLOYMENT_DEV }}
+                  title: "Android Build"
+                  description: |
+                      ${{ job.status == 'success' && 'Android build has been completed :white_check_mark:' || 'Android build has failed :x:'}}
+                      ${{ job.status == 'success' && steps.upload-artifact.outputs.artifact-url || ''}}
+                  status: ${{ job.status }}
+                  color: ${{ job.status == 'success' && '00FF00' || 'FF0000' }}
+
+            - name: 🚢 Submit Android app
+              run: eas submit -p android --profile ${{ github.ref_name }} --path app-build
+
+            - name: Notify Discord
+              uses: sarisia/actions-status-discord@v1
+              if: failure() || success()
+              with:
+                  webhook: ${{ secrets.DISCORD_WEBHOOK_DEPLOYMENT_DEV }}
+                  title: "Android Shipment"
+                  description: "Android shipment has been completed"
+                  status: ${{ job.status }}
+                  color: ${{ job.status == 'success' && '00FF00' || 'FF0000' }}

@@ -30,7 +30,7 @@ type AuthState = {
 	loading: boolean
 	currentUser: AuthUser | null
 	confirmationCodeSent: boolean
-	error: unknown
+	error: string | null
 }
 
 type AuthActions = {
@@ -54,7 +54,7 @@ type AuthActions = {
 	setUsername: (email: string) => void
 	setPassword: (password: string) => void
 	setConfirmationCode: (confirmationCode: string) => void
-	setError: (error: unknown) => void
+
 	destroy: () => void
 	clear: () => void
 }
@@ -104,6 +104,7 @@ const createAuthSlice: StateCreator<AuthStore, [], [], AuthSlice> = (
 		currentUser: null,
 		confirmationCodeSent: false,
 		error: null,
+
 		setName(name: string) {
 			set({ name })
 		},
@@ -118,10 +119,6 @@ const createAuthSlice: StateCreator<AuthStore, [], [], AuthSlice> = (
 
 		setConfirmationCode(confirmationCode: string) {
 			set({ confirmationCode })
-		},
-
-		setError(error: unknown) {
-			set({ error })
 		},
 
 		handleGetCurrentUser: async (): Promise<void> => {
@@ -275,6 +272,13 @@ const createAuthSlice: StateCreator<AuthStore, [], [], AuthSlice> = (
 			if (get().loading) return
 
 			set({ loading: true, error: null })
+			const confirmationCode = get().confirmationCode
+
+			if (!confirmationCode || confirmationCode?.length < 6) {
+				set({ error: "Please enter a valid confirmation code" })
+
+				return
+			}
 
 			try {
 				const { nextStep } = await confirmSignUp({
@@ -374,7 +378,7 @@ const createAuthSlice: StateCreator<AuthStore, [], [], AuthSlice> = (
 
 				set({ loading: false })
 			} catch (error) {
-				set({ loading: false, error })
+				set({ loading: false, error: (error as AuthError).message })
 			}
 		},
 

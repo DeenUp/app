@@ -1,0 +1,41 @@
+{
+	"build": {
+		"dev": {
+			"developmentClient": true,
+			"distribution": "internal",
+			"android": {
+				"buildType": "apk"
+			},
+			"ios": {
+				"simulator": true
+			}
+		},
+		"production": {
+			"distribution": "store",
+
+			"android": {
+				"buildType": "app-bundle"
+			},
+			"ios": {
+				"simulator": true
+			}
+		},
+		"staging": {
+			"distribution": "internal",
+
+			"android": {
+				"buildType": "app-bundle"
+			},
+			"ios": {
+				"simulator": true
+			}
+		}
+	},
+	"submit": {
+		"dev": {
+			"android": {
+				"track": "internal"
+			}
+		}
+	}
+}

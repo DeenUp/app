@@ -1,5 +1,3 @@
-import type { AuthError } from "aws-amplify/auth"
-
 import { useState } from "react"
 import { Text, View } from "react-native"
 
@@ -16,14 +14,7 @@ import { useAuthStore, useSettingsStore } from "~/stores"
 export default function Auth() {
 	const translate = useSettingsStore((state) => state.translate)
 
-	const {
-		username,
-		loading,
-		confirmationCode,
-		error,
-		handleConfirmSignUp,
-		setError,
-	} = useAuthStore()
+	const { username, loading, error, handleConfirmSignUp } = useAuthStore()
 
 	const [isVerified, setVerified] = useState(false)
 
@@ -38,12 +29,6 @@ export default function Auth() {
 	}
 
 	const handleVerifySubmit = async () => {
-		if (confirmationCode === "" || confirmationCode!.length < 6) {
-			setError("Please fill in all verification fields.")
-
-			return
-		}
-
 		await handleConfirmSignUp({
 			onSuccess: () => {
 				setVerified(true)
@@ -76,7 +61,7 @@ export default function Auth() {
 						}}
 					/>
 				) : (
-					<Verify error={(error as AuthError).message} />
+					<Verify error={error} />
 				)}
 
 				<Button

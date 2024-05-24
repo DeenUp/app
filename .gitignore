@@ -30,9 +30,6 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
-.env*.local
-
 # typescript
 *.tsbuildinfo
 
@@ -43,7 +40,10 @@ expo-env.d.ts
 # @end expo-cli
 
 # amplify configuration
-amplifyconfiguration.json
+amplify-dev.json
+amplify-production.json
+amplify-staging.json
+amplify.json
 
 # debug
 npm-debug.log*
@@ -51,9 +51,11 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# local env files
+# env files
+.env.dev
+.env.production
+.env.staging
 .env
-.env*.local
 
 # expo
 .expo/
@@ -65,10 +67,8 @@ coverage
 artifacts
 
 # build
-ios
-android
+./ios
+./android
 
 # ide
 .idea
-.vscode
-

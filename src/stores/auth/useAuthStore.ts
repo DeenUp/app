@@ -1,11 +1,12 @@
 import { create } from "zustand"
 
-import type { AuthSlice } from "./slices"
+import type { AuthStore } from "./slices"
 
-import { createAuthSlice } from "./slices"
+import { createAuthSlice, createFormSlice } from "./slices"
 
-const useAuthStore = create<AuthSlice>()((...a) => ({
+const useAuthStore = create<AuthStore>()((...a) => ({
 	...createAuthSlice(...a),
+	...createFormSlice(...a),
 }))
 
 export default useAuthStore

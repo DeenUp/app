@@ -1,5 +1,3 @@
-import type { Dispatch, SetStateAction } from "react"
-
 import { useState } from "react"
 
 import LottieView from "lottie-react-native"
@@ -10,31 +8,31 @@ import Verify from "~/components/auth/Verify"
 import { Button, EmailInputField, PasswordInputField } from "~/components/ui"
 import { useAuthStore, useSettingsStore } from "~/stores"
 
-type Props = {
-	step: number
-	setStep: Dispatch<SetStateAction<States>>
-	onBackPress: () => void
-}
-
-type States = {
-	isSignUp: boolean
-	isForgotPassword: boolean
-	step: number
-}
-
-const ForgotPassword = ({ step, setStep, onBackPress }: Props) => {
+const ForgotPassword = () => {
 	const translate = useSettingsStore((state) => state.translate)
-	const { email, password, passwordConfirm, setUsername, setPassword } =
-		useAuthStore((state) => ({
-			setName: state.setName,
-			setUsername: state.setUsername,
-			setPassword: state.setPassword,
-			handleResetPassword: state.handleResetPassword,
-			email: state.username,
-			name: state.name,
-			password: state.password,
-			passwordConfirm: state.setPassword,
-		}))
+	const {
+		email,
+		password,
+		passwordConfirm,
+		setUsername,
+		setPassword,
+		step,
+		handleNextStep,
+		handlePrevStep,
+	} = useAuthStore((state) => ({
+		setName: state.setName,
+		setUsername: state.setUsername,
+		setPassword: state.setPassword,
+		handleResetPassword: state.handleResetPassword,
+		email: state.username,
+		name: state.name,
+		password: state.password,
+		passwordConfirm: state.setPassword,
+		setStep: state.setStep,
+		handleNextStep: state.handleNextStep,
+		handlePrevStep: state.handlePrevStep,
+		step: state.step,
+	}))
 	const [code, setCode] = useState("")
 	const [isSubmiting, setSubmitting] = useState(false)
 
@@ -64,11 +62,7 @@ const ForgotPassword = ({ step, setStep, onBackPress }: Props) => {
 
 		setSubmitting(true)
 		setTimeout(() => {
-			setStep((prevState) => ({
-				...prevState,
-				step: prevState.step + 1,
-			}))
-
+			handleNextStep()
 			setSubmitting(false)
 		}, 1000)
 	}
@@ -195,7 +189,7 @@ const ForgotPassword = ({ step, setStep, onBackPress }: Props) => {
 										"authPage.forgotPassword.backToSignIn",
 									)
 				}
-				onPress={step === 3 ? onBackPress : handleSubmit}
+				onPress={step === 3 ? handlePrevStep : handleSubmit}
 			/>
 		</MotiView>
 	)
