@@ -99,7 +99,7 @@ export default function Page(): ReactNode {
 							router.push("/friends-mode/result")
 						}}
 					/> */}
-					<View className="flex flex-row items-center justify-between px-3">
+					<View className="flex flex-row items-center justify-between px-3 ">
 						<Button
 							color="primary"
 							size="sm"
