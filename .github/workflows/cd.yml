@@ -9,27 +9,10 @@ on:
     push:
         branches:
             - staging
-    workflow_dispatch:
-        inputs:
-            os:
-                type: choice
-                description: OS to build on. Ubuntu is faster, MacOS supports iOS builds
-                options:
-                    - ubuntu-latest
-                    - macos-latest
-            platform:
-                type: choice
-                description: Platform to build for
-                options:
-                    - android
-                    - ios
-            should_submit:
-                type: boolean
-                description: Submit the build to the store
 
 jobs:
     continuous-deployment:
-        runs-on: ${{ github.event.inputs.os }}
+        runs-on: macOS-latest
         environment: ${{ github.ref_name}}
 
         steps:
@@ -45,21 +28,35 @@ jobs:
             - name: 🧰 Setup Expo and EAS
               uses: expo/expo-github-action@v7
               with:
-                  expo-version: 50.0.19
-                  eas-version: 9.1.0
+                  token: ${{ secrets.EXPO_TOKEN }}
+                  expo-version: latest
+                  eas-version: latest
 
             - name: 📦 Install dependencies
               run: pnpm install
 
-            - name: 👷 Build app
+            - name: 👷 Build iOS app
               env:
                   AMPLIFY_CONFIG: ${{ secrets.AMPLIFY_CONFIG }}
               run: |
                   eas build --local \
                     --non-interactive \
                     --output=./app-build \
-                    --platform=${{ github.event.inputs.platform }} \
+                    --platform=ios \
                     --profile=${{ github.ref_name}}
+
             - name: 🚢 Submit
-              if: ${{ github.event.inputs.should_submit }}
-              run: eas submit -p ${{ github.event.inputs.platform }} --profile ${{ github.ref_name }} --path app-build
+              run: eas submit -p ios --profile ${{ github.ref_name }} --path app-build
+
+            - name: 👷 Build Android app
+              env:
+                  AMPLIFY_CONFIG: ${{ secrets.AMPLIFY_CONFIG }}
+              run: |
+                  eas build --local \A
+                    --non-interactive \
+                    --output=./app-build \
+                    --platform=android \
+                    --profile=${{ github.ref_name}}
+
+            - name: 🚢 Submit
+              run: eas submit -p android --profile ${{ github.ref_name }} --path app-build
