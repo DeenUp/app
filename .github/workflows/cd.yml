@@ -37,6 +37,9 @@ jobs:
                   expo-version: latest
                   eas-version: latest
 
+            - name: Decode $AMPLIFY_CONFIG from base64 Create Amplify config json at src/configs/amplify/
+              run: echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > src/configs/amplify/amplify-${{github.ref_name}}.json
+
             - name: 👷 Build iOS app
               env:
                   AMPLIFY_CONFIG: ${{ secrets.AMPLIFY_CONFIG }}
@@ -82,6 +85,7 @@ jobs:
               run: |
                   eas build --local \
                     --output=./app-build \
+                    --non-interactive \
                     --platform=android \
                     --profile=${{ github.ref_name}}
 
