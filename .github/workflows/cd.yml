@@ -23,7 +23,12 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: latest
-                  cache: "pnpm"
+
+            - name: Install pnpm
+              run: npm install -g pnpm --unsafe-perm=true
+
+            - name: 📦 Install dependencies
+              run: pnpm install
 
             - name: 🧰 Setup Expo and EAS
               uses: expo/expo-github-action@v7
@@ -31,9 +36,6 @@ jobs:
                   token: ${{ secrets.EXPO_TOKEN }}
                   expo-version: latest
                   eas-version: latest
-
-            - name: 📦 Install dependencies
-              run: pnpm install
 
             - name: 👷 Build iOS app
               env:
