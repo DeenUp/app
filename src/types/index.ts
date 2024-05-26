@@ -19,6 +19,7 @@ import type {
 	UpdateMutationApi,
 	UpdateWithImageMutationApi,
 } from "./apis.type"
+import type { Flavor } from "./flavor.type"
 import type { Player, PossibleAnswer, Question } from "./game.type"
 import type {
 	ApiRequestType,
@@ -50,6 +51,7 @@ export type {
 	CreateWithImageMutationApi,
 	DeleteMutationApi,
 	Fail,
+	Flavor,
 	GetQueryApi,
 	GraphQLService,
 	GraphqlSubscriptionMessage,

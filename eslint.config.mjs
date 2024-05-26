@@ -29,6 +29,7 @@ export default [
 			"ios",
 			"android",
 			"coverage",
+			"scripts",
 		],
 	},
 	{

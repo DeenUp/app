@@ -1,0 +1,65 @@
+name: Continuous Deployment
+
+on:
+    pull_request:
+        types: [closed]
+        branches:
+            - production
+            - dev
+    push:
+        branches:
+            - staging
+    workflow_dispatch:
+        inputs:
+            os:
+                type: choice
+                description: OS to build on. Ubuntu is faster, MacOS supports iOS builds
+                options:
+                    - ubuntu-latest
+                    - macos-latest
+            platform:
+                type: choice
+                description: Platform to build for
+                options:
+                    - android
+                    - ios
+            should_submit:
+                type: boolean
+                description: Submit the build to the store
+
+jobs:
+    continuous-deployment:
+        runs-on: ${{ github.event.inputs.os }}
+        environment: ${{ github.ref_name}}
+
+        steps:
+            - name: 📂 Checkout code
+              uses: actions/checkout@v2
+
+            - name: 🚀 Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: latest
+                  cache: "pnpm"
+
+            - name: 🧰 Setup Expo and EAS
+              uses: expo/expo-github-action@v7
+              with:
+                  expo-version: 50.0.19
+                  eas-version: 9.1.0
+
+            - name: 📦 Install dependencies
+              run: pnpm install
+
+            - name: 👷 Build app
+              env:
+                  AMPLIFY_CONFIG: ${{ secrets.AMPLIFY_CONFIG }}
+              run: |
+                  eas build --local \
+                    --non-interactive \
+                    --output=./app-build \
+                    --platform=${{ github.event.inputs.platform }} \
+                    --profile=${{ github.ref_name}}
+            - name: 🚢 Submit
+              if: ${{ github.event.inputs.should_submit }}
+              run: eas submit -p ${{ github.event.inputs.platform }} --profile ${{ github.ref_name }} --path app-build

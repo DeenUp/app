@@ -1,0 +1,45 @@
+{
+	"build": {
+		"development": {
+			"developmentClient": true,
+			"distribution": "internal",
+			"env": {
+				"FLAVOR": "dev",
+				"EXPO_PROJECT_ID": "a794d76d-0c7d-4902-895a-35bf2d9946ad"
+			},
+			"android": {
+				"buildType": "apk"
+			},
+			"ios": {
+				"simulator": true
+			}
+		},
+		"production": {
+			"distribution": "store",
+			"env": {
+				"FLAVOR": "production",
+				"EXPO_PROJECT_ID": "a794d76d-0c7d-4902-895a-35bf2d9946ad"
+			},
+			"android": {
+				"buildType": "app-bundle"
+			},
+			"ios": {
+				"simulator": true
+			}
+		},
+		"staging": {
+			"distribution": "internal",
+			"env": {
+				"FLAVOR": "staging",
+				"EXPO_PROJECT_ID": "a794d76d-0c7d-4902-895a-35bf2d9946ad"
+			},
+
+			"android": {
+				"buildType": "app-bundle"
+			},
+			"ios": {
+				"simulator": true
+			}
+		}
+	}
+}
