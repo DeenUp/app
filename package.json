@@ -3,7 +3,7 @@
 	"private": true,
 	"main": "expo-router/entry",
 	"version": "0.0.1",
-	"packageManager": "pnpm@9.1.1",
+	"packageManager": "pnpm@9.1.2",
 	"scripts": {
 		"inc-version": "node ./scripts/increment-version && git add version.json",
 		"prepare-env": "cp .env.$FLAVOR .env",
