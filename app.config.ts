@@ -12,8 +12,6 @@ const { EXPO_PROJECT_ID, FLAVOR } = process.env
 
 const projectId: string = EXPO_PROJECT_ID as string
 const flavor: Flavor = FLAVOR as Flavor
-console.log("flavor", flavor)
-console.log("projectId", projectId)
 
 const getOrganizationDomain = (): string => {
 	const organizationDomain = "ca.mohd.deenup"
