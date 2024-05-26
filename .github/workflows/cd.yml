@@ -48,8 +48,34 @@ jobs:
                     --platform=ios \
                     --profile=${{ github.ref_name}}
 
+            - name: Notify Discord
+              uses: sarisia/actions-status-discord@v1
+              if: failure() || success()
+              with:
+                  webhook: ${{ secrets.DISCORD_WEBHOOK_DEPLOYMENT_DEV }}
+                  title: "iOS Build"
+                  description: "iOS build has been completed"
+                  status: ${{ job.status }}
+                  color: ${{ job.status == 'success' && '00FF00' || 'FF0000' }}
+
+            - name: 📱 Upload binary
+              uses: actions/upload-artifact@v2
+              with:
+                  name: app-ios
+                  path: app-build
+
             - name: 🚢 Submit iOS app
-              run: eas submit -p ios --profile ${{ github.ref_name }} --path app-build
+              run: eas submit -p ios --profile  ${{ github.ref_name }} --path app-build --non-interactive
+
+            - name: Notify Discord
+              uses: sarisia/actions-status-discord@v1
+              if: failure() || success()
+              with:
+                  webhook: ${{ secrets.DISCORD_WEBHOOK_DEPLOYMENT_DEV }}
+                  title: "iOS Shipment"
+                  description: "iOS shipment has been completed"
+                  status: ${{ job.status }}
+                  color: ${{ job.status == 'success' && '00FF00' || 'FF0000' }}
 
     build-android:
         runs-on: ubuntu-latest
@@ -77,18 +103,32 @@ jobs:
                   expo-version: latest
                   eas-version: latest
 
-            - name: Create Amplify config
+            - name: 📜 Create Amplify config
               run: echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > src/configs/amplify/amplify-${{github.ref_name}}.json
 
             - name: 👷 Build Android app
-              env:
-                  AMPLIFY_CONFIG: ${{ secrets.AMPLIFY_CONFIG }}
               run: |
                   eas build --local \
                     --output=./app-build \
                     --non-interactive \
                     --platform=android \
                     --profile=${{ github.ref_name}}
+
+            - name: Notify Discord
+              uses: sarisia/actions-status-discord@v1
+              if: failure() || success()
+              with:
+                  webhook: ${{ secrets.DISCORD_WEBHOOK_DEPLOYMENT_DEV }}
+                  title: "Android Build"
+                  description: "Android build has been completed"
+                  status: ${{ job.status }}
+                  color: ${{ job.status == 'success' && '00FF00' || 'FF0000' }}
+
+            - name: 📱 Upload binary
+              uses: actions/upload-artifact@v2
+              with:
+                  name: app-ios
+                  path: app-build
 
             - name: 🚢 Submit Android app
               run: eas submit -p android --profile ${{ github.ref_name }} --path app-build
