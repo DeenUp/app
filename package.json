@@ -12,7 +12,7 @@
 		"start:prod": "FLAVOR=production pnpm run _start",
 		"start:stg": "FLAVOR=staging pnpm run _start",
 		"_build": "node ./scripts/build",
-		"eas-build-pre-install": "node ./scripts/pre-install",
+		"eas-build-pre-install": "./scripts/pre-build.sh",
 		"build:ios:dev": "FLAVOR=dev PLATFORM=ios pnpm run _build",
 		"build:ios:prod": "FLAVOR=production PLATFORM=ios pnpm run _build",
 		"build:ios:stg": "FLAVOR=staging PLATFORM=ios pnpm run _build",
