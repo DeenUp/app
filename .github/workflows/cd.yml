@@ -81,7 +81,6 @@ jobs:
                   AMPLIFY_CONFIG: ${{ secrets.AMPLIFY_CONFIG }}
               run: |
                   eas build --local \
-                    --non-interactive \
                     --output=./app-build \
                     --platform=android \
                     --profile=${{ github.ref_name}}
