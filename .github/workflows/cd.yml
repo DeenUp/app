@@ -11,7 +11,7 @@ on:
             - staging
 
 jobs:
-    continuous-deployment:
+    build-ios:
         runs-on: macOS-latest
         environment: ${{ github.ref_name}}
 
@@ -47,18 +47,44 @@ jobs:
                     --platform=ios \
                     --profile=${{ github.ref_name}}
 
-            - name: 🚢 Submit
+            - name: 🚢 Submit iOS app
               run: eas submit -p ios --profile ${{ github.ref_name }} --path app-build
+
+    build-android:
+        runs-on: ubuntu-latest
+        environment: ${{ github.ref_name}}
+
+        steps:
+            - name: 📂 Checkout code
+              uses: actions/checkout@v2
+
+            - name: 🚀 Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: latest
+
+            - name: Install pnpm
+              run: npm install -g pnpm --unsafe-perm=true
+
+            - name: 📦 Install dependencies
+              run: pnpm install
+
+            - name: 🧰 Setup Expo and EAS
+              uses: expo/expo-github-action@v7
+              with:
+                  token: ${{ secrets.EXPO_TOKEN }}
+                  expo-version: latest
+                  eas-version: latest
 
             - name: 👷 Build Android app
               env:
                   AMPLIFY_CONFIG: ${{ secrets.AMPLIFY_CONFIG }}
               run: |
-                  eas build --local \A
+                  eas build --local \
                     --non-interactive \
                     --output=./app-build \
                     --platform=android \
                     --profile=${{ github.ref_name}}
 
-            - name: 🚢 Submit
+            - name: 🚢 Submit Android app
               run: eas submit -p android --profile ${{ github.ref_name }} --path app-build
