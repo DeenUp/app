@@ -1,4 +1,3 @@
-//@ts-ignore
 import type { ResourcesConfig } from "aws-amplify"
 
 import { flavor } from "../envs.config"
