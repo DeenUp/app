@@ -118,7 +118,7 @@ jobs:
 
             - name: 🔍 Check if .env & Amplify config exists
               run: |
-                  if [ ! -f src/configs/amplify/amplify-${{github.ref_name}}.json ]; then
+                  if [ ! -f amplify.json ]; then
                     echo "Amplify config does not exist"
                     exit 1
                   fi
