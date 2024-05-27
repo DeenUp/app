@@ -17,7 +17,7 @@ jobs:
 
         steps:
             - name: 📂 Checkout code
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
 
             - name: 🚀 Setup Node.js
               uses: actions/setup-node@v4
@@ -31,7 +31,7 @@ jobs:
               run: pnpm install
 
             - name: 🧰 Setup Expo and EAS
-              uses: expo/expo-github-action@v7
+              uses: expo/expo-github-action@v8
               with:
                   token: ${{ secrets.EXPO_TOKEN }}
                   expo-version: latest
@@ -54,12 +54,12 @@ jobs:
               with:
                   webhook: ${{ secrets.DISCORD_WEBHOOK_DEPLOYMENT_DEV }}
                   title: "iOS Build"
-                  description: "iOS build has been completed"
+                  description: ${{ job.status == 'success' && 'iOS build has been completed' || 'iOS build has failed'}}
                   status: ${{ job.status }}
                   color: ${{ job.status == 'success' && '00FF00' || 'FF0000' }}
 
-            - name: 📱 Upload binary
-              uses: actions/upload-artifact@v2
+            - name: 📱 Upload artifact
+              uses: actions/upload-artifact@v4
               with:
                   name: app-ios
                   path: app-build
@@ -83,7 +83,7 @@ jobs:
 
         steps:
             - name: 📂 Checkout code
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
 
             - name: 🚀 Setup Node.js
               uses: actions/setup-node@v4
@@ -97,7 +97,7 @@ jobs:
               run: pnpm install
 
             - name: 🧰 Setup Expo and EAS
-              uses: expo/expo-github-action@v7
+              uses: expo/expo-github-action@v8
               with:
                   token: ${{ secrets.EXPO_TOKEN }}
                   expo-version: latest
@@ -120,15 +120,27 @@ jobs:
               with:
                   webhook: ${{ secrets.DISCORD_WEBHOOK_DEPLOYMENT_DEV }}
                   title: "Android Build"
-                  description: "Android build has been completed"
+                  description: ${{ job.status == 'success' && 'Android build has been completed' || 'Android build has failed'}}
                   status: ${{ job.status }}
                   color: ${{ job.status == 'success' && '00FF00' || 'FF0000' }}
 
-            - name: 📱 Upload binary
-              uses: actions/upload-artifact@v2
+            - name: 📱 Upload artifact
+              uses: actions/upload-artifact@v4
               with:
-                  name: app-ios
+                  name: app-android
                   path: app-build
+                  retention-days: 1
+                  overwrite: true
 
             - name: 🚢 Submit Android app
               run: eas submit -p android --profile ${{ github.ref_name }} --path app-build
+
+            - name: Notify Discord
+              uses: sarisia/actions-status-discord@v1
+              if: failure() || success()
+              with:
+                  webhook: ${{ secrets.DISCORD_WEBHOOK_DEPLOYMENT_DEV }}
+                  title: "Android Shipment"
+                  description: "Android shipment has been completed"
+                  status: ${{ job.status }}
+                  color: ${{ job.status == 'success' && '00FF00' || 'FF0000' }}
