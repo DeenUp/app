@@ -43,6 +43,7 @@ expo-env.d.ts
 amplify-dev.json
 amplify-production.json
 amplify-staging.json
+amplify.json
 
 # debug
 npm-debug.log*
