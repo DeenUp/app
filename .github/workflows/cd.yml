@@ -30,13 +30,22 @@ jobs:
             - name: 📦 Install dependencies
               run: pnpm install
 
-            - name: Create Amplify config
-              run: echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > src/configs/amplify/amplify-${{github.ref_name}}.json
+            - name: Generate .env.${{ github.ref_name }} file adding FLAVOR and EXPO_PROJECT_ID
+              run: |
+                  touch .env
+                  echo "FLAVOR=${{ github.ref_name }}" > .env
+                  echo "EXPO_PROJECT_ID=${{ secrets.EXPO_PROJECT_ID }}" >> .env
 
-            - name: Check if Amplify config exists
-              run: ls src/configs/amplify/amplify-${{github.ref_name}}.json
-              if: failure()
-              continue-on-error: false
+            - name: 📜 Create Amplify config
+              run: |
+                  echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > src/configs/amplify/amplify-${{github.ref_name}}.json
+
+            - name: 🔍 Check if Amplify config exists
+              run: |
+                  if [ ! -f src/configs/amplify/amplify-${{github.ref_name}}.json ]; then
+                    echo "Amplify config does not exist"
+                    exit 1
+                  fi
 
             - name: 🧰 Setup Expo and EAS
               uses: expo/expo-github-action@v8
@@ -44,14 +53,6 @@ jobs:
                   token: ${{ secrets.EXPO_TOKEN }}
                   expo-version: latest
                   eas-version: latest
-
-            - name: Create Amplify config
-              run: echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > src/configs/amplify/amplify-${{github.ref_name}}.json
-
-            - name: Check if Amplify config exists
-              run: ls src/configs/amplify/amplify-${{github.ref_name}}.json
-              if: failure()
-              continue-on-error: false
 
             - name: 👷 Build iOS app
               run: |
@@ -109,6 +110,21 @@ jobs:
 
             - name: 📦 Install dependencies
               run: pnpm install
+
+            - name: PNPM Prepare .env file
+              run: |
+                  FLAVOR=${{ github.ref_name }} pnpm prepare-env
+
+            - name: 📜 Create Amplify config
+              run: |
+                  echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > src/configs/amplify/amplify-${{github.ref_name}}.json
+
+            - name: 🔍 Check if Amplify config exists
+              run: |
+                  if [ ! -f src/configs/amplify/amplify-${{github.ref_name}}.json ]; then
+                    echo "Amplify config does not exist"
+                    exit 1
+                  fi
 
             - name: 🧰 Setup Expo and EAS
               uses: expo/expo-github-action@v8
