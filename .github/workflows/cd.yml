@@ -163,7 +163,7 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                   name: app-android
-                  path: app-build
+                  path: build
                   retention-days: 1
                   overwrite: true
 
@@ -180,7 +180,7 @@ jobs:
                   color: ${{ job.status == 'success' && '00FF00' || 'FF0000' }}
 
             - name: 🚢 Submit Android app
-              run: eas submit -p android --profile ${{ github.ref_name }} --path app-build
+              run: eas submit -p android --profile ${{ github.ref_name }} --path app-build --non-interactive
 
             - name: Notify Discord
               uses: sarisia/actions-status-discord@v1
