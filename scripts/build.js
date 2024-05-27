@@ -21,7 +21,7 @@ const run = async () => {
 	const releaseChannel = `v${version.slice(0, version.indexOf("."))}`
 	const platform = PLATFORM ?? "android"
 	const distribution = DISTRIBUTION ?? "internal"
-	const profile = `${FLAVOR}-${releaseChannel}-${distribution}`
+	const profile = `${FLAVOR}`
 
 	console.log("profile:", profile)
 
