@@ -129,6 +129,9 @@ jobs:
                     echo ".env file does not exist"
                     exit 1
                   fi
+
+            - name: print env and amplify config
+              run: |
                   cat .env
                   cat src/configs/amplify/amplify-${{github.ref_name}}.json
 
