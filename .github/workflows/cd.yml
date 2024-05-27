@@ -38,11 +38,11 @@ jobs:
 
             - name: 📜 Create Amplify config
               run: |
-                  echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > src/configs/amplify/amplify-${{github.ref_name}}.json
+                  echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > amplify.json
 
             - name: 🔍 Check if .env & Amplify config exists
               run: |
-                  if [ ! -f src/configs/amplify/amplify-${{github.ref_name}}.json ]; then
+                  if [ ! -f  amplify.json ]; then
                     echo "Amplify config does not exist"
                     exit 1
                   fi
@@ -54,7 +54,7 @@ jobs:
             - name: print env and amplify config
               run: |
                   cat .env
-                  cat src/configs/amplify/amplify-${{github.ref_name}}.json
+                  cat amplify.json
 
             - name: 🧰 Setup Expo and EAS
               uses: expo/expo-github-action@v8
