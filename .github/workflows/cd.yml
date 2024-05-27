@@ -30,6 +30,14 @@ jobs:
             - name: 📦 Install dependencies
               run: pnpm install
 
+            - name: Create Amplify config
+              run: echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > src/configs/amplify/amplify-${{github.ref_name}}.json
+
+            - name: Check if Amplify config exists
+              run: ls src/configs/amplify/amplify-${{github.ref_name}}.json
+              if: failure()
+              continue-on-error: false
+
             - name: 🧰 Setup Expo and EAS
               uses: expo/expo-github-action@v8
               with:
