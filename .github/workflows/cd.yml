@@ -65,7 +65,8 @@ jobs:
                   path: app-build
 
             - name: 🚢 Submit iOS app
-              run: eas submit -p ios --profile  ${{ github.ref_name }} --path app-build --non-interactive
+              run: |
+                  eas submit -p ios --profile  ${{ github.ref_name }} --path app-build --non-interactive
 
             - name: Notify Discord
               uses: sarisia/actions-status-discord@v1
@@ -104,7 +105,8 @@ jobs:
                   eas-version: latest
 
             - name: 📜 Create Amplify config
-              run: echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > src/configs/amplify/amplify-${{github.ref_name}}.json
+              run: |
+                  echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > src/configs/amplify/amplify-${{github.ref_name}}.json
 
             - name: 👷 Build Android app
               run: |
