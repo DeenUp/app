@@ -57,6 +57,7 @@ jobs:
                   token: ${{ secrets.EXPO_TOKEN }}
                   expo-version: latest
                   eas-version: latest
+                  expo-cache: true
 
             - name: 👷 Build iOS app
               run: |
@@ -105,9 +106,15 @@ jobs:
             - name: 📦 Install dependencies
               run: pnpm install
 
-            - name: 📜 Create Amplify config
+            - name: 🖊️📜 Generate .env
               run: |
-                  echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > src/configs/amplify/amplify-${{github.ref_name}}.json
+                  touch .env
+                  echo "FLAVOR=${{ github.ref_name }}" > .env
+                  echo "EXPO_PROJECT_ID=${{ secrets.EXPO_PROJECT_ID }}" >> .env
+
+            - name: 🖊️📜 Generate Amplify config
+              run: |
+                  echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > amplify.json
 
             - name: 🔍 Check if .env & Amplify config exists
               run: |
@@ -126,10 +133,7 @@ jobs:
                   token: ${{ secrets.EXPO_TOKEN }}
                   expo-version: latest
                   eas-version: latest
-
-            - name: 📜 Create Amplify config
-              run: |
-                  echo ${{secrets.AMPLIFY_CONFIG}} | base64 --decode > src/configs/amplify/amplify-${{github.ref_name}}.json
+                  expo-cache: true
 
             - name: 👷 Build Android app
               run: |
