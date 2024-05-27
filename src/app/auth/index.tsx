@@ -27,17 +27,19 @@ export default function Auth() {
 	}
 
 	return (
-		<KeyboardAvoidingView
-			style={twr`flex-1 bg-[#6D28D9]`}
-			behavior={Platform.OS === "ios" ? "padding" : "height"}
-		>
-			<StatusBar style="light" />
-			<View className={styles.header}>
-				{!isSignUp && !isForgotPassword && (
-					<Text className={styles.logo}>DeenUp</Text>
-				)}
-			</View>
-			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+			<KeyboardAvoidingView
+				style={twr`flex-1 bg-[#6D28D9]`}
+				behavior={Platform.OS === "ios" ? "padding" : "padding"}
+			>
+				<StatusBar style="light" />
+
+				<View className={styles.header}>
+					{!isSignUp && !isForgotPassword && (
+						<Text className={styles.logo}>DeenUp</Text>
+					)}
+				</View>
+
 				<MotiView
 					delay={200}
 					from={{ height: "0%" }}
@@ -69,7 +71,7 @@ export default function Auth() {
 						{!isSignUp && !isForgotPassword && <SignIn />}
 					</AnimatePresence>
 				</MotiView>
-			</TouchableWithoutFeedback>
-		</KeyboardAvoidingView>
+			</KeyboardAvoidingView>
+		</TouchableWithoutFeedback>
 	)
 }
