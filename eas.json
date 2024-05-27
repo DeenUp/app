@@ -41,5 +41,13 @@
 				"simulator": true
 			}
 		}
+	},
+	"submit": {
+		"dev": {
+			"android": {
+				"track": "internal",
+				"withoutCredentials": true
+			}
+		}
 	}
 }

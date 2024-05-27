@@ -8,6 +8,9 @@ import type { Flavor } from "~/types"
 
 import { version, versionCode } from "./version.json"
 
+/* eslint-disable import/first */
+require("dotenv").config()
+
 const { EXPO_PROJECT_ID, FLAVOR } = process.env
 
 const projectId: string = EXPO_PROJECT_ID as string
