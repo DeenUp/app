@@ -12,7 +12,6 @@
 		},
 		"production": {
 			"distribution": "store",
-
 			"android": {
 				"buildType": "app-bundle"
 			},
@@ -22,7 +21,6 @@
 		},
 		"staging": {
 			"distribution": "internal",
-
 			"android": {
 				"buildType": "app-bundle"
 			},
