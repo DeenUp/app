@@ -4,7 +4,7 @@ import type { ResourcesConfig } from "aws-amplify"
 import * as AmplifyConfig from "../../../amplify.json"
 
 const getAmplifyConfig = (): ResourcesConfig => {
-	const config = AmplifyConfig
+	const config = AmplifyConfig as ResourcesConfig
 
 	if (!config) {
 		throw new Error(`Amplify config not found`)
