@@ -63,6 +63,8 @@ const getPlugins = (): (string | [] | [string] | [string, unknown] | any)[] => {
 	const plugins = [
 		"expo-router",
 		"expo-splash-screen",
+		"expo-font",
+		"expo-localization",
 		[
 			"expo-build-properties",
 			{
@@ -134,6 +136,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 		softwareKeyboardLayoutMode: "pan",
 		splash: {
 			backgroundColor: "#472836",
+			image: `./src/assets/app-icon/${flavor}/adaptive-foreground.png`,
+			resizeMode: "contain",
 		},
 		versionCode,
 	},

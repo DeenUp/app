@@ -67,8 +67,8 @@ coverage
 artifacts
 
 # build
-./ios
-./android
+ios/
+android/
 
 # ide
 .idea
