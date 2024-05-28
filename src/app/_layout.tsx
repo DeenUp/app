@@ -90,7 +90,7 @@ const RootLayout = () => {
 					options={{
 						presentation:
 							pathname === "/auth/verification"
-								? "transparentModal"
+								? "modal"
 								: "modal",
 						headerShadowVisible: false,
 						headerBlurEffect: "light",
@@ -102,6 +102,18 @@ const RootLayout = () => {
 						},
 						headerShown: true,
 						headerTitle: "",
+						//make headerleft invisible
+
+						headerLeft: () => (
+							<TouchableOpacity
+								className={"size-1"}
+								onPress={() => {
+									clear()
+									router.back()
+								}}
+							/>
+						),
+
 						headerRight: () => (
 							<TouchableOpacity
 								className={"size-10"}

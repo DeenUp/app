@@ -25,7 +25,7 @@ export default function Page(): ReactNode {
 		joinGameButton: tw`w-1/2 rounded-3xl rounded-r-none`,
 		createGameButton: tw`w-1/2 rounded-3xl rounded-l-none border-base-300`,
 		motiLogo: twr`flex flex-col items-center justify-center text-center text-8xl font-bold`,
-		motiContainer: twr`-mb-12 flex h-72 w-full justify-start gap-2 gap-4 rounded-3xl bg-gray-300 p-6`,
+		motiContainer: twr`-mb-12 flex h-72 w-full justify-start gap-2 gap-4 rounded-3xl bg-gray-300 p-6 shadow-xl`,
 	}
 
 	return (
@@ -54,7 +54,7 @@ export default function Page(): ReactNode {
 					animate={{ opacity: 1, translateY: 0 }}
 					style={styles.motiContainer}
 					transition={{
-						type: "timing",
+						type: "spring",
 						delay: 200,
 					}}
 				>
