@@ -25,7 +25,7 @@ export default function Page(): ReactNode {
 		joinGameButton: tw`w-1/2 rounded-3xl rounded-r-none`,
 		createGameButton: tw`w-1/2 rounded-3xl rounded-l-none border-base-300`,
 		motiLogo: twr`flex flex-col items-center justify-center text-center text-8xl font-bold`,
-		motiContainer: twr`-mb-12 flex h-72 w-full justify-start gap-2 gap-4 rounded-3xl bg-gray-300 p-6 shadow-xl`,
+		motiContainer: twr`-mb-8 flex h-72 w-full justify-start gap-4 rounded-3xl bg-gray-300 p-6 shadow-xl`,
 	}
 
 	return (
@@ -99,7 +99,7 @@ export default function Page(): ReactNode {
 							router.push("/friends-mode/result")
 						}}
 					/> */}
-					<View className="flex flex-row items-center justify-between px-3 ">
+					<View className=" flex flex-row items-center justify-between px-3 ">
 						<Button
 							color="primary"
 							size="sm"

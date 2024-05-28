@@ -12,7 +12,7 @@ import type { GameStore, SettingsStore } from "~/stores"
 
 import QuestionHeader from "~/components/gameplay/QuestionHeader"
 import QuestionOption from "~/components/gameplay/QuestionOption"
-import { Button } from "~/components/ui"
+import { Button, Spacer } from "~/components/ui"
 import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
 
@@ -74,7 +74,7 @@ export default function Page(): ReactNode {
 			>
 				<AntIcons name="closecircle" color={"white"} size={32} />
 			</TouchableOpacity>
-
+			<Spacer />
 			<QuestionHeader
 				index={currentQuestionIndex + 1}
 				length={questions.length}
@@ -82,6 +82,7 @@ export default function Page(): ReactNode {
 				seconds={seconds}
 				timed={true}
 			/>
+			<Spacer />
 			<View className={styles.body}>
 				<Text className={styles.question}>
 					{questions[currentQuestionIndex]?.question}
@@ -108,6 +109,7 @@ export default function Page(): ReactNode {
 					)}
 				</View>
 			</View>
+			<Spacer />
 			<View className={styles.buttonsContainer}>
 				<Button
 					color="outline"
@@ -144,6 +146,7 @@ export default function Page(): ReactNode {
 					buttonStyle={styles.buttons}
 				/>
 			</View>
+			<Spacer />
 		</SafeAreaView>
 	)
 }
