@@ -47,10 +47,10 @@ export default function Page(): ReactNode {
 
 	const styles = {
 		screen: twr`flex-1 flex-col items-center justify-center bg-[#472836] px-6 pt-12`,
-		card: twr`flex w-full flex-grow flex-col items-stretch justify-around rounded-md bg-[#F9F2DF]  p-8 shadow-md`,
+		card: twr`flex w-96 flex-grow flex-col items-stretch justify-around rounded-md bg-[#F9F2DF]  p-8 shadow-md`,
 		question: tw`w-full text-left text-2xl font-bold`,
 		options: tw`gap-6`,
-		closeButton: tw`w-full flex-col items-end justify-end justify-between`,
+		closeButton: tw`w-full flex-col items-end justify-end justify-between p-6`,
 	}
 
 	const [selectedIndex, setSelectedIndex] = useState<number | undefined>(-1)
@@ -86,7 +86,7 @@ export default function Page(): ReactNode {
 					length={questions.length}
 					minutes={minutes}
 					seconds={seconds}
-					timed={true}
+					timed={false}
 				/>
 			</View>
 
