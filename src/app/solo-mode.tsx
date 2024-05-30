@@ -135,11 +135,7 @@ export default function Page(): ReactNode {
 											questions[currentQuestionIndex]
 												?.correctAnswer
 										}
-										onPress={() => {
-											Haptics.impactAsync(
-												Haptics.ImpactFeedbackStyle
-													.Medium,
-											)
+										onPress={async () => {
 											questions[index]!.userAnswer =
 												option
 											selectAnswer({ answer: option })
