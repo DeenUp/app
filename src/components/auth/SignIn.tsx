@@ -1,11 +1,19 @@
 import React, { useState } from "react"
-import { Alert, Text, TouchableOpacity, View } from "react-native"
+import { Alert, Image, Text, TouchableOpacity, View } from "react-native"
 
+import * as Haptics from "expo-haptics"
 import { router } from "expo-router"
 
 import { MotiView } from "moti"
+import twr from "twrnc"
 
-import { Button, EmailInputField, PasswordInputField } from "~/components/ui"
+import googleLogo from "~/assets/images/google-logo.png"
+import {
+	Button,
+	EmailInputField,
+	PasswordInputField,
+	ThemedAwesomeButton,
+} from "~/components/ui"
 import { tw } from "~/helpers"
 import { useAuthStore, useSettingsStore } from "~/stores"
 
@@ -34,7 +42,6 @@ const SignIn = () => {
 		setIsSignUp: state.setIsSignUp,
 		setIsForgotPassword: state.setIsForgotPassword,
 	}))
-	const { loading } = useAuthStore()
 
 	const [errors, setErrors] = useState({
 		email: "",
@@ -42,7 +49,7 @@ const SignIn = () => {
 	})
 
 	const styles = {
-		footer: tw`flex h-8 w-full flex-row items-center justify-center gap-1`,
+		footer: tw` flex h-8 flex-row items-center justify-center gap-1`,
 		signUpText: tw`font-bold text-primary`,
 	}
 
@@ -56,6 +63,8 @@ const SignIn = () => {
 		setErrors(newErrors)
 
 		if (Object.values(newErrors).some((error) => error !== "")) {
+			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
+
 			return
 		}
 		await handleSignIn({
@@ -72,6 +81,9 @@ const SignIn = () => {
 						},
 					},
 				])
+				Haptics.notificationAsync(
+					Haptics.NotificationFeedbackType.Success,
+				)
 			},
 		})
 	}
@@ -103,7 +115,12 @@ const SignIn = () => {
 			from={{ opacity: 0 }}
 			delay={500}
 			exitTransition={{ delay: 0 }}
-			style={{ width: "100%", gap: 10 }}
+			style={twr`flex flex-col items-center justify-center gap-4`}
+			onDidAnimate={() => {
+				Haptics.notificationAsync(
+					Haptics.NotificationFeedbackType.Success,
+				)
+			}}
 		>
 			<View className="gap-8">
 				<EmailInputField
@@ -128,14 +145,42 @@ const SignIn = () => {
 				label={translate("authPage.signIn.forgotPassword")}
 				onPress={() => setIsForgotPassword(true)}
 			/>
-			<Button
-				buttonStyle="w-full"
-				color="primary"
-				size="xl"
-				label={"Sign In"}
-				onPress={handleSubmit}
-				isLoading={loading}
-			/>
+			<ThemedAwesomeButton
+				width={350}
+				height={70}
+				textSize={20}
+				type="anchor"
+				onPress={async (next) => {
+					await handleSubmit().then(() => {
+						//@ts-ignore
+						next()
+					})
+				}}
+				progress
+			>
+				Sign In
+			</ThemedAwesomeButton>
+			{/* Seperator with text in between */}
+			<View className="flex flex-row items-center gap-4">
+				<View className="h-1 flex-1 bg-gray-300" />
+				<Text className="text-gray-500">or</Text>
+				<View className="h-1 flex-1 bg-gray-300" />
+			</View>
+
+			<View className="flex flex-row items-center gap-4">
+				<ThemedAwesomeButton
+					width={350}
+					textSize={16}
+					type="anchor"
+					onPress={() => {}}
+					before={
+						<Image source={googleLogo} style={twr`mr-4 h-6 w-6`} />
+					}
+					paddingHorizontal={40}
+				>
+					Continue with Google
+				</ThemedAwesomeButton>
+			</View>
 			<View className={styles.footer}>
 				<Text>{translate("authPage.signIn.noAccount")}</Text>
 				<TouchableOpacity onPress={() => setIsSignUp(true)}>

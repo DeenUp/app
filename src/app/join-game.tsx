@@ -8,10 +8,12 @@ import * as Clipboard from "expo-clipboard"
 import { router } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
+import { FontAwesome6 } from "@expo/vector-icons"
+
 import type { GameStore } from "~/stores"
 
 import { CodeInput } from "~/components/auth"
-import { Button, ParticipantsList } from "~/components/ui"
+import { Button, ParticipantsList, ThemedAwesomeButton } from "~/components/ui"
 import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
 
@@ -132,15 +134,15 @@ export default function CreateGame() {
 
 	const styles = {
 		container: tw`flex justify-center bg-primary`,
-		headerContainer: tw`absolute left-10 top-4 flex w-2/3 flex-row gap-6`,
-		headerText: tw`text-3xl font-bold text-white`,
+		headerContainer: tw`mt-32 w-full flex-col items-start justify-start gap-6 p-4`,
+		headerText: tw`text-4xl font-bold text-base-100`,
 		subheaderText: tw`text-base-200`,
-		codeContainer: tw`mt-72 flex h-full items-center justify-start gap-8  rounded-lg rounded-t-3xl bg-white pt-20`,
+		codeContainer: tw`h-full items-center justify-start gap-8 rounded-t-[50] bg-base-100 px-10 pt-12`,
 		codeText: tw`text-xl font-bold`,
 		buttonContainer: tw`flex w-full flex-col items-center justify-center gap-6`,
 		backButton: tw`flex h-16 items-center justify-center rounded-full p-4`,
 		shareButton: tw`flex items-center justify-center rounded-full border border-primary bg-base-100 p-4`,
-		codeInputContainer: tw`flex flex-row items-center justify-center gap-2`,
+		codeInputContainer: tw`flex flex-row items-center justify-center gap-2 pl-12`,
 		codeDigitBox: tw`m-1 rounded-md bg-gray-200 p-4`,
 		joinGameButton: tw`w-2/3`,
 	}
@@ -148,7 +150,7 @@ export default function CreateGame() {
 	return (
 		<SafeAreaView
 			style={{
-				backgroundColor: "#6D28D9",
+				backgroundColor: "#472836",
 			}}
 		>
 			<StatusBar style="light" />
@@ -163,12 +165,9 @@ export default function CreateGame() {
 						onPress={() => router.dismissAll()}
 						size="sm"
 					/>
-					<View>
+					<View className="flex w-full items-center justify-center">
 						<Text className={styles.headerText}>
 							{translate("joinGamePage.joinGameHeader")}
-						</Text>
-						<Text className={styles.subheaderText}>
-							{translate("joinGamePage.joinGameSubheader")}
 						</Text>
 					</View>
 				</View>
@@ -178,8 +177,21 @@ export default function CreateGame() {
 							code={states.inputCode}
 							handleCodeChange={handleCodeChange}
 							inputRefs={inputRefs}
-							inputClass="w-11 h-16"
+							inputClass="w-[40] h-16 border-2 border-primary"
 						/>
+						<ThemedAwesomeButton
+							theme="c137"
+							type="anchor"
+							width={55}
+							borderRadius={10}
+							onPress={handlePasteFromClipboard}
+						>
+							<FontAwesome6
+								name="paste"
+								size={24}
+								color="#472836"
+							/>
+						</ThemedAwesomeButton>
 					</View>
 					{participants.length ? (
 						<ParticipantsList />

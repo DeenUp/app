@@ -16,9 +16,8 @@ import "../../global.css"
 
 import { TouchableOpacity } from "react-native"
 
-import { MaterialCommunityIcons } from "@expo/vector-icons"
-
 import { SpaceMonoRegular } from "~/assets"
+import { CloseButton } from "~/components/ui"
 import { getAmplifyConfig } from "~/configs"
 import { AmplifyProvider } from "~/providers"
 import { useAuthStore } from "~/stores"
@@ -77,14 +76,10 @@ const RootLayout = () => {
 				<Stack.Screen
 					name="index"
 					options={{
-						headerShown: true,
-						headerShadowVisible: false,
-						headerTitle: "",
-						headerStyle: {
-							backgroundColor: "#F2F3F3",
-						},
+						headerShown: false,
 					}}
 				/>
+
 				<Stack.Screen
 					name="auth"
 					options={{
@@ -98,11 +93,10 @@ const RootLayout = () => {
 							backgroundColor:
 								pathname === "/auth/verification"
 									? "#F9FAFB"
-									: "#6D28D9",
+									: "#472836",
 						},
 						headerShown: true,
 						headerTitle: "",
-						//make headerleft invisible
 
 						headerLeft: () => (
 							<TouchableOpacity
@@ -115,23 +109,12 @@ const RootLayout = () => {
 						),
 
 						headerRight: () => (
-							<TouchableOpacity
-								className={"size-10"}
+							<CloseButton
 								onPress={() => {
 									clear()
 									router.back()
 								}}
-							>
-								<MaterialCommunityIcons
-									name="close"
-									color={
-										pathname === "/auth/verification"
-											? "black"
-											: "white"
-									}
-									size={24}
-								/>
-							</TouchableOpacity>
+							/>
 						),
 					}}
 				/>
@@ -183,6 +166,28 @@ const RootLayout = () => {
 									size={24}
 								/>
 							</TouchableOpacity>
+						),
+					}}
+				/>
+				<Stack.Screen
+					name="solo-mode"
+					options={{
+						presentation: "fullScreenModal",
+						headerShown: false,
+						headerTitle: "",
+						headerStyle: {
+							backgroundColor: "#472836",
+						},
+						headerShadowVisible: false,
+
+						headerLeft: () => (
+							<TouchableOpacity
+								className={"size-1"}
+								onPress={() => {
+									clear()
+									router.back()
+								}}
+							/>
 						),
 					}}
 				/>

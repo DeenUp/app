@@ -19,7 +19,7 @@ export default {
 		header: "Create Game",
 		subheader:
 			"Copy and share the lobby code with your friends so they can join you",
-		button: "Start Game",
+		button: "START",
 	},
 	authPage: {
 		emailInput: "Email Address",

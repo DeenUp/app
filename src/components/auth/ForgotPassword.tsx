@@ -1,11 +1,18 @@
 import { useState } from "react"
 
+import * as Haptics from "expo-haptics"
+
 import LottieView from "lottie-react-native"
 import { AnimatePresence, MotiView } from "moti"
+import twr from "twrnc"
 
 import { lottieBlueCheck } from "~/assets"
 import Verify from "~/components/auth/Verify"
-import { Button, EmailInputField, PasswordInputField } from "~/components/ui"
+import {
+	EmailInputField,
+	PasswordInputField,
+	ThemedAwesomeButton,
+} from "~/components/ui"
 import { useAuthStore, useSettingsStore } from "~/stores"
 
 const ForgotPassword = () => {
@@ -34,7 +41,7 @@ const ForgotPassword = () => {
 		step: state.step,
 	}))
 	const [code, setCode] = useState("")
-	const [isSubmiting, setSubmitting] = useState(false)
+	const [_isSubmiting, setSubmitting] = useState(false)
 
 	const [errors, setErrors] = useState({
 		email: "",
@@ -92,12 +99,11 @@ const ForgotPassword = () => {
 			from={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			delay={700}
-			style={{
-				gap: 150,
-				width: "100%",
-				flex: 1,
-				justifyContent: "space-between",
-				paddingBottom: 10,
+			style={twr`flex-1 items-center justify-between gap-10 py-8`}
+			onDidAnimate={() => {
+				Haptics.notificationAsync(
+					Haptics.NotificationFeedbackType.Success,
+				)
 			}}
 		>
 			<AnimatePresence>
@@ -170,27 +176,31 @@ const ForgotPassword = () => {
 					</MotiView>
 				)}
 			</AnimatePresence>
+			<ThemedAwesomeButton
+				progress
+				type="anchor"
+				size="large"
+				width={300}
+				onPress={async (next) => {
+					if (step === 3) {
+						handlePrevStep()
+						//@ts-ignore
+						next()
+					}
 
-			<Button
-				buttonStyle="w-full"
-				color="primary"
-				size="xl"
-				isLoading={isSubmiting}
-				label={
-					step === 0
-						? translate("authPage.forgotPassword.requestReset")
-						: step === 1
-							? translate("authPage.verify.submitButton")
-							: step === 2
-								? translate(
-										"authPage.forgotPassword.submitButton",
-									)
-								: translate(
-										"authPage.forgotPassword.backToSignIn",
-									)
-				}
-				onPress={step === 3 ? handlePrevStep : handleSubmit}
-			/>
+					handleSubmit()
+					//@ts-ignore
+					next()
+				}}
+			>
+				{step === 0
+					? translate("authPage.forgotPassword.requestReset")
+					: step === 1
+						? translate("authPage.verify.submitButton")
+						: step === 2
+							? translate("authPage.forgotPassword.submitButton")
+							: translate("authPage.forgotPassword.backToSignIn")}
+			</ThemedAwesomeButton>
 		</MotiView>
 	)
 }

@@ -1,15 +1,20 @@
 import { useState } from "react"
 
+import * as Haptics from "expo-haptics"
+
 import LottieView from "lottie-react-native"
-import { AnimatePresence, MotiView } from "moti"
+import { AnimatePresence, MotiImage, MotiView } from "moti"
+import twr from "twrnc"
 
 import { lottieBlueCheck } from "~/assets"
+import SignUpEmailImage from "~/assets/images/auth/signup-email.png"
+import SignUpNameImage from "~/assets/images/auth/signup-name.png"
 import Verify from "~/components/auth/Verify"
 import {
-	Button,
 	EmailInputField,
 	NameInputField,
 	PasswordInputField,
+	ThemedAwesomeButton,
 } from "~/components/ui"
 import { useAuthStore, useSettingsStore } from "~/stores"
 
@@ -25,7 +30,7 @@ const SignUp = () => {
 		email,
 		password,
 		confirmationCode,
-		loading,
+
 		setName,
 		setUsername,
 		setPassword,
@@ -72,8 +77,11 @@ const SignUp = () => {
 		setErrors(newErrors)
 
 		if (Object.values(newErrors).some((error) => error !== "")) {
+			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
+
 			return
 		}
+
 		if (step === 2) {
 			console.debug("signingup")
 			await handleSignUp({
@@ -112,6 +120,7 @@ const SignUp = () => {
 		}
 
 		handleNextStep()
+		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 	}
 
 	const handleInputChange = (field: string, value: string) => {
@@ -137,12 +146,11 @@ const SignUp = () => {
 			from={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			delay={700}
-			style={{
-				gap: 150,
-				width: "100%",
-				flex: 1,
-				justifyContent: "space-between",
-				paddingBottom: 10,
+			style={twr`flex-1 items-center justify-between gap-10 py-8`}
+			onDidAnimate={() => {
+				Haptics.notificationAsync(
+					Haptics.NotificationFeedbackType.Success,
+				)
 			}}
 		>
 			<AnimatePresence>
@@ -151,6 +159,7 @@ const SignUp = () => {
 						key="nameField"
 						from={{ opacity: 0, translateY: -20 }}
 						animate={{ opacity: 1, translateY: 0 }}
+						style={twr`flex-1 items-center justify-between gap-10`}
 					>
 						<NameInputField
 							error={errors.name}
@@ -159,6 +168,10 @@ const SignUp = () => {
 								handleInputChange("name", value)
 							}
 						/>
+						<MotiImage
+							source={SignUpNameImage}
+							style={twr`h-64 w-64`}
+						/>
 					</MotiView>
 				)}
 				{step === 1 && (
@@ -166,6 +179,7 @@ const SignUp = () => {
 						key="emailField"
 						from={{ opacity: 0, translateY: -20 }}
 						animate={{ opacity: 1, translateY: 0 }}
+						style={twr`flex-1 items-center justify-between gap-10`}
 					>
 						<EmailInputField
 							error={errors.email}
@@ -173,6 +187,10 @@ const SignUp = () => {
 							onChangeText={(value) =>
 								handleInputChange("email", value)
 							}
+						/>
+						<MotiImage
+							source={SignUpEmailImage}
+							style={twr`h-64 w-64`}
 						/>
 					</MotiView>
 				)}
@@ -222,30 +240,40 @@ const SignUp = () => {
 				)}
 			</AnimatePresence>
 
-			<Button
-				isLoading={loading}
-				buttonStyle="w-full"
-				color="primary"
-				size="xl"
-				label={
-					step < 2
-						? translate("authPage.signUp.continueButton")
-						: step === 2
-							? translate("authPage.signUp.submitButton")
-							: step === 3
-								? translate("authPage.signUp.verifyButton")
-								: translate("authPage.signUp.backToSignIn")
-				}
-				onPress={
-					step === 2
-						? handleSubmit
+			<ThemedAwesomeButton
+				progress
+				type="anchor"
+				size="large"
+				width={370}
+				textSize={20}
+				onPress={async (next) => {
+					if (step === 2) {
+						await handleSubmit()
+						//@ts-ignore
+						next()
+					}
+					if (step === 3) {
+						await handleVerifySubmit()
+						//@ts-ignore
+						next()
+					}
+
+					if (step === 4) {
+						setIsSignUp(false)
+					}
+					handleContinue()
+					//@ts-ignore
+					next()
+				}}
+			>
+				{step < 2
+					? translate("authPage.signUp.continueButton")
+					: step === 2
+						? translate("authPage.signUp.submitButton")
 						: step === 3
-							? handleVerifySubmit
-							: step === 4
-								? () => setIsSignUp(false)
-								: handleContinue
-				}
-			/>
+							? translate("authPage.signUp.verifyButton")
+							: translate("authPage.signUp.backToSignIn")}
+			</ThemedAwesomeButton>
 		</MotiView>
 	)
 }

@@ -1,19 +1,23 @@
-import { Text, View } from "react-native"
-import { Avatar } from "react-native-paper"
+import { useEffect, useState } from "react"
+import { Text } from "react-native"
+import { useAnimatedStyle, withSpring } from "react-native-reanimated"
 
 import { MotiView } from "moti"
 import twr from "twrnc"
 
-import type { GameStore, SettingsStore, UserStore } from "~/stores"
+import type { GameStore, UserStore } from "~/stores"
 
 import { questions } from "~/assets"
 import { tw } from "~/helpers"
-import { useGameStore, useSettingsStore, useUserStore } from "~/stores"
+import { useGameStore, useUserStore } from "~/stores"
 
+import Placeholder from "./Placeholder"
 import QuestionOption from "./QuestionOption"
 
 export default function QuestionAndAnswer() {
-	const theme = useSettingsStore((state: SettingsStore) => state.theme)
+	const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
+		undefined,
+	)
 
 	const currentUser = useUserStore((state: UserStore) => state.currentUser)
 
@@ -22,7 +26,6 @@ export default function QuestionAndAnswer() {
 		selectPossibleAnswer,
 		selectedPossibleAnswer,
 		submittedAnswers,
-		participants,
 	} = useGameStore((state: GameStore) => ({
 		gameRound: state.gameRound,
 		loading: state.loading,
@@ -34,14 +37,42 @@ export default function QuestionAndAnswer() {
 		submitAnswer: state.submitAnswer,
 		participants: state.participants,
 		sessionQuestions: state.sessionQuestions,
+		currentQuestionIndex: state.currentQuestionIndex,
 	}))
 
 	const styles = {
 		container: twr`flex h-[70%] w-[95%] flex-col items-center justify-center gap-6 rounded-xl bg-white p-4`,
 		options: tw`gap-6`,
 		question: tw`text-center text-2xl font-bold`,
-		card: twr`h-full w-full flex-1 flex-col items-stretch justify-center gap-6 `,
+		card: twr`h-full w-full flex-1 flex-col items-stretch justify-center gap-6 bg-[#F9F2DF]`,
 	}
+	const OptionHeight = 90
+
+	useEffect(() => {
+		const question = questions.find(
+			(question) => question.question === gameRound?.question,
+		)
+
+		const index = question?.options.findIndex(
+			(option) => option === selectedPossibleAnswer?.answer,
+		)
+
+		if (index !== -1) {
+			setSelectedIndex(index)
+		}
+	}, [selectedPossibleAnswer])
+
+	const animatedStyle = useAnimatedStyle(() => {
+		return {
+			transform: [
+				{
+					translateY: withSpring(
+						(selectedIndex as number) * OptionHeight,
+					),
+				},
+			],
+		}
+	})
 
 	return (
 		<MotiView
@@ -70,51 +101,13 @@ export default function QuestionAndAnswer() {
 			}}
 		>
 			<Text className={styles.question}>{gameRound?.question}</Text>
-			{gameRound &&
-			submittedAnswers[gameRound!.id]?.find(
+
+			{submittedAnswers[gameRound!.id]?.find(
 				(answer) =>
 					answer.userID === currentUser?.id &&
 					answer.gameRoundID === gameRound?.id,
 			) ? (
-				<MotiView
-					key={"waiting-for-players"}
-					style={styles.card}
-					from={{
-						opacity: 0,
-					}}
-					animate={{
-						opacity: 1,
-					}}
-					className={styles.options}
-				>
-					<View className="flex h-96 items-center justify-center gap-20">
-						<Text className="text-center text-2xl">
-							Waiting for other players to submit their answers
-						</Text>
-						<View className="flex flex-row items-center justify-center gap-2">
-							{participants.map((participant) => (
-								<Avatar.Icon
-									key={participant.id}
-									size={40}
-									icon="account"
-									style={{
-										backgroundColor: submittedAnswers[
-											gameRound!.id
-										]!.find(
-											(answer) =>
-												answer.userID ===
-													participant.userId &&
-												answer.gameRoundID ===
-													gameRound?.id,
-										)
-											? theme.colors.accent
-											: theme.colors.surface,
-									}}
-								/>
-							))}
-						</View>
-					</View>
-				</MotiView>
+				<Placeholder solo={false} />
 			) : (
 				<MotiView
 					key={"options"}
@@ -135,6 +128,7 @@ export default function QuestionAndAnswer() {
 							)
 							?.options.map((option, index) => (
 								<QuestionOption
+									index={index + 1}
 									key={index}
 									label={option}
 									isSelected={
@@ -147,6 +141,34 @@ export default function QuestionAndAnswer() {
 									}}
 								/>
 							))}
+					{selectedIndex !== -1 && (
+						<MotiView
+							style={[
+								{
+									position: "absolute",
+									top: 0,
+									left: 0,
+									right: 0,
+									height: OptionHeight,
+									borderWidth: 2,
+									borderColor: "#472836",
+									borderRadius: 12,
+									backgroundColor: "#FEFFBE",
+									width: "100%",
+									zIndex: -1,
+									shadowColor: "#000",
+									shadowOffset: {
+										width: 0,
+										height: 2,
+									},
+									shadowOpacity: 0.25,
+									shadowRadius: 3.84,
+								},
+								animatedStyle,
+							]}
+						/>
+					)}
+					)
 				</MotiView>
 			)}
 		</MotiView>

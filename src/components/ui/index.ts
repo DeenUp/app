@@ -1,3 +1,4 @@
+import ThemedAwesomeButton, { CloseButton } from "./AwesomeButton"
 import Button from "./Button"
 import CodeComponent from "./CodeComponent"
 import Gap from "./Gap"
@@ -14,6 +15,7 @@ import Timer from "./Timer"
 
 export {
 	Button,
+	CloseButton,
 	CodeComponent,
 	EmailInputField,
 	Gap,
@@ -24,5 +26,6 @@ export {
 	PlayerAvatar,
 	SegmentedProgressBar,
 	Spacer,
+	ThemedAwesomeButton,
 	Timer,
 }
