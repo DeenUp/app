@@ -1,5 +1,7 @@
 import type { StateCreator } from "zustand"
 
+import * as Haptics from "expo-haptics"
+
 import type { GameStore } from "."
 import type { Question } from "../../../types"
 
@@ -56,6 +58,9 @@ const createSoloSessionSlice: StateCreator<
 			if (!selectedAnswer) return
 
 			if (question.correctAnswer === selectedAnswer) {
+				Haptics.notificationAsync(
+					Haptics.NotificationFeedbackType.Success,
+				)
 				set((state: SoloSessionStates) => ({
 					showResult: true,
 					correctQuestions: [...state.correctQuestions, question],
@@ -65,6 +70,7 @@ const createSoloSessionSlice: StateCreator<
 				return
 			}
 
+			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
 			set((state: SoloSessionStates) => ({
 				showResult: true,
 				incorrectQuestions: [...state.incorrectQuestions, question],

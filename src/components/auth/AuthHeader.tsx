@@ -52,8 +52,8 @@ const AuthHeader = () => {
 			<SegmentedProgressBar
 				progress={step / (isSignUp ? 4 : 3)}
 				segments={isSignUp ? 4 : 3}
-				color="#007EBD"
-				backgroundColor="gray"
+				color="#472836"
+				backgroundColor="#7E6972"
 			/>
 			<View className={styles.textContainer}>
 				<Text className={styles.headerText}>

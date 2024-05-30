@@ -1,13 +1,15 @@
-import type { FC } from "react"
+import type { FC, ReactNode } from "react"
 
 import { Text, TextInput, View } from "react-native"
 
+import { MaterialIcons } from "@expo/vector-icons"
+import { twMerge } from "tailwind-merge"
 import twr from "twrnc"
 
 import { tw } from "~/helpers"
 
 type Props = {
-	prefix?: string
+	icon?: ReactNode
 	placeholder: string
 	value: string | null
 	error: string | null
@@ -27,7 +29,7 @@ type Props = {
 }
 
 const InputField = ({
-	prefix,
+	icon,
 	placeholder,
 	value,
 	error,
@@ -39,26 +41,25 @@ const InputField = ({
 	testID,
 }: Props) => {
 	const styles = {
-		body: tw`bg-outline flex h-20 w-full flex-row items-center justify-start gap-2 rounded-full border border-gray-200 bg-white px-4 shadow-md`,
+		body: tw`flex h-20 w-full flex-row items-center justify-start gap-2 rounded-full border-4 border-primary bg-transparent  px-4 shadow-md`,
 	}
+
+	const style = twr`${twMerge(className, tw`mb-2 ml-2 flex-1 text-lg `)}`
 
 	return (
 		<View className={styles.body}>
-			{prefix && <Text className="text-lg font-bold">{prefix}</Text>}
+			{icon && <Text className="text-lg font-bold">{icon}</Text>}
 
 			<TextInput
 				testID={testID}
 				value={value!}
-				style={
-					className
-						? twr`${className}`
-						: twr`mb-2 ml-2 flex-1 text-lg`
-				}
+				style={style}
 				placeholder={placeholder}
 				keyboardType={keyboardType}
 				secureTextEntry={secureTextEntry}
 				autoCorrect={autoCorrect}
 				onChangeText={onChangeText}
+				placeholderClassName="font-extrabold"
 			/>
 
 			{error && <Text>⛔️🙅‍♂️</Text>}
@@ -83,8 +84,8 @@ const EmailInputField: FC<InputFieldProps> = (props) => {
 		<InputField
 			{...props}
 			testID="email-input"
-			prefix="📧"
-			placeholder="Email"
+			icon={<MaterialIcons name="email" size={24} color="#472836" />}
+			placeholder="email"
 			keyboardType="email-address"
 		/>
 	)
@@ -95,8 +96,8 @@ const PasswordInputField: FC<InputFieldProps> = (props) => {
 		<InputField
 			{...props}
 			testID="password-input"
-			prefix="🔒"
-			placeholder="Password"
+			icon={<MaterialIcons name="lock" size={24} color="#472836" />}
+			placeholder="password"
 			secureTextEntry
 		/>
 	)
@@ -107,8 +108,14 @@ const NameInputField: FC<InputFieldProps> = (props) => {
 		<InputField
 			{...props}
 			testID="name-input"
-			prefix="🥸"
-			placeholder="Name"
+			icon={
+				<MaterialIcons
+					name="account-circle"
+					size={24}
+					color="#472836"
+				/>
+			}
+			placeholder="name"
 			keyboardType="default"
 		/>
 	)

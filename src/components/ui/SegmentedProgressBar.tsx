@@ -4,6 +4,7 @@ import type { ViewStyle } from "react-native"
 import { View } from "react-native"
 
 import { MotiView } from "moti"
+import twr from "twrnc"
 
 type SegmentedProgressBarProps = {
 	progress: number
@@ -22,19 +23,9 @@ const SegmentedProgressBar: FC<SegmentedProgressBarProps> = ({
 	style,
 	className,
 }) => {
-	const segmentStyle: ViewStyle = {
-		flex: 1,
-		height: 7,
-		borderRadius: 10,
-		backgroundColor: backgroundColor ?? "transparent",
-	}
+	const segmentStyle = twr`h-2 flex-1 rounded-md ${backgroundColor ? `bg-[${backgroundColor}]` : "bg-transparent"}`
 
-	const segmentContainerStyle: ViewStyle = {
-		flexDirection: "row",
-		borderRadius: 10,
-		overflow: "hidden",
-		gap: 9,
-	}
+	const segmentContainerStyle = twr`flex-row gap-2 overflow-hidden rounded-2xl`
 
 	const filledSegments = Math.floor(progress * segments)
 

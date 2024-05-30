@@ -37,8 +37,8 @@ const ParticipantsList = () => {
 						key={user.id}
 						name={user.name}
 						selfie={user.selfie}
-						color={"#6D28D9"}
-						size={60}
+						color={"#472836"}
+						size={90}
 						className="flex items-center justify-center gap-4"
 					/>
 				))}

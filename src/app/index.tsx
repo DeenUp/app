@@ -1,15 +1,16 @@
 import type { ReactNode } from "react"
 
-import { Text, View } from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context"
+import { Platform, SafeAreaView, StatusBar, View } from "react-native"
 
+import * as Haptics from "expo-haptics"
 import { router } from "expo-router"
-import { StatusBar } from "expo-status-bar"
 
-import { MotiView } from "moti"
+import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { MotiImage, MotiView } from "moti"
 import twr from "twrnc"
 
-import { Button, Spacer } from "~/components/ui"
+import DeenUp from "~/assets/images/deenup.png"
+import { Spacer, ThemedAwesomeButton } from "~/components/ui"
 import { tw } from "~/helpers"
 import { useAuthStore } from "~/stores"
 
@@ -17,41 +18,41 @@ export default function Page(): ReactNode {
 	const currentUser = useAuthStore((state) => state.currentUser)
 
 	const styles = {
-		body: tw`flex h-full flex-col `,
+		body: twr`flex-1 bg-[#472836]`,
+		container: tw`flex h-full flex-col  bg-primary`,
 		logoContainer: tw`items-center`,
-		logo: tw`text-8xl font-bold`,
-		logoPrimary: tw`text-8xl font-bold text-primary`,
 		playButtonsContainer: tw`flex w-full flex-row items-center justify-center gap-2 px-1`,
 		joinGameButton: tw`w-1/2 rounded-3xl rounded-r-none`,
 		createGameButton: tw`w-1/2 rounded-3xl rounded-l-none border-base-300`,
-		motiLogo: twr`flex flex-col items-center justify-center text-center text-8xl font-bold`,
-		motiContainer: twr`-mb-8 flex h-72 w-full justify-start gap-4 rounded-3xl bg-gray-300 p-6 shadow-xl`,
+		logo: twr`flex flex-col items-center justify-center text-center text-8xl font-bold`,
+		motiContainer: twr`-mb-8 flex  w-full items-center justify-start gap-2 gap-4 rounded-3xl bg-[#F9F2DF] p-6`,
 	}
 
 	return (
-		<SafeAreaView>
-			<StatusBar style="auto" />
-			<View className={styles.body}>
+		<SafeAreaView style={styles.body}>
+			{Platform.OS === "ios" && (
+				<StatusBar barStyle="light-content" backgroundColor="#472836" />
+			)}
+			{Platform.OS === "android" && (
+				<StatusBar backgroundColor="#472836" />
+			)}
+			<View className={styles.container}>
 				<Spacer />
 				<View className={styles.logoContainer}>
-					<Text className={styles.logo}>
-						Deen
-						<MotiView
-							style={styles.motiLogo}
-							from={{ opacity: 0, translateY: 200, scale: 0.5 }}
-							animate={{ opacity: 1, translateY: 0, scale: 1 }}
-							transition={{
-								scale: { type: "spring", delay: 350 },
-							}}
-						>
-							<Text className={styles.logoPrimary}>Up!</Text>
-						</MotiView>
-					</Text>
+					<MotiImage
+						style={styles.logo}
+						from={{ opacity: 0, translateY: 200, scale: 0.5 }}
+						animate={{ opacity: 1, translateY: 0, scale: 1.5 }}
+						transition={{
+							scale: { type: "spring", delay: 350 },
+						}}
+						source={DeenUp}
+					/>
 				</View>
 				<Spacer />
 				<MotiView
-					from={{ opacity: 0, translateY: 250 }}
-					animate={{ opacity: 1, translateY: 0 }}
+					from={{ opacity: 0, height: 0 }}
+					animate={{ opacity: 1, height: 300 }}
 					style={styles.motiContainer}
 					transition={{
 						type: "spring",
@@ -59,61 +60,102 @@ export default function Page(): ReactNode {
 					}}
 				>
 					<View className={styles.playButtonsContainer}>
-						<Button
-							color="primary"
-							size="xl"
-							label="Join Game"
-							onPress={() =>
-								router.push(
-									currentUser ? "/join-game" : "/auth/",
+						<ThemedAwesomeButton
+							type="anchor"
+							size="large"
+							width={170}
+							height={70}
+							borderTopRightRadius={0}
+							borderBottomRightRadius={0}
+							onPress={() => {
+								Haptics.impactAsync(
+									Haptics.ImpactFeedbackStyle.Rigid,
 								)
-							}
-							buttonStyle={styles.joinGameButton}
-						/>
-						<Button
-							color="primary"
-							size="xl"
-							label="Create Game"
-							onPress={() =>
-								router.push(
-									currentUser ? "/create-game" : "/auth/",
+								if (currentUser) {
+									router.push("/join-game")
+								} else {
+									router.push("/auth/")
+								}
+							}}
+							textSize={20}
+						>
+							Join Game
+						</ThemedAwesomeButton>
+
+						<ThemedAwesomeButton
+							type="anchor"
+							size="large"
+							width={170}
+							height={70}
+							borderTopLeftRadius={0}
+							borderBottomLeftRadius={0}
+							onPressOut={() => {
+								Haptics.impactAsync(
+									Haptics.ImpactFeedbackStyle.Rigid,
 								)
-							}
-							buttonStyle={styles.createGameButton}
-						/>
+								if (currentUser) {
+									router.push("/create-game")
+								} else {
+									router.push("/auth/")
+								}
+							}}
+							textSize={20}
+						>
+							Create Game
+						</ThemedAwesomeButton>
 					</View>
-					<Button
-						color="primary"
-						size="xl"
-						label="Solo Mode"
+					<ThemedAwesomeButton
+						type="anchor"
+						size="large"
 						onPress={() => {
+							Haptics.impactAsync(
+								Haptics.ImpactFeedbackStyle.Rigid,
+							)
 							router.push("/solo-mode")
 						}}
-						buttonStyle="rounded-3xl"
-					/>
-					{/* <Button
-						color="primary"
-						size="xl"
-						label="Friends Mode Result"
-						onPress={() => {
-							router.push("/friends-mode/result")
-						}}
-					/> */}
-					<View className=" flex flex-row items-center justify-between px-3 ">
-						<Button
-							color="primary"
-							size="sm"
-							onPress={() => {}}
-							buttonStyle="rounded-full size-12"
-							iconName="gamepad-circle-outline"
-						/>
-						<Button
-							color="primary"
-							size="xl"
-							onPress={() => router.push("/profile")}
-							buttonStyle="rounded-full size-12"
-							iconName="face-man-profile"
-						/>
+						width={350}
+						height={70}
+						textSize={20}
+					>
+						Solo Mode
+					</ThemedAwesomeButton>
+					<View className="flex w-full flex-row items-center justify-between px-3">
+						<ThemedAwesomeButton
+							type="anchor"
+							size="small"
+							width={60}
+							height={50}
+							onPress={() => {
+								Haptics.impactAsync(
+									Haptics.ImpactFeedbackStyle.Rigid,
+								)
+								router.push("/settings")
+							}}
+						>
+							<MaterialCommunityIcons
+								name="gamepad-circle-outline"
+								size={24}
+								color="black"
+							/>
+						</ThemedAwesomeButton>
+						<ThemedAwesomeButton
+							type="anchor"
+							size="small"
+							width={50}
+							height={50}
+							onPress={() => {
+								Haptics.impactAsync(
+									Haptics.ImpactFeedbackStyle.Rigid,
+								)
+								router.push("/profile")
+							}}
+						>
+							<MaterialCommunityIcons
+								name="face-man-profile"
+								size={20}
+								color="black"
+							/>
+						</ThemedAwesomeButton>
 					</View>
 				</MotiView>
 			</View>

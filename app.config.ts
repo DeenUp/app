@@ -163,6 +163,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 		buildNumber: `${versionCode}`,
 		icon: `./src/assets/app-icon/${flavor}/ios.png`,
 		supportsTablet: true,
+		infoPlist: {
+			UIViewControllerBasedStatusBarAppearance: "YES",
+		},
 	},
 	name: "DeenUp",
 	notification: {
@@ -186,5 +189,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 		favicon: `./src/assets/app-icon/${flavor}/web/favicon.ico`,
 		themeColor: "#472836",
 	},
+
 	version,
 })
