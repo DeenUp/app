@@ -5,8 +5,6 @@ import { ThemedButton } from "react-native-really-awesome-button"
 
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
-export { CloseButton }
-
 function ThemedAwesomeButton({
 	theme,
 	type,
@@ -39,6 +37,8 @@ const CloseButton: FC<ButtonProps> = ({ onPress }) => {
 		</ThemedAwesomeButton>
 	)
 }
+export { CloseButton }
+
 export type ThemedButton = {
 	disabled?: boolean
 	index?: number | null

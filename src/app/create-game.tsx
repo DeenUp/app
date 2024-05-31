@@ -19,7 +19,7 @@ import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
 
 export default function CreateGame(): ReactNode {
-	const translate = useSettingsStore((state) => state.translate)
+	const { translate, theme } = useSettingsStore()
 
 	const {
 		gameSessionID,
@@ -60,18 +60,12 @@ export default function CreateGame(): ReactNode {
 		router.dismiss()
 	}
 
-	// const handleShare = async () => {
-	// 	if (!code) return
-
-	// 	await Clipboard.setStringAsync(code)
-	// }
-
 	const styles = {
 		container: tw`flex justify-center bg-primary`,
 		headerContainer: tw`mt-32 w-full flex-col items-start justify-start gap-6 p-4`,
-		headerText: tw`text-4xl font-bold text-base-100`,
+		headerText: tw`text-4xl font-bold text-surface`,
 		subheaderText: tw`text-base-200`,
-		codeContainer: tw`h-full items-center justify-start gap-8 rounded-t-[50] bg-base-100 px-10 pt-12`,
+		codeContainer: tw`h-full items-center justify-start gap-8 rounded-t-[50] bg-background px-10 pt-12`,
 		codeText: twr`text-xl font-bold`,
 		buttonContainer: tw`flex w-full flex-row items-center justify-center gap-6 `,
 		backButton: tw``,
@@ -84,7 +78,7 @@ export default function CreateGame(): ReactNode {
 	return (
 		<SafeAreaView
 			style={{
-				backgroundColor: "#472836",
+				backgroundColor: theme.primary,
 			}}
 		>
 			<StatusBar style="light" />
@@ -128,7 +122,7 @@ export default function CreateGame(): ReactNode {
 								<FontAwesome6
 									name="play"
 									size={20}
-									color="#472836"
+									color={theme.primary}
 									style={twr`ml-3`}
 								/>
 							}

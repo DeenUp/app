@@ -10,22 +10,37 @@ import { tw } from "~/helpers"
 
 import ThemedAwesomeButton from "./AwesomeButton"
 
+type States = {
+	placeholders: number[]
+	displayedCode: string[]
+	raiseLevels: number[]
+}
+
 type CodeComponentProps = {
 	code?: string | null
 }
 
 const CodeComponent: React.FC<CodeComponentProps> = ({ code }) => {
-	const [placeholders, setPlaceholders] = useState<number[]>([])
-	const [displayedCode, setDisplayedCode] = useState<string[]>([])
-	//Set raise level using withSpring to animate the code digits
+	const [states, setStates] = useState<States>({
+		placeholders: [],
+		displayedCode: [],
+		raiseLevels: [],
+	})
 
-	const [raiseLevels, setRaiseLevels] = useState<number[]>([])
+	const { placeholders, displayedCode, raiseLevels } = states
 
 	useEffect(() => {
 		const intervalId = setInterval(() => {
-			setPlaceholders(
-				Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)),
-			)
+			setStates((prev) => {
+				const newPlaceholders = Array.from({ length: 6 }, () =>
+					Math.floor(Math.random() * 10),
+				)
+
+				return {
+					...prev,
+					placeholders: newPlaceholders,
+				}
+			})
 		}, 100)
 
 		return () => {
@@ -36,21 +51,32 @@ const CodeComponent: React.FC<CodeComponentProps> = ({ code }) => {
 	useEffect(() => {
 		if (code) {
 			const codeArray = code.split("")
-			setDisplayedCode(Array(codeArray.length).fill(""))
-			setRaiseLevels(Array(codeArray.length).fill(1))
+
+			setStates((prev) => {
+				const newDisplayedCode = Array(codeArray.length).fill("")
+				const newRaiseLevels = Array(codeArray.length).fill(1)
+
+				return {
+					...prev,
+					displayedCode: newDisplayedCode,
+					raiseLevels: newRaiseLevels,
+				}
+			})
+
 			codeArray.forEach((digit, index) => {
 				setTimeout(() => {
-					setDisplayedCode((prev) => {
-						const newCode = [...prev]
-						newCode[index] = digit // Set the digit at the current index
+					setStates((prev) => {
+						const newDisplayedCode = [...prev.displayedCode]
+						const newRaiseLevels = [...prev.raiseLevels]
 
-						return newCode
-					})
-					setRaiseLevels((prev) => {
-						const newLevels = [...prev]
-						newLevels[index] = 6
+						newDisplayedCode[index] = digit
+						newRaiseLevels[index] = 6
 
-						return newLevels
+						return {
+							...prev,
+							displayedCode: newDisplayedCode,
+							raiseLevels: newRaiseLevels,
+						}
 					})
 				}, index * 200)
 			})

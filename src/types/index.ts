@@ -86,12 +86,27 @@ export type {
 }
 
 export type Theme = {
-	colors: {
-		primary: string
-		background: string
-		surface: string
-		accent: string
-		// Add more colors as needed
-	}
+	primary: string
+	secondary: string
+	tertiary: string
+	background: string
+	surface: string
+	accent: string
+	neutral: string
+
+	info: string
+	success: string
+	warning: string
+	error: string
+	card: string
+	input: string
+	"input-focus": string
+	"input-placeholder": string
+	"input-border": string
+	"input-error": string
+	"input-success": string
+	"input-warning": string
+	"input-info": string
+
 	// Add more theme properties as needed
 }

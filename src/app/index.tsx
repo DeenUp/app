@@ -12,18 +12,19 @@ import twr from "twrnc"
 import DeenUp from "~/assets/images/deenup.png"
 import { Spacer, ThemedAwesomeButton } from "~/components/ui"
 import { tw } from "~/helpers"
-import { useAuthStore } from "~/stores"
+import { useAuthStore, useSettingsStore } from "~/stores"
 
 export default function Page(): ReactNode {
 	const currentUser = useAuthStore((state) => state.currentUser)
+	const { theme } = useSettingsStore()
 
 	const styles = {
-		body: twr`flex-1 bg-[#472836]`,
-		container: tw`flex h-full flex-col  bg-primary`,
+		body: twr`flex-1 bg-[${theme.primary}]`,
+		container: tw`flex h-full flex-col bg-primary`,
 		logoContainer: tw`items-center`,
 		playButtonsContainer: tw`flex w-full flex-row items-center justify-center gap-2 px-1`,
 		joinGameButton: tw`w-1/2 rounded-3xl rounded-r-none`,
-		createGameButton: tw`w-1/2 rounded-3xl rounded-l-none border-base-300`,
+		createGameButton: tw`border-base-300 w-1/2 rounded-3xl rounded-l-none`,
 		logo: twr`flex flex-col items-center justify-center text-center text-8xl font-bold`,
 		motiContainer: twr`-mb-8 flex  w-full items-center justify-start gap-2 gap-4 rounded-3xl bg-[#F9F2DF] p-6`,
 	}

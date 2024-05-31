@@ -16,9 +16,10 @@ import QuestionHeader from "~/components/gameplay/QuestionHeader"
 import QuestionOption from "~/components/gameplay/QuestionOption"
 import { CloseButton, Spacer, ThemedAwesomeButton } from "~/components/ui"
 import { tw } from "~/helpers"
-import { useGameStore } from "~/stores"
+import { useGameStore, useSettingsStore } from "~/stores"
 
 export default function Page(): ReactNode {
+	const { theme } = useSettingsStore()
 	const {
 		minutes,
 		seconds,
@@ -45,20 +46,24 @@ export default function Page(): ReactNode {
 		}
 	}, [])
 
+	const optionHeight = 85
+
 	const styles = {
-		screen: twr`flex-1 flex-col items-center justify-center bg-[#472836] px-6 pt-12`,
-		card: twr`flex w-96 flex-grow flex-col items-stretch justify-around rounded-md bg-[#F9F2DF]  p-8 shadow-md`,
+		screen: twr`flex-1 flex-col items-center justify-center bg-[${theme.primary}] px-6 pt-12`,
+		card: twr`flex w-96 flex-grow flex-col items-stretch justify-around rounded-md bg-[${theme.background}] p-8 shadow-md`,
 		question: tw`w-full text-left text-2xl font-bold`,
-		options: tw`gap-6`,
+		options: tw`gap-4`,
 		closeButton: tw`w-full flex-col items-end justify-end justify-between p-6`,
 	}
 
-	const [selectedIndex, setSelectedIndex] = useState<number | undefined>(-1)
+	const [selectedIndex, setSelectedIndex] = useState<number>(-1)
 
 	useEffect(() => {
 		const index = questions[currentQuestionIndex]?.options.findIndex(
 			(option) => option === selectedAnswer,
 		)
+
+		if (index === undefined) return
 
 		if (index !== -1) {
 			setSelectedIndex(index)
@@ -69,8 +74,7 @@ export default function Page(): ReactNode {
 		return {
 			transform: [
 				{
-					//@ts-ignore
-					translateY: withSpring(selectedIndex * 90),
+					translateY: withSpring(selectedIndex * optionHeight),
 				},
 			],
 		}
@@ -154,7 +158,7 @@ export default function Page(): ReactNode {
 										translateY: -100,
 									}}
 									style={[
-										twr`rounded-4 absolute left-0 right-0 top-0 -z-10 h-[90px] w-full  bg-[#FEFFBE] shadow-md`,
+										twr`rounded-4 absolute left-0 right-0 top-0 -z-10 h-[${optionHeight}px] w-full  bg-[${theme.surface}] shadow-md`,
 										animatedStyle,
 									]}
 								/>
