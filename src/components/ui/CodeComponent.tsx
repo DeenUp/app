@@ -7,41 +7,36 @@ import { MotiText } from "moti"
 import twr from "twrnc"
 
 import { tw } from "~/helpers"
+import { useSettingsStore } from "~/stores"
 
 import ThemedAwesomeButton from "./AwesomeButton"
-
-type States = {
-	placeholders: number[]
-	displayedCode: string[]
-	raiseLevels: number[]
-}
 
 type CodeComponentProps = {
 	code?: string | null
 }
 
 const CodeComponent: React.FC<CodeComponentProps> = ({ code }) => {
-	const [states, setStates] = useState<States>({
-		placeholders: [],
-		displayedCode: [],
-		raiseLevels: [],
-	})
+	const [placeholders, setPlaceholders] = useState<string[]>(
+		Array(6).fill(""),
+	)
+	const [displayedCode, setDisplayedCode] = useState<string[]>([])
+	const [raiseLevels, setRaiseLevels] = useState<number[]>(Array(6).fill(0))
 
-	const { placeholders, displayedCode, raiseLevels } = states
+	const { theme } = useSettingsStore()
+
+	const generatePlaceholders = () => {
+		const characters =
+			"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+		return Array.from({ length: 6 }, () =>
+			characters.charAt(Math.floor(Math.random() * characters.length)),
+		)
+	}
 
 	useEffect(() => {
 		const intervalId = setInterval(() => {
-			setStates((prev) => {
-				const newPlaceholders = Array.from({ length: 6 }, () =>
-					Math.floor(Math.random() * 10),
-				)
-
-				return {
-					...prev,
-					placeholders: newPlaceholders,
-				}
-			})
-		}, 100)
+			setPlaceholders(generatePlaceholders())
+		}, 60)
 
 		return () => {
 			clearInterval(intervalId)
@@ -52,33 +47,22 @@ const CodeComponent: React.FC<CodeComponentProps> = ({ code }) => {
 		if (code) {
 			const codeArray = code.split("")
 
-			setStates((prev) => {
-				const newDisplayedCode = Array(codeArray.length).fill("")
-				const newRaiseLevels = Array(codeArray.length).fill(1)
-
-				return {
-					...prev,
-					displayedCode: newDisplayedCode,
-					raiseLevels: newRaiseLevels,
-				}
-			})
-
 			codeArray.forEach((digit, index) => {
 				setTimeout(() => {
-					setStates((prev) => {
-						const newDisplayedCode = [...prev.displayedCode]
-						const newRaiseLevels = [...prev.raiseLevels]
-
+					setDisplayedCode((prev) => {
+						const newDisplayedCode = [...prev]
 						newDisplayedCode[index] = digit
+
+						return newDisplayedCode
+					})
+
+					setRaiseLevels((prev) => {
+						const newRaiseLevels = [...prev]
 						newRaiseLevels[index] = 6
 
-						return {
-							...prev,
-							displayedCode: newDisplayedCode,
-							raiseLevels: newRaiseLevels,
-						}
+						return newRaiseLevels
 					})
-				}, index * 200)
+				}, index * 800)
 			})
 		}
 	}, [code])
@@ -93,13 +77,13 @@ const CodeComponent: React.FC<CodeComponentProps> = ({ code }) => {
 
 	return (
 		<View className={styles.codeTextContainer}>
-			{placeholders.map((placeholder, index) => (
+			{Array.from({ length: 6 }).map((_, index) => (
 				<ThemedAwesomeButton
 					key={index}
 					theme="bruce"
 					width={56}
-					borderColor="#472836"
-					backgroundColor="#F9F2DF"
+					borderColor={theme.primary}
+					backgroundColor={theme.background}
 					paddingBottom={2}
 					raiseLevel={raiseLevels[index] || 1}
 					onPress={() => {
@@ -120,12 +104,13 @@ const CodeComponent: React.FC<CodeComponentProps> = ({ code }) => {
 							type: "timing",
 							duration: 100,
 							delay: index * 100,
+							repeat: 1,
 						}}
 						style={styles.codeText}
 					>
 						{displayedCode[index] !== undefined
 							? (displayedCode[index] as string)
-							: placeholder}
+							: placeholders[index]}
 					</MotiText>
 				</ThemedAwesomeButton>
 			))}

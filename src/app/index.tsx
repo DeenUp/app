@@ -1,9 +1,10 @@
 import type { ReactNode } from "react"
 
-import { Platform, SafeAreaView, StatusBar, View } from "react-native"
+import { SafeAreaView, View } from "react-native"
 
 import * as Haptics from "expo-haptics"
 import { router } from "expo-router"
+import { StatusBar } from "expo-status-bar"
 
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { MotiImage, MotiView } from "moti"
@@ -23,20 +24,14 @@ export default function Page(): ReactNode {
 		container: tw`flex h-full flex-col bg-primary`,
 		logoContainer: tw`items-center`,
 		playButtonsContainer: tw`flex w-full flex-row items-center justify-center gap-2 px-1`,
-		joinGameButton: tw`w-1/2 rounded-3xl rounded-r-none`,
-		createGameButton: tw`border-base-300 w-1/2 rounded-3xl rounded-l-none`,
 		logo: twr`flex flex-col items-center justify-center text-center text-8xl font-bold`,
-		motiContainer: twr`-mb-8 flex  w-full items-center justify-start gap-2 gap-4 rounded-3xl bg-[#F9F2DF] p-6`,
+		motiContainer: twr`-mb-8 flex w-full items-center justify-start gap-2 gap-4 rounded-3xl bg-[#F9F2DF] p-6`,
 	}
 
 	return (
 		<SafeAreaView style={styles.body}>
-			{Platform.OS === "ios" && (
-				<StatusBar barStyle="light-content" backgroundColor="#472836" />
-			)}
-			{Platform.OS === "android" && (
-				<StatusBar backgroundColor="#472836" />
-			)}
+			<StatusBar style="light" />
+
 			<View className={styles.container}>
 				<Spacer />
 				<View className={styles.logoContainer}>

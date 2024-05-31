@@ -91,7 +91,7 @@ const Scores = () => {
 						size={60}
 						icon="account"
 						style={{
-							backgroundColor: theme.colors.surface,
+							backgroundColor: theme.surface,
 						}}
 					/>
 					<View style={styles.playerDetails}>

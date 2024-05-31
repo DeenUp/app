@@ -1,3 +1,4 @@
+import { colors } from "./colors"
 import { forgotPasswordSteps, signUpSteps } from "./FormSteps"
 
-export { forgotPasswordSteps, signUpSteps }
+export { colors, forgotPasswordSteps, signUpSteps }

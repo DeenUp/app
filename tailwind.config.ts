@@ -3,7 +3,7 @@
 // @ts-expect-error - no types
 import nativewind from "nativewind/preset"
 
-const { colors } = require("./src/constants/colors.ts")
+import { colors } from "./src/constants"
 
 module.exports = {
 	content: ["./src/**/*.{ts,tsx}"],
