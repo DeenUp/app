@@ -7,6 +7,7 @@ import { MotiText } from "moti"
 import twr from "twrnc"
 
 import { tw } from "~/helpers"
+import { useSettingsStore } from "~/stores"
 
 import ThemedAwesomeButton from "./AwesomeButton"
 
@@ -15,18 +16,27 @@ type CodeComponentProps = {
 }
 
 const CodeComponent: React.FC<CodeComponentProps> = ({ code }) => {
-	const [placeholders, setPlaceholders] = useState<number[]>([])
+	const [placeholders, setPlaceholders] = useState<string[]>(
+		Array(6).fill(""),
+	)
 	const [displayedCode, setDisplayedCode] = useState<string[]>([])
-	//Set raise level using withSpring to animate the code digits
+	const [raiseLevels, setRaiseLevels] = useState<number[]>(Array(6).fill(0))
 
-	const [raiseLevels, setRaiseLevels] = useState<number[]>([])
+	const { theme } = useSettingsStore()
+
+	const generatePlaceholders = () => {
+		const characters =
+			"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+		return Array.from({ length: 6 }, () =>
+			characters.charAt(Math.floor(Math.random() * characters.length)),
+		)
+	}
 
 	useEffect(() => {
 		const intervalId = setInterval(() => {
-			setPlaceholders(
-				Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)),
-			)
-		}, 100)
+			setPlaceholders(generatePlaceholders())
+		}, 60)
 
 		return () => {
 			clearInterval(intervalId)
@@ -36,23 +46,23 @@ const CodeComponent: React.FC<CodeComponentProps> = ({ code }) => {
 	useEffect(() => {
 		if (code) {
 			const codeArray = code.split("")
-			setDisplayedCode(Array(codeArray.length).fill(""))
-			setRaiseLevels(Array(codeArray.length).fill(1))
+
 			codeArray.forEach((digit, index) => {
 				setTimeout(() => {
 					setDisplayedCode((prev) => {
-						const newCode = [...prev]
-						newCode[index] = digit // Set the digit at the current index
+						const newDisplayedCode = [...prev]
+						newDisplayedCode[index] = digit
 
-						return newCode
+						return newDisplayedCode
 					})
+
 					setRaiseLevels((prev) => {
-						const newLevels = [...prev]
-						newLevels[index] = 6
+						const newRaiseLevels = [...prev]
+						newRaiseLevels[index] = 6
 
-						return newLevels
+						return newRaiseLevels
 					})
-				}, index * 200)
+				}, index * 800)
 			})
 		}
 	}, [code])
@@ -67,13 +77,13 @@ const CodeComponent: React.FC<CodeComponentProps> = ({ code }) => {
 
 	return (
 		<View className={styles.codeTextContainer}>
-			{placeholders.map((placeholder, index) => (
+			{Array.from({ length: 6 }).map((_, index) => (
 				<ThemedAwesomeButton
 					key={index}
 					theme="bruce"
 					width={56}
-					borderColor="#472836"
-					backgroundColor="#F9F2DF"
+					borderColor={theme.primary}
+					backgroundColor={theme.background}
 					paddingBottom={2}
 					raiseLevel={raiseLevels[index] || 1}
 					onPress={() => {
@@ -94,12 +104,13 @@ const CodeComponent: React.FC<CodeComponentProps> = ({ code }) => {
 							type: "timing",
 							duration: 100,
 							delay: index * 100,
+							repeat: 1,
 						}}
 						style={styles.codeText}
 					>
 						{displayedCode[index] !== undefined
 							? (displayedCode[index] as string)
-							: placeholder}
+							: placeholders[index]}
 					</MotiText>
 				</ThemedAwesomeButton>
 			))}

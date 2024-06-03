@@ -27,7 +27,7 @@ const Timer = (props: Props): ReactNode => {
 			width: 100.0,
 		},
 		text: {
-			color: theme.colors.surface,
+			color: theme.surface,
 			fontSize: 18.0,
 			fontWeight: "bold",
 		},
@@ -38,7 +38,7 @@ const Timer = (props: Props): ReactNode => {
 			<MaterialCommunityIcons
 				name="alarm"
 				size={20}
-				color={theme.colors.surface}
+				color={theme.surface}
 			/>
 			<Text style={styles.text}>
 				{minute.toString().length === 1 ? `0${minute}` : minute}:

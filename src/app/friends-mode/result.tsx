@@ -50,7 +50,7 @@ export default function Page(): ReactNode {
 				flexDirection: "column",
 				alignItems: "center",
 				justifyContent: "flex-start",
-				backgroundColor: theme.colors.primary,
+				backgroundColor: theme.primary,
 			}}
 		>
 			<Stack.Screen options={{ title: "Results" }} />

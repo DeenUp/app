@@ -35,10 +35,10 @@ const QuestionOption = ({
 	return (
 		<MotiView
 			style={styles.card}
-			from={{ translateY: -100, opacity: 0 }}
-			animate={{ translateY: 0, opacity: 1 }}
+			from={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
 			transition={{ type: "timing", delay: index * 400, duration: 200 }}
-			exit={{ opacity: 0, translateY: -100 }}
+			exit={{ opacity: 0 }}
 		>
 			<ThemedAwesomeButton
 				theme="summer"

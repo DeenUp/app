@@ -9,11 +9,17 @@ import { router } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
 import { FontAwesome6 } from "@expo/vector-icons"
+import twr from "twrnc"
 
 import type { GameStore } from "~/stores"
 
 import { CodeInput } from "~/components/auth"
-import { Button, ParticipantsList, ThemedAwesomeButton } from "~/components/ui"
+import {
+	Button,
+	ParticipantsList,
+	Separator,
+	ThemedAwesomeButton,
+} from "~/components/ui"
 import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
 
@@ -23,7 +29,7 @@ type States = {
 
 export default function CreateGame() {
 	const CODE_LENGTH = 6
-	const translate = useSettingsStore((state) => state.translate)
+	const { translate, theme } = useSettingsStore()
 
 	const {
 		gameSessionID,
@@ -135,13 +141,12 @@ export default function CreateGame() {
 	const styles = {
 		container: tw`flex justify-center bg-primary`,
 		headerContainer: tw`mt-32 w-full flex-col items-start justify-start gap-6 p-4`,
-		headerText: tw`text-4xl font-bold text-base-100`,
-		subheaderText: tw`text-base-200`,
-		codeContainer: tw`h-full items-center justify-start gap-8 rounded-t-[50] bg-base-100 px-10 pt-12`,
+		headerText: tw`text-4xl font-bold text-background`,
+		codeContainer: tw`h-full items-center justify-start gap-8 rounded-t-[50] bg-background px-10 pt-12`,
 		codeText: tw`text-xl font-bold`,
 		buttonContainer: tw`flex w-full flex-col items-center justify-center gap-6`,
 		backButton: tw`flex h-16 items-center justify-center rounded-full p-4`,
-		shareButton: tw`flex items-center justify-center rounded-full border border-primary bg-base-100 p-4`,
+		shareButton: tw`flex items-center justify-center rounded-full border border-primary bg-surface p-4`,
 		codeInputContainer: tw`flex flex-row items-center justify-center gap-2 pl-12`,
 		codeDigitBox: tw`m-1 rounded-md bg-gray-200 p-4`,
 		joinGameButton: tw`w-2/3`,
@@ -193,26 +198,36 @@ export default function CreateGame() {
 							/>
 						</ThemedAwesomeButton>
 					</View>
-					{participants.length ? (
-						<ParticipantsList />
-					) : (
+					{participants.length > 0 && <ParticipantsList />}
+					<Separator color="primary" className="w-full" />
+					{participants.length === 0 && (
 						<View className={styles.buttonContainer}>
-							<Button
-								color="base"
-								size="sm"
-								label={translate(
-									"joinGamePage.pasteFromClipboard",
-								)}
-								onPress={handlePasteFromClipboard}
-							/>
+							{/* <Button
+                color="primary"
+                size="lg"
 
-							<Button
-								color="primary"
-								size="lg"
-								label={translate("joinGamePage.joinGameButton")}
+                onPress={handleContinue}
+                buttonStyle={styles.joinGameButton}
+              /> */}
+
+							<ThemedAwesomeButton
 								onPress={handleContinue}
-								buttonStyle={styles.joinGameButton}
-							/>
+								type="anchor"
+								size="large"
+								textSize={20}
+								width={360}
+								raiseLevel={8}
+								after={
+									<FontAwesome6
+										name="play"
+										size={20}
+										color={theme.primary}
+										style={twr`ml-3`}
+									/>
+								}
+							>
+								{translate("joinGamePage.joinGameButton")}
+							</ThemedAwesomeButton>
 						</View>
 					)}
 

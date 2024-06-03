@@ -81,8 +81,8 @@ export default function Placeholder({ solo }: { solo: boolean }) {
 											answer.gameRoundID ===
 												gameRound?.id,
 									)
-										? theme.colors.accent
-										: theme.colors.surface,
+										? theme.accent
+										: theme.surface,
 								}}
 							/>
 						))}
