@@ -13,11 +13,10 @@ export default function Page(): ReactNode {
 	const { handleSignOut } = useAuthStore((store: AuthStore) => store)
 
 	return (
-		<View className="px-6">
+		<View className="w-full flex-1 items-center justify-center bg-primary px-6">
 			<ThemedAwesomeButton
 				theme="mysterion"
 				type="danger"
-				stretch
 				paddingTop={4}
 				paddingHorizontal={4}
 				borderRadius={100}

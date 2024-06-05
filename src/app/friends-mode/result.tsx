@@ -12,7 +12,7 @@ import twr from "twrnc"
 import type { GameStore, SettingsStore } from "~/stores"
 
 import { Scores } from "~/components/gameplay"
-import { Button } from "~/components/ui"
+import { Button, ThemedAwesomeButton } from "~/components/ui"
 import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
 
@@ -26,7 +26,6 @@ export default function Page(): ReactNode {
 		headerText: tw`ml-6 text-xl font-bold text-white`,
 		bottomButtonsContainer: tw`flex-stretch flex h-14 flex-row gap-3 px-12`,
 		checkAnswersButton: tw`absolute bottom-4 mx-12 w-3/4 rounded-xl`,
-		shareButton: tw`flex size-16 items-center justify-center rounded-3xl border-4 border-gray-300`,
 		animationContainer: tw`absolute -z-10 flex size-full items-center justify-start`,
 		animationContainerBackground: tw`absolute top-40 size-96 rounded-3xl bg-primary`,
 		doneButton: tw`w-2/4`,
@@ -78,24 +77,40 @@ export default function Page(): ReactNode {
 					transition={{ type: "timing", duration: 500, delay: 1000 }}
 					style={twr`absolute bottom-12 flex w-full flex-row items-center justify-center gap-4 px-6`}
 				>
-					<Button
-						buttonStyle={styles.doneButton}
-						color="accent"
-						size="lg"
-						label="Exit"
-						onPress={() => {
-							router.dismissAll()
+					<ThemedAwesomeButton
+						type="anchor"
+						size="large"
+						width={350}
+						height={70}
+						textSize={20}
+						style={twr`mt-8`}
+						progress
+						onPress={async (next) => {
+							//@ts-ignore
+							next()
+
+							return
 						}}
-					/>
-					<Button
-						buttonStyle={styles.doneButton}
-						color="primary"
-						size="lg"
-						label="New Game"
-						onPress={() => {
-							router.navigate("/create-game")
+					>
+						Exit
+					</ThemedAwesomeButton>
+					<ThemedAwesomeButton
+						type="anchor"
+						size="large"
+						width={350}
+						height={70}
+						textSize={20}
+						style={twr`mt-8`}
+						progress
+						onPress={async (next) => {
+							//@ts-ignore
+							next()
+
+							return
 						}}
-					/>
+					>
+						New Game
+					</ThemedAwesomeButton>
 				</MotiView>
 			</View>
 		</SafeAreaView>

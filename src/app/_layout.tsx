@@ -7,6 +7,8 @@ import { StatusBar } from "expo-status-bar"
 
 import { Amplify } from "aws-amplify"
 
+import { useSettingsStore } from "~/stores"
+
 import "react-native-reanimated"
 import "react-native-gesture-handler"
 
@@ -39,6 +41,7 @@ preventAutoHideAsync().catch((error) => {
 
 const RootLayout = () => {
 	const { clear } = useAuthStore()
+	const { theme } = useSettingsStore()
 
 	const [loaded, error] = useFonts({
 		SpaceMono: SpaceMonoRegular,
@@ -126,8 +129,11 @@ const RootLayout = () => {
 						headerShadowVisible: false,
 						headerBlurEffect: "light",
 						headerTitle: "Profile",
+						headerTitleStyle: {
+							color: theme.primary,
+						},
 						headerStyle: {
-							backgroundColor: "#F2F3F3",
+							backgroundColor: theme.primary,
 						},
 						headerLeft: () => (
 							<TouchableOpacity
@@ -137,7 +143,7 @@ const RootLayout = () => {
 							>
 								<FontAwesome
 									name="chevron-left"
-									color={"#6D28D9"}
+									color={theme.surface}
 									size={24}
 								/>
 							</TouchableOpacity>
@@ -151,8 +157,11 @@ const RootLayout = () => {
 						headerShown: true,
 						headerShadowVisible: false,
 						headerTitle: "Settings",
+						headerTitleStyle: {
+							color: theme.primary,
+						},
 						headerStyle: {
-							backgroundColor: "#F2F3F3",
+							backgroundColor: theme.primary,
 						},
 						headerLeft: () => (
 							<TouchableOpacity
@@ -162,7 +171,7 @@ const RootLayout = () => {
 							>
 								<FontAwesome
 									name="chevron-left"
-									color={"#6D28D9"}
+									color={theme.surface}
 									size={24}
 								/>
 							</TouchableOpacity>
