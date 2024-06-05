@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-import { SafeAreaView, View } from "react-native"
+import { Platform, SafeAreaView, View } from "react-native"
 
 import * as Haptics from "expo-haptics"
 import { router } from "expo-router"
@@ -30,7 +30,7 @@ export default function Page(): ReactNode {
 
 	return (
 		<SafeAreaView style={styles.body}>
-			<StatusBar style="light" />
+			<StatusBar hidden={Platform.OS === "ios"} />
 
 			<View className={styles.container}>
 				<Spacer />

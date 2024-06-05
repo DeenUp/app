@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import { Platform } from "react-native"
 
 import { useFonts } from "expo-font"
 import { router, Stack, usePathname } from "expo-router"
@@ -80,6 +81,9 @@ const RootLayout = () => {
 					name="index"
 					options={{
 						headerShown: false,
+						statusBarStyle:
+							Platform.OS === "ios" ? undefined : "light",
+						statusBarColor: theme.primary,
 					}}
 				/>
 
