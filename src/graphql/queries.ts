@@ -42,20 +42,20 @@ export const listGameRounds = /* GraphQL */ `query ListGameRounds(
 	APITypes.ListGameRoundsQueryVariables,
 	APITypes.ListGameRoundsQuery
 >
-export const getGameRoundByGameSessionID =
-	/* GraphQL */ `query GetGameRoundByGameSessionID(
+export const listGameRoundsByGameSessionID =
+	/* GraphQL */ `query ListGameRoundsByGameSessionID(
   $gameSessionID: ID!
   $sortDirection: ModelSortDirection
   $filter: ModelGameRoundFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  getGameRoundByGameSessionID(
-    gameSessionID: $gameSessionID
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
+  listGameRoundsByGameSessionID(
+  $gameSessionID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelGameRoundFilterInput
+  $limit: Int
+  $nextToken: String
   ) {
     items {
      ${gameRoundDocument({ includeGameSession: false, includeAnswers: false })}
@@ -65,8 +65,8 @@ export const getGameRoundByGameSessionID =
   }
 }
 ` as GeneratedQuery<
-		APITypes.GetGameRoundByGameSessionIDQueryVariables,
-		APITypes.GetGameRoundByGameSessionIDQuery
+		APITypes.ListGameRoundsByGameSessionIDQueryVariables,
+		APITypes.ListGameRoundsByGameSessionIDQuery
 	>
 export const getSubmittedAnswer =
 	/* GraphQL */ `query GetSubmittedAnswer($id: ID!) {
@@ -95,15 +95,15 @@ export const listSubmittedAnswers = /* GraphQL */ `query ListSubmittedAnswers(
 	APITypes.ListSubmittedAnswersQueryVariables,
 	APITypes.ListSubmittedAnswersQuery
 >
-export const getSubmittedAnswerByUserID =
-	/* GraphQL */ `query GetSubmittedAnswerByUserID(
+export const listSubmittedAnswersByUserID =
+	/* GraphQL */ `query ListSubmittedAnswersByUserID(
   $userID: ID!
   $sortDirection: ModelSortDirection
   $filter: ModelSubmittedAnswerFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  getSubmittedAnswerByUserID(
+  listSubmittedAnswersByUserID(
     userID: $userID
     sortDirection: $sortDirection
     filter: $filter
@@ -118,35 +118,64 @@ export const getSubmittedAnswerByUserID =
   }
 }
 ` as GeneratedQuery<
-		APITypes.GetSubmittedAnswerByUserIDQueryVariables,
-		APITypes.GetSubmittedAnswerByUserIDQuery
+		APITypes.ListSubmittedAnswersByUserIDQueryVariables,
+		APITypes.ListSubmittedAnswersByUserIDQuery
 	>
-export const getSubmittedAnswerByGameRoundID =
-	/* GraphQL */ `query GetSubmittedAnswerByGameRoundID(
+
+export const listSubmittedAnswersByGameRoundID =
+	/* GraphQL */ `query ListSubmittedAnswersByGameRoundID(
   $gameRoundID: ID!
   $sortDirection: ModelSortDirection
   $filter: ModelSubmittedAnswerFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  getSubmittedAnswerByGameRoundID(
+  listSubmittedAnswersByGameRoundID(
     gameRoundID: $gameRoundID
     sortDirection: $sortDirection
     filter: $filter
     limit: $limit
     nextToken: $nextToken
   ) {
-    items {
-      ${submittedAnswersDocument({ includeUser: true, includeGameRound: false })}
-    }
+  items {
+    ${submittedAnswersDocument({ includeUser: true, includeGameRound: false })}
+  }
     nextToken
     __typename
   }
 }
 ` as GeneratedQuery<
-		APITypes.GetSubmittedAnswerByGameRoundIDQueryVariables,
-		APITypes.GetSubmittedAnswerByGameRoundIDQuery
+		APITypes.ListSubmittedAnswersByGameRoundIDQueryVariables,
+		APITypes.ListSubmittedAnswersByGameRoundIDQuery
 	>
+
+export const listSubmittedAnswersByGameSessionID =
+	/* GraphQL */ `query ListSubmittedAnswersByGameSessionID(
+  $gameSessionID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelSubmittedAnswerFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listSubmittedAnswersByGameSessionID(
+    gameSessionID: $gameSessionID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+  items {
+    ${submittedAnswersDocument({ includeUser: true, includeGameRound: false })}
+  }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+		APITypes.ListSubmittedAnswersByGameSessionIDQueryVariables,
+		APITypes.ListSubmittedAnswersByGameSessionIDQuery
+	>
+
 export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
   getGameSession(id: $id) {
     ${gameSessionDocument({ includeLobby: false, includeGameRounds: false })}
@@ -173,32 +202,60 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
 	APITypes.ListGameSessionsQueryVariables,
 	APITypes.ListGameSessionsQuery
 >
-export const getGameSessionByLobbyID =
-	/* GraphQL */ `query GetGameSessionByLobbyID(
+// export const getGameSessionByLobbyID =
+// 	/* GraphQL */ `query GetGameSessionByLobbyID(
+//   $lobbyID: ID!
+//   $sortDirection: ModelSortDirection
+//   $filter: ModelGameSessionFilterInput
+//   $limit: Int
+//   $nextToken: String
+// ) {
+//   getGameSessionByLobbyID(
+//     lobbyID: $lobbyID
+//     sortDirection: $sortDirection
+//     filter: $filter
+//     limit: $limit
+//     nextToken: $nextToken
+//   ) {
+//     items {
+//       ${gameSessionDocument({ includeLobby: false, includeGameRounds: false })}
+//     }
+//     nextToken
+//     __typename
+//   }
+// }
+// ` as GeneratedQuery<
+// 		APITypes.ListGameSessionsByLobbyIDQueryVariables,
+// 		APITypes.ListGameSessionsByLobbyIDQuery
+// 	>
+//
+export const listGameSessionsByLobbyID =
+	/* GraphQL */ `query ListGameSessionsByLobbyID(
   $lobbyID: ID!
   $sortDirection: ModelSortDirection
   $filter: ModelGameSessionFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  getGameSessionByLobbyID(
+  listGameSessionsByLobbyID(
     lobbyID: $lobbyID
     sortDirection: $sortDirection
     filter: $filter
     limit: $limit
     nextToken: $nextToken
   ) {
-    items {
-      ${gameSessionDocument({ includeLobby: false, includeGameRounds: false })}
-    }
+  items {
+       ${gameSessionDocument({ includeLobby: false, includeGameRounds: false })}
+      }
     nextToken
     __typename
   }
 }
 ` as GeneratedQuery<
-		APITypes.GetGameSessionByLobbyIDQueryVariables,
-		APITypes.GetGameSessionByLobbyIDQuery
+		APITypes.ListGameSessionsByLobbyIDQueryVariables,
+		APITypes.ListGameSessionsByLobbyIDQuery
 	>
+
 export const getLobby = /* GraphQL */ `query GetLobby($id: ID!) {
   getLobby(id: $id) {
     ${lobbyDocument({
@@ -230,14 +287,14 @@ export const listLobbies = /* GraphQL */ `query ListLobbies(
 	APITypes.ListLobbiesQueryVariables,
 	APITypes.ListLobbiesQuery
 >
-export const getLobbyByCode = /* GraphQL */ `query GetLobbyByCode(
+export const listLobbiesByCode = /* GraphQL */ `query ListLobbiesByCode(
   $code: String!
   $sortDirection: ModelSortDirection
   $filter: ModelLobbyFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  getLobbyByCode(
+  listLobbiesByCode(
     code: $code
     sortDirection: $sortDirection
     filter: $filter
@@ -256,17 +313,17 @@ export const getLobbyByCode = /* GraphQL */ `query GetLobbyByCode(
   }
 }
 ` as GeneratedQuery<
-	APITypes.GetLobbyByCodeQueryVariables,
-	APITypes.GetLobbyByCodeQuery
+	APITypes.ListLobbiesByCodeQueryVariables,
+	APITypes.ListLobbiesByCodeQuery
 >
-export const getLobbyByCreatorID = /* GraphQL */ `query GetLobbyByCreatorID(
+export const listLobbiesByCreatorID = /* GraphQL */ `query ListLobbyByCreatorID(
   $creatorID: ID!
   $sortDirection: ModelSortDirection
   $filter: ModelLobbyFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  getLobbyByCreatorID(
+  listLobbiesByCreatorID(
     creatorID: $creatorID
     sortDirection: $sortDirection
     filter: $filter
@@ -285,18 +342,18 @@ export const getLobbyByCreatorID = /* GraphQL */ `query GetLobbyByCreatorID(
   }
 }
 ` as GeneratedQuery<
-	APITypes.GetLobbyByCreatorIDQueryVariables,
-	APITypes.GetLobbyByCreatorIDQuery
+	APITypes.ListLobbiesByCreatorIDQueryVariables,
+	APITypes.ListLobbiesByCreatorIDQuery
 >
-export const getLobbyByGameSessionID =
-	/* GraphQL */ `query GetLobbyByGameSessionID(
+export const listLobbiesByGameSessionID =
+	/* GraphQL */ `query listLobbiesByGameSessionID(
   $gameSessionID: ID!
   $sortDirection: ModelSortDirection
   $filter: ModelLobbyFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  getLobbyByGameSessionID(
+  listLobbiesByGameSessionID(
     gameSessionID: $gameSessionID
     sortDirection: $sortDirection
     filter: $filter
@@ -314,8 +371,8 @@ export const getLobbyByGameSessionID =
   }
 }
 ` as GeneratedQuery<
-		APITypes.GetLobbyByGameSessionIDQueryVariables,
-		APITypes.GetLobbyByGameSessionIDQuery
+		APITypes.ListLobbiesByGameSessionIDQueryVariables,
+		APITypes.ListLobbiesByGameSessionIDQuery
 	>
 export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
   getUser(id: $id) {
@@ -345,14 +402,14 @@ export const listUsers = /* GraphQL */ `query ListUsers(
   }
 }
 ` as GeneratedQuery<APITypes.ListUsersQueryVariables, APITypes.ListUsersQuery>
-export const getUserByEmail = /* GraphQL */ `query GetUserByEmail(
+export const listUsersByEmail = /* GraphQL */ `query listUsersByEmail(
   $email: AWSEmail!
   $sortDirection: ModelSortDirection
   $filter: ModelUserFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  getUserByEmail(
+ listUsersByEmail(
     email: $email
     sortDirection: $sortDirection
     filter: $filter
@@ -371,12 +428,12 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail(
   }
 }
 ` as GeneratedQuery<
-	APITypes.GetUserByEmailQueryVariables,
-	APITypes.GetUserByEmailQuery
+	APITypes.ListUsersByEmailQueryVariables,
+	APITypes.ListUsersByEmailQuery
 >
 export const getParticipant = /* GraphQL */ `query GetParticipant($id: ID!) {
   getParticipant(id: $id) {
-    ${participantDocument({ includeUser: true, includeLobby: true })} 
+    ${participantDocument({ includeUser: true, includeLobby: true })}
   }
 }
 ` as GeneratedQuery<

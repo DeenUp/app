@@ -44,16 +44,14 @@ const createMultiplayerSessionSlice: StateCreator<
 	let gameRoundSubscription: Subscription | null = null
 	let submittedAnswerSubscription: Subscription | null = null
 
-	const onGameRoundSubscription = (gameSessionId: string) => {
+	const onGameRoundSubscription = (gameSessionID: string) => {
 		gameRoundSubscription = gameRoundApi.subscribe(
 			{
 				filter: {
-					gameSessionID: { eq: gameSessionId },
+					gameSessionID: { eq: gameSessionID },
 				},
 			},
 			({ type, data: gameRound }) => {
-				onSubmittedAnswerSubscription(gameRound.id)
-
 				if (type === "created") {
 					set({
 						gameRound,
@@ -75,7 +73,7 @@ const createMultiplayerSessionSlice: StateCreator<
 		return gameRoundSubscription
 	}
 
-	const onSubmittedAnswerSubscription = (gameRoundID: string) => {
+	const onSubmittedAnswerSubscription = (gameSessionID: string) => {
 		if (submittedAnswerSubscription) {
 			submittedAnswerSubscription.unsubscribe()
 		}
@@ -83,10 +81,11 @@ const createMultiplayerSessionSlice: StateCreator<
 		submittedAnswerSubscription = submittedAnswerApi.subscribe(
 			{
 				filter: {
-					gameRoundID: { eq: gameRoundID },
+					gameSessionID: { eq: gameSessionID },
 				},
 			},
 			({ data: submittedAnswer }) => {
+				const { gameRoundID } = submittedAnswer
 				const currentRoundAnswers = get().submittedAnswers[gameRoundID]!
 
 				set({
@@ -146,6 +145,7 @@ const createMultiplayerSessionSlice: StateCreator<
 			const gameSessionID = get().gameSessionID!
 
 			onGameRoundSubscription(gameSessionID)
+			onSubmittedAnswerSubscription(gameSessionID)
 
 			if (!get().isCreator) return
 
@@ -186,8 +186,6 @@ const createMultiplayerSessionSlice: StateCreator<
 					loading: false,
 					gameRound: newGameRound,
 				})
-
-				onSubmittedAnswerSubscription(response.item!.id)
 			} catch (error) {
 				console.error(error)
 				set({
@@ -208,6 +206,7 @@ const createMultiplayerSessionSlice: StateCreator<
 
 		submitAnswer: async (): Promise<void> => {
 			if (get().loading) return
+			if (!get().selectedPossibleAnswer) return
 
 			set({ loading: true })
 
@@ -233,6 +232,7 @@ const createMultiplayerSessionSlice: StateCreator<
 					isCorrect: answer === correctAnswer,
 					userID: useUserStore.getState().currentUser!.id,
 					gameRoundID: id,
+					gameSessionID: get().gameSessionID!,
 				})
 
 				if (response.hasError) {

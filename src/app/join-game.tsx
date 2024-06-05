@@ -31,35 +31,25 @@ export default function CreateGame() {
 	const CODE_LENGTH = 6
 	const { translate, theme } = useSettingsStore()
 
-	const {
-		gameSessionID,
-		joinExistingLobby,
-		participants,
-		leaveLobby,
-		joinLobby,
-		destroy,
-	} = useGameStore((state: GameStore) => ({
-		participants: state.participants,
-		error: state.error,
-		destroy: state.destroy,
-		leaveLobby: state.leaveLobby,
-		joinLobby: state.joinLobby,
-		joinExistingLobby: state.joinExistingLobby,
-		gameSessionID: state.gameSessionID,
-	}))
+	const { gameSessionID, joinExistingLobby, participants, joinLobby, error } =
+		useGameStore((state: GameStore) => ({
+			participants: state.participants,
+			error: state.error,
+			destroy: state.destroy,
+			leaveLobby: state.leaveLobby,
+			joinLobby: state.joinLobby,
+			joinExistingLobby: state.joinExistingLobby,
+			gameSessionID: state.gameSessionID,
+			gameRound: state.gameRound,
+		}))
 
 	useEffect(() => {
 		joinExistingLobby()
-
-		return () => {
-			destroy()
-			leaveLobby()
-		}
 	}, [])
 
 	useEffect(() => {
 		if (gameSessionID) {
-			router.navigate("/friends-mode/")
+			router.replace("/friends-mode/")
 		}
 	}, [gameSessionID])
 
@@ -119,6 +109,7 @@ export default function CreateGame() {
 	const handlePasteFromClipboard = async () => {
 		try {
 			const text: string = await Clipboard.getStringAsync()
+			console.log("Pasted text from clipboard:", text)
 			const newCode: string[] = [...states.inputCode]
 			const sourceText =
 				text.length > CODE_LENGTH
@@ -143,19 +134,17 @@ export default function CreateGame() {
 		headerContainer: tw`mt-32 w-full flex-col items-start justify-start gap-6 p-4`,
 		headerText: tw`text-4xl font-bold text-background`,
 		codeContainer: tw`h-full items-center justify-start gap-8 rounded-t-[50] bg-background px-10 pt-12`,
-		codeText: tw`text-xl font-bold`,
+
 		buttonContainer: tw`flex w-full flex-col items-center justify-center gap-6`,
 		backButton: tw`flex h-16 items-center justify-center rounded-full p-4`,
-		shareButton: tw`flex items-center justify-center rounded-full border border-primary bg-surface p-4`,
 		codeInputContainer: tw`flex flex-row items-center justify-center gap-2 pl-12`,
-		codeDigitBox: tw`m-1 rounded-md bg-gray-200 p-4`,
-		joinGameButton: tw`w-2/3`,
 	}
 
 	return (
 		<SafeAreaView
 			style={{
 				backgroundColor: "#472836",
+				flex: 1,
 			}}
 		>
 			<StatusBar style="light" />
@@ -202,14 +191,6 @@ export default function CreateGame() {
 					<Separator color="primary" className="w-full" />
 					{participants.length === 0 && (
 						<View className={styles.buttonContainer}>
-							{/* <Button
-                color="primary"
-                size="lg"
-
-                onPress={handleContinue}
-                buttonStyle={styles.joinGameButton}
-              /> */}
-
 							<ThemedAwesomeButton
 								onPress={handleContinue}
 								type="anchor"
@@ -231,7 +212,7 @@ export default function CreateGame() {
 						</View>
 					)}
 
-					{/* {error && <Text>{error as string}</Text>} */}
+					{error && <Text>{error as string}</Text>}
 				</View>
 			</View>
 		</SafeAreaView>

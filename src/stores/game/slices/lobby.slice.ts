@@ -55,7 +55,6 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 			},
 
 			({ type, data: participant }) => {
-				console.log(useUserStore!.getState()!.currentUser!.email)
 				if (type === "deleted") {
 					set({
 						participants: get().participants.filter(
@@ -214,8 +213,6 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 							),
 					})
 
-					onParticipantSubscription(lobby.id)
-
 					return
 				}
 
@@ -273,9 +270,12 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 				}
 
 				const lobby = response.item!.lobby!
+
 				const participants = lobby.participants!.items.filter(
 					(item): item is Participant => item !== null,
 				)
+
+				if (participants.length <= 1) return
 
 				set({
 					lobbyCode: lobby.code,
@@ -285,6 +285,8 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 					participants,
 				})
 
+				onParticipantSubscription(lobby.id)
+				onGameSessionSubscription(lobby.id)
 				onLobbySubscription(lobby.id)
 			} catch (error) {
 				set({ loading: false, error: error as string })

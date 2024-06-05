@@ -33,7 +33,7 @@ export default function Placeholder({ solo }: { solo: boolean }) {
 	const styles = {
 		options: tw`gap-6`,
 		question: tw`text-center text-2xl font-bold`,
-		card: twr`flex h-96 w-96 flex-grow flex-col items-stretch justify-around rounded-md bg-[#F9F2DF]  p-8 shadow-md`,
+		card: twr`flex h-96 w-full flex-grow flex-col items-stretch justify-around rounded-md bg-[#F9F2DF]  p-8 shadow-md`,
 	}
 
 	return (
@@ -61,7 +61,7 @@ export default function Placeholder({ solo }: { solo: boolean }) {
 			}}
 		>
 			{!solo ? (
-				<View className="">
+				<View>
 					<Text className="text-center text-2xl">
 						Waiting for other players to submit their answers
 					</Text>

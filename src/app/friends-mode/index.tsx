@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 
 import { useEffect } from "react"
-import { SafeAreaView, Text } from "react-native"
+import { SafeAreaView, Text, View } from "react-native"
 
 import { router } from "expo-router"
 import { StatusBar } from "expo-status-bar"
@@ -12,9 +12,9 @@ import twr from "twrnc"
 import type { SubmittedAnswer } from "~/graphql/api"
 import type { GameStore, SettingsStore, UserStore } from "~/stores"
 
-import { QuestionAndAnswer, Scores } from "~/components/gameplay"
+import { Placeholder, QuestionAndAnswer, Scores } from "~/components/gameplay"
 import QuestionHeader from "~/components/gameplay/QuestionHeader"
-import { Button } from "~/components/ui"
+import { CloseButton, ThemedAwesomeButton } from "~/components/ui"
 import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore, useUserStore } from "~/stores"
 
@@ -27,11 +27,9 @@ export default function Page(): ReactNode {
 
 	const {
 		gameRound,
-		loading,
 		initializeGameRound,
 		submitAnswer,
 		submittedAnswers,
-		isCreator,
 		destroy,
 	} = useGameStore((state: GameStore) => ({
 		gameRound: state.gameRound,
@@ -57,160 +55,125 @@ export default function Page(): ReactNode {
 	}, [])
 
 	const styles = {
-		body: tw`shadow-offset-x-10 shadow-offset-y-5 mx-6 mb-2 flex h-72 flex-col items-stretch justify-around rounded-md bg-white p-12 shadow-md`,
+		screen: twr`flex-1 flex-col items-center justify-center bg-[${theme.primary}] pt-12`,
+		container: twr`w-full flex-1 flex-col items-center justify-center p-4`,
 		question: tw`text-center text-2xl font-bold`,
-		options: tw`gap-6`,
 		buttonsContainer: tw`flex flex-row justify-between px-6`,
-		buttons: tw`w-1/4`,
-		closeButton: tw`absolute right-10 top-14 z-20 size-10 bg-transparent`,
+		closeButton: tw`w-full flex-col items-end justify-end justify-between p-6`,
 		roundResultText: twr`absolute bottom-12 my-auto text-center text-xl font-semibold`,
 	}
 
 	return (
-		<SafeAreaView
-			style={{
-				flex: 1,
-				flexDirection: "column",
-				alignItems: "center",
-				justifyContent: "flex-start",
-				backgroundColor: theme.primary,
-			}}
-		>
+		<SafeAreaView style={styles.screen}>
 			<StatusBar style="light" />
 
-			<Button
-				buttonStyle={styles.closeButton}
-				size="lg"
-				iconSize={32}
-				iconName="close"
-				onPress={() => {
-					router.dismissAll()
-				}}
-			/>
-			{!gameRound?.isComplete && (
-				<QuestionHeader
-					index={gameRound?.index ?? 0}
-					length={10}
-					timed={false}
-				/>
-			)}
-
-			{gameRound?.isComplete && (
-				<MotiView
-					from={{
-						opacity: 0,
-						scale: 0.5,
-					}}
-					animate={{
-						opacity: 1,
-						scale: 1,
-					}}
-					exit={{
-						opacity: 0,
-						scale: 0,
-					}}
-					transition={{
-						delay: 100,
-					}}
-					exitTransition={{
-						delay: 400,
-					}}
-					style={twr`mt-18 absolute w-2/3`}
-				>
-					<Text style={twr`text-center text-2xl text-white`}>
-						{submittedAnswers[gameRound?.id]?.find(
-							(answer: SubmittedAnswer) =>
-								answer.userID === currentUser?.id &&
-								answer.gameRoundID === gameRound?.id &&
-								gameRound.correctAnswer === answer.answer,
-						)
-							? "Correct!"
-							: "Incorrect!"}
-					</Text>
-
-					<Text
-						style={twr`mt-4 text-center text-3xl font-bold text-white`}
-					>
-						{gameRound.correctAnswer}
-					</Text>
-				</MotiView>
-			)}
-			<AnimatePresence exitBeforeEnter>
-				{gameRound?.isComplete ? <Scores /> : <QuestionAndAnswer />}
-			</AnimatePresence>
-			{!gameRound?.isComplete ? (
-				<MotiView
-					key="button"
-					from={{
-						opacity: 0,
-						scale: 0.5,
-					}}
-					animate={{
-						opacity: 1,
-						scale: 1,
-					}}
-					exit={{
-						opacity: 0,
-						scale: 0,
-					}}
-					transition={{
-						delay: 400,
-					}}
-					style={twr`w-2/3`}
-				>
-					<Button
-						isLoading={loading}
-						label={"Submit Answer"}
-						onPress={() => {
-							submitAnswer()
-						}}
-						color="accent"
-						buttonStyle="shadow-md px-6 mt-10 w-full"
-						size="lg"
+			<View className={styles.closeButton}>
+				<CloseButton onPress={() => router.navigate("/")} />
+				{!gameRound?.isComplete && (
+					<QuestionHeader
+						index={gameRound?.index ?? 0}
+						length={10}
+						timed={false}
 					/>
-				</MotiView>
-			) : (
-				<MotiView
-					from={{
-						opacity: 0,
-						scale: 0.5,
-					}}
-					animate={{
-						opacity: 1,
-						scale: 1,
-					}}
-					exit={{
-						opacity: 0,
-						scale: 0,
-					}}
-					delay={1000}
-					style={twr`absolute bottom-12 flex w-full items-center justify-center `}
-				>
-					{isCreator ||
-					(gameRound.isComplete && gameRound.index === 10) ? (
-						<Button
-							isLoading={loading}
-							label={
-								gameRound?.index === 10
-									? "View Results"
-									: "Next Round"
-							}
-							onPress={
-								gameRound?.index === 10
-									? () => router.push("/friends-mode/result")
-									: () => initializeGameRound()
-							}
-							color="primary"
-							buttonStyle="shadow-md px-6 mt-2 w-2/3"
-							size="lg"
-						/>
-					) : (
-						<Text style={styles.roundResultText}>
-							Waiting for host...
+				)}
+			</View>
+			<View style={styles.container}>
+				{gameRound?.isComplete && (
+					<MotiView
+						from={{
+							opacity: 0,
+							scale: 0.5,
+						}}
+						animate={{
+							opacity: 1,
+							scale: 1,
+						}}
+						exit={{
+							opacity: 0,
+							scale: 0,
+						}}
+						transition={{
+							delay: 100,
+						}}
+						exitTransition={{
+							delay: 400,
+						}}
+						style={twr`mt-18 absolute w-2/3`}
+					>
+						<Text style={twr`text-center text-2xl text-white`}>
+							{submittedAnswers[gameRound?.id]?.find(
+								(answer: SubmittedAnswer) =>
+									answer.userID === currentUser?.id &&
+									answer.gameRoundID === gameRound?.id &&
+									gameRound.correctAnswer === answer.answer,
+							)
+								? "Correct!"
+								: "Incorrect!"}
 						</Text>
+
+						<Text
+							style={twr`mt-4 text-center text-3xl font-bold text-white`}
+						>
+							{gameRound.correctAnswer}
+						</Text>
+					</MotiView>
+				)}
+
+				<AnimatePresence exitBeforeEnter>
+					{gameRound?.isComplete ? (
+						<Scores />
+					) : gameRound &&
+					  submittedAnswers[gameRound!.id]?.find(
+							(answer) =>
+								answer.userID === currentUser?.id &&
+								answer.gameRoundID === gameRound?.id,
+					  ) ? (
+						<Placeholder solo={false} />
+					) : (
+						<QuestionAndAnswer />
 					)}
-				</MotiView>
-			)}
+				</AnimatePresence>
+
+				{!gameRound?.isComplete && (
+					<MotiView
+						key="button"
+						from={{
+							opacity: 0,
+							scale: 0.5,
+						}}
+						animate={{
+							opacity: 1,
+							scale: 1,
+						}}
+						exit={{
+							opacity: 0,
+							scale: 0,
+						}}
+						transition={{
+							delay: 400,
+						}}
+					>
+						<ThemedAwesomeButton
+							type="anchor"
+							size="large"
+							width={350}
+							height={70}
+							textSize={20}
+							style={twr`mt-8`}
+							progress
+							onPress={async (next) => {
+								submitAnswer()
+								//@ts-ignore
+								next()
+
+								return
+							}}
+						>
+							{gameRound?.index === 10 ? "Submit" : "Next"}
+						</ThemedAwesomeButton>
+					</MotiView>
+				)}
+			</View>
 		</SafeAreaView>
 	)
 }

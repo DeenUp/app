@@ -1,3 +1,4 @@
+/* tslint:disable */
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
@@ -128,6 +129,8 @@ export type SubmittedAnswer = {
 	user: User
 	gameRoundID: string
 	gameRound: GameRound
+	gameSessionID: string
+	gameSession: GameSession
 	updatedAt: string
 	createdAt: string
 }
@@ -138,8 +141,9 @@ export type User = {
 	email: string
 	name: string
 	selfie?: string | null
-	status: UserStatus
-	type: UserType
+	status?: UserStatus | null
+	type?: UserType | null
+	isOnline?: boolean | null
 	createdLobbies?: ModelLobbyConnection | null
 	joinedLobbies?: ModelParticipantConnection | null
 	submittedAnswers?: ModelSubmittedAnswerConnection | null
@@ -200,6 +204,7 @@ export type GameSession = {
 	lobbyID: string
 	lobby: Lobby
 	rounds?: ModelGameRoundConnection | null
+	submittedAnswers?: ModelSubmittedAnswerConnection | null
 	updatedAt: string
 	createdAt: string
 }
@@ -231,6 +236,7 @@ export type CreateSubmittedAnswerInput = {
 	isCorrect?: boolean | null
 	userID: string
 	gameRoundID: string
+	gameSessionID: string
 	updatedAt?: string | null
 	createdAt?: string | null
 }
@@ -240,6 +246,7 @@ export type ModelSubmittedAnswerConditionInput = {
 	isCorrect?: ModelBooleanInput | null
 	userID?: ModelIDInput | null
 	gameRoundID?: ModelIDInput | null
+	gameSessionID?: ModelIDInput | null
 	updatedAt?: ModelStringInput | null
 	createdAt?: ModelStringInput | null
 	and?: Array<ModelSubmittedAnswerConditionInput | null> | null
@@ -253,6 +260,7 @@ export type UpdateSubmittedAnswerInput = {
 	isCorrect?: boolean | null
 	userID?: string | null
 	gameRoundID?: string | null
+	gameSessionID?: string | null
 	updatedAt?: string | null
 	createdAt?: string | null
 }
@@ -331,6 +339,7 @@ export type UpdateUserInput = {
 	selfie?: string | null
 	status?: UserStatus | null
 	type?: UserType | null
+	isOnline?: boolean | null
 	updatedAt?: string | null
 	createdAt?: string | null
 }
@@ -341,6 +350,7 @@ export type ModelUserConditionInput = {
 	selfie?: ModelStringInput | null
 	status?: ModelUserStatusInput | null
 	type?: ModelUserTypeInput | null
+	isOnline?: ModelBooleanInput | null
 	updatedAt?: ModelStringInput | null
 	createdAt?: ModelStringInput | null
 	and?: Array<ModelUserConditionInput | null> | null
@@ -409,6 +419,7 @@ export type ModelSubmittedAnswerFilterInput = {
 	isCorrect?: ModelBooleanInput | null
 	userID?: ModelIDInput | null
 	gameRoundID?: ModelIDInput | null
+	gameSessionID?: ModelIDInput | null
 	updatedAt?: ModelStringInput | null
 	createdAt?: ModelStringInput | null
 	and?: Array<ModelSubmittedAnswerFilterInput | null> | null
@@ -452,6 +463,7 @@ export type ModelUserFilterInput = {
 	selfie?: ModelStringInput | null
 	status?: ModelUserStatusInput | null
 	type?: ModelUserTypeInput | null
+	isOnline?: ModelBooleanInput | null
 	updatedAt?: ModelStringInput | null
 	createdAt?: ModelStringInput | null
 	and?: Array<ModelUserFilterInput | null> | null
@@ -542,6 +554,7 @@ export type ModelSubscriptionSubmittedAnswerFilterInput = {
 	isCorrect?: ModelSubscriptionBooleanInput | null
 	userID?: ModelSubscriptionIDInput | null
 	gameRoundID?: ModelSubscriptionIDInput | null
+	gameSessionID?: ModelSubscriptionIDInput | null
 	updatedAt?: ModelSubscriptionStringInput | null
 	createdAt?: ModelSubscriptionStringInput | null
 	and?: Array<ModelSubscriptionSubmittedAnswerFilterInput | null> | null
@@ -576,6 +589,7 @@ export type ModelSubscriptionUserFilterInput = {
 	selfie?: ModelSubscriptionStringInput | null
 	status?: ModelSubscriptionStringInput | null
 	type?: ModelSubscriptionStringInput | null
+	isOnline?: ModelSubscriptionBooleanInput | null
 	updatedAt?: ModelSubscriptionStringInput | null
 	createdAt?: ModelSubscriptionStringInput | null
 	and?: Array<ModelSubscriptionUserFilterInput | null> | null
@@ -614,6 +628,7 @@ export type CreateGameRoundMutation = {
 				isCorrect?: boolean | null
 				userID: string
 				gameRoundID: string
+				gameSessionID: string
 				updatedAt: string
 				createdAt: string
 			} | null>
@@ -636,6 +651,10 @@ export type CreateGameRoundMutation = {
 			}
 			rounds?: {
 				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
 				nextToken?: string | null
 			} | null
 			updatedAt: string
@@ -668,6 +687,7 @@ export type UpdateGameRoundMutation = {
 				isCorrect?: boolean | null
 				userID: string
 				gameRoundID: string
+				gameSessionID: string
 				updatedAt: string
 				createdAt: string
 			} | null>
@@ -690,6 +710,10 @@ export type UpdateGameRoundMutation = {
 			}
 			rounds?: {
 				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
 				nextToken?: string | null
 			} | null
 			updatedAt: string
@@ -722,6 +746,7 @@ export type DeleteGameRoundMutation = {
 				isCorrect?: boolean | null
 				userID: string
 				gameRoundID: string
+				gameSessionID: string
 				updatedAt: string
 				createdAt: string
 			} | null>
@@ -744,6 +769,10 @@ export type DeleteGameRoundMutation = {
 			}
 			rounds?: {
 				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
 				nextToken?: string | null
 			} | null
 			updatedAt: string
@@ -772,8 +801,9 @@ export type CreateSubmittedAnswerMutation = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -809,6 +839,32 @@ export type CreateSubmittedAnswerMutation = {
 				updatedAt: string
 				createdAt: string
 			}
+			updatedAt: string
+			createdAt: string
+		}
+		gameSessionID: string
+		gameSession: {
+			__typename: "GameSession"
+			id: string
+			lobbyID: string
+			lobby: {
+				__typename: "Lobby"
+				id: string
+				code: string
+				isActive: boolean
+				creatorID: string
+				gameSessionID?: string | null
+				updatedAt: string
+				createdAt: string
+			}
+			rounds?: {
+				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
+				nextToken?: string | null
+			} | null
 			updatedAt: string
 			createdAt: string
 		}
@@ -835,8 +891,9 @@ export type UpdateSubmittedAnswerMutation = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -872,6 +929,32 @@ export type UpdateSubmittedAnswerMutation = {
 				updatedAt: string
 				createdAt: string
 			}
+			updatedAt: string
+			createdAt: string
+		}
+		gameSessionID: string
+		gameSession: {
+			__typename: "GameSession"
+			id: string
+			lobbyID: string
+			lobby: {
+				__typename: "Lobby"
+				id: string
+				code: string
+				isActive: boolean
+				creatorID: string
+				gameSessionID?: string | null
+				updatedAt: string
+				createdAt: string
+			}
+			rounds?: {
+				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
+				nextToken?: string | null
+			} | null
 			updatedAt: string
 			createdAt: string
 		}
@@ -898,8 +981,9 @@ export type DeleteSubmittedAnswerMutation = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -935,6 +1019,32 @@ export type DeleteSubmittedAnswerMutation = {
 				updatedAt: string
 				createdAt: string
 			}
+			updatedAt: string
+			createdAt: string
+		}
+		gameSessionID: string
+		gameSession: {
+			__typename: "GameSession"
+			id: string
+			lobbyID: string
+			lobby: {
+				__typename: "Lobby"
+				id: string
+				code: string
+				isActive: boolean
+				creatorID: string
+				gameSessionID?: string | null
+				updatedAt: string
+				createdAt: string
+			}
+			rounds?: {
+				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
+				nextToken?: string | null
+			} | null
 			updatedAt: string
 			createdAt: string
 		}
@@ -969,8 +1079,9 @@ export type CreateGameSessionMutation = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -994,6 +1105,21 @@ export type CreateGameSessionMutation = {
 				question: string
 				correctAnswer: string
 				isComplete: boolean
+				gameSessionID: string
+				updatedAt: string
+				createdAt: string
+			} | null>
+			nextToken?: string | null
+		} | null
+		submittedAnswers?: {
+			__typename: "ModelSubmittedAnswerConnection"
+			items: Array<{
+				__typename: "SubmittedAnswer"
+				id: string
+				answer: string
+				isCorrect?: boolean | null
+				userID: string
+				gameRoundID: string
 				gameSessionID: string
 				updatedAt: string
 				createdAt: string
@@ -1031,8 +1157,9 @@ export type UpdateGameSessionMutation = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -1056,6 +1183,21 @@ export type UpdateGameSessionMutation = {
 				question: string
 				correctAnswer: string
 				isComplete: boolean
+				gameSessionID: string
+				updatedAt: string
+				createdAt: string
+			} | null>
+			nextToken?: string | null
+		} | null
+		submittedAnswers?: {
+			__typename: "ModelSubmittedAnswerConnection"
+			items: Array<{
+				__typename: "SubmittedAnswer"
+				id: string
+				answer: string
+				isCorrect?: boolean | null
+				userID: string
+				gameRoundID: string
 				gameSessionID: string
 				updatedAt: string
 				createdAt: string
@@ -1093,8 +1235,9 @@ export type DeleteGameSessionMutation = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -1118,6 +1261,21 @@ export type DeleteGameSessionMutation = {
 				question: string
 				correctAnswer: string
 				isComplete: boolean
+				gameSessionID: string
+				updatedAt: string
+				createdAt: string
+			} | null>
+			nextToken?: string | null
+		} | null
+		submittedAnswers?: {
+			__typename: "ModelSubmittedAnswerConnection"
+			items: Array<{
+				__typename: "SubmittedAnswer"
+				id: string
+				answer: string
+				isCorrect?: boolean | null
+				userID: string
+				gameRoundID: string
 				gameSessionID: string
 				updatedAt: string
 				createdAt: string
@@ -1159,8 +1317,9 @@ export type CreateLobbyMutation = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -1193,6 +1352,10 @@ export type CreateLobbyMutation = {
 			}
 			rounds?: {
 				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
 				nextToken?: string | null
 			} | null
 			updatedAt: string
@@ -1233,8 +1396,9 @@ export type UpdateLobbyMutation = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -1267,6 +1431,10 @@ export type UpdateLobbyMutation = {
 			}
 			rounds?: {
 				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
 				nextToken?: string | null
 			} | null
 			updatedAt: string
@@ -1307,8 +1475,9 @@ export type DeleteLobbyMutation = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -1343,6 +1512,10 @@ export type DeleteLobbyMutation = {
 				__typename: "ModelGameRoundConnection"
 				nextToken?: string | null
 			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
+				nextToken?: string | null
+			} | null
 			updatedAt: string
 			createdAt: string
 		} | null
@@ -1363,8 +1536,9 @@ export type UpdateUserMutation = {
 		email: string
 		name: string
 		selfie?: string | null
-		status: UserStatus
-		type: UserType
+		status?: UserStatus | null
+		type?: UserType | null
+		isOnline?: boolean | null
 		createdLobbies?: {
 			__typename: "ModelLobbyConnection"
 			items: Array<{
@@ -1400,6 +1574,7 @@ export type UpdateUserMutation = {
 				isCorrect?: boolean | null
 				userID: string
 				gameRoundID: string
+				gameSessionID: string
 				updatedAt: string
 				createdAt: string
 			} | null>
@@ -1437,8 +1612,9 @@ export type CreateParticipantMutation = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -1459,8 +1635,9 @@ export type CreateParticipantMutation = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -1508,8 +1685,9 @@ export type UpdateParticipantMutation = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -1530,8 +1708,9 @@ export type UpdateParticipantMutation = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -1579,8 +1758,9 @@ export type DeleteParticipantMutation = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -1601,8 +1781,9 @@ export type DeleteParticipantMutation = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -1644,6 +1825,7 @@ export type GetGameRoundQuery = {
 				isCorrect?: boolean | null
 				userID: string
 				gameRoundID: string
+				gameSessionID: string
 				updatedAt: string
 				createdAt: string
 			} | null>
@@ -1666,6 +1848,10 @@ export type GetGameRoundQuery = {
 			}
 			rounds?: {
 				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
 				nextToken?: string | null
 			} | null
 			updatedAt: string
@@ -1711,7 +1897,7 @@ export type ListGameRoundsQuery = {
 	} | null
 }
 
-export type GetGameRoundByGameSessionIDQueryVariables = {
+export type ListGameRoundsByGameSessionIDQueryVariables = {
 	gameSessionID: string
 	sortDirection?: ModelSortDirection | null
 	filter?: ModelGameRoundFilterInput | null
@@ -1719,8 +1905,8 @@ export type GetGameRoundByGameSessionIDQueryVariables = {
 	nextToken?: string | null
 }
 
-export type GetGameRoundByGameSessionIDQuery = {
-	getGameRoundByGameSessionID?: {
+export type ListGameRoundsByGameSessionIDQuery = {
+	listGameRoundsByGameSessionID?: {
 		__typename: "ModelGameRoundConnection"
 		items: Array<{
 			__typename: "GameRound"
@@ -1765,8 +1951,9 @@ export type GetSubmittedAnswerQuery = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -1805,6 +1992,32 @@ export type GetSubmittedAnswerQuery = {
 			updatedAt: string
 			createdAt: string
 		}
+		gameSessionID: string
+		gameSession: {
+			__typename: "GameSession"
+			id: string
+			lobbyID: string
+			lobby: {
+				__typename: "Lobby"
+				id: string
+				code: string
+				isActive: boolean
+				creatorID: string
+				gameSessionID?: string | null
+				updatedAt: string
+				createdAt: string
+			}
+			rounds?: {
+				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
+				nextToken?: string | null
+			} | null
+			updatedAt: string
+			createdAt: string
+		}
 		updatedAt: string
 		createdAt: string
 	} | null
@@ -1831,8 +2044,9 @@ export type ListSubmittedAnswersQuery = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -1848,6 +2062,14 @@ export type ListSubmittedAnswersQuery = {
 				updatedAt: string
 				createdAt: string
 			}
+			gameSessionID: string
+			gameSession: {
+				__typename: "GameSession"
+				id: string
+				lobbyID: string
+				updatedAt: string
+				createdAt: string
+			}
 			updatedAt: string
 			createdAt: string
 		} | null>
@@ -1855,7 +2077,7 @@ export type ListSubmittedAnswersQuery = {
 	} | null
 }
 
-export type GetSubmittedAnswerByUserIDQueryVariables = {
+export type ListSubmittedAnswersByUserIDQueryVariables = {
 	userID: string
 	sortDirection?: ModelSortDirection | null
 	filter?: ModelSubmittedAnswerFilterInput | null
@@ -1863,8 +2085,8 @@ export type GetSubmittedAnswerByUserIDQueryVariables = {
 	nextToken?: string | null
 }
 
-export type GetSubmittedAnswerByUserIDQuery = {
-	getSubmittedAnswerByUserID?: {
+export type ListSubmittedAnswersByUserIDQuery = {
+	listSubmittedAnswersByUserID?: {
 		__typename: "ModelSubmittedAnswerConnection"
 		items: Array<{
 			__typename: "SubmittedAnswer"
@@ -1878,8 +2100,9 @@ export type GetSubmittedAnswerByUserIDQuery = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -1892,6 +2115,14 @@ export type GetSubmittedAnswerByUserIDQuery = {
 				correctAnswer: string
 				isComplete: boolean
 				gameSessionID: string
+				updatedAt: string
+				createdAt: string
+			}
+			gameSessionID: string
+			gameSession: {
+				__typename: "GameSession"
+				id: string
+				lobbyID: string
 				updatedAt: string
 				createdAt: string
 			}
@@ -1902,7 +2133,7 @@ export type GetSubmittedAnswerByUserIDQuery = {
 	} | null
 }
 
-export type GetSubmittedAnswerByGameRoundIDQueryVariables = {
+export type ListSubmittedAnswersByGameRoundIDQueryVariables = {
 	gameRoundID: string
 	sortDirection?: ModelSortDirection | null
 	filter?: ModelSubmittedAnswerFilterInput | null
@@ -1910,8 +2141,8 @@ export type GetSubmittedAnswerByGameRoundIDQueryVariables = {
 	nextToken?: string | null
 }
 
-export type GetSubmittedAnswerByGameRoundIDQuery = {
-	getSubmittedAnswerByGameRoundID?: {
+export type ListSubmittedAnswersByGameRoundIDQuery = {
+	listSubmittedAnswersByGameRoundID?: {
 		__typename: "ModelSubmittedAnswerConnection"
 		items: Array<{
 			__typename: "SubmittedAnswer"
@@ -1925,8 +2156,9 @@ export type GetSubmittedAnswerByGameRoundIDQuery = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -1939,6 +2171,70 @@ export type GetSubmittedAnswerByGameRoundIDQuery = {
 				correctAnswer: string
 				isComplete: boolean
 				gameSessionID: string
+				updatedAt: string
+				createdAt: string
+			}
+			gameSessionID: string
+			gameSession: {
+				__typename: "GameSession"
+				id: string
+				lobbyID: string
+				updatedAt: string
+				createdAt: string
+			}
+			updatedAt: string
+			createdAt: string
+		} | null>
+		nextToken?: string | null
+	} | null
+}
+
+export type ListSubmittedAnswersByGameSessionIDQueryVariables = {
+	gameSessionID: string
+	sortDirection?: ModelSortDirection | null
+	filter?: ModelSubmittedAnswerFilterInput | null
+	limit?: number | null
+	nextToken?: string | null
+}
+
+export type ListSubmittedAnswersByGameSessionIDQuery = {
+	listSubmittedAnswersByGameSessionID?: {
+		__typename: "ModelSubmittedAnswerConnection"
+		items: Array<{
+			__typename: "SubmittedAnswer"
+			id: string
+			answer: string
+			isCorrect?: boolean | null
+			userID: string
+			user: {
+				__typename: "User"
+				id: string
+				email: string
+				name: string
+				selfie?: string | null
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
+				updatedAt: string
+				createdAt: string
+			}
+			gameRoundID: string
+			gameRound: {
+				__typename: "GameRound"
+				id: string
+				index: number
+				question: string
+				correctAnswer: string
+				isComplete: boolean
+				gameSessionID: string
+				updatedAt: string
+				createdAt: string
+			}
+			gameSessionID: string
+			gameSession: {
+				__typename: "GameSession"
+				id: string
+				lobbyID: string
 				updatedAt: string
 				createdAt: string
 			}
@@ -1974,8 +2270,9 @@ export type GetGameSessionQuery = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -1999,6 +2296,21 @@ export type GetGameSessionQuery = {
 				question: string
 				correctAnswer: string
 				isComplete: boolean
+				gameSessionID: string
+				updatedAt: string
+				createdAt: string
+			} | null>
+			nextToken?: string | null
+		} | null
+		submittedAnswers?: {
+			__typename: "ModelSubmittedAnswerConnection"
+			items: Array<{
+				__typename: "SubmittedAnswer"
+				id: string
+				answer: string
+				isCorrect?: boolean | null
+				userID: string
+				gameRoundID: string
 				gameSessionID: string
 				updatedAt: string
 				createdAt: string
@@ -2037,6 +2349,10 @@ export type ListGameSessionsQuery = {
 				__typename: "ModelGameRoundConnection"
 				nextToken?: string | null
 			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
+				nextToken?: string | null
+			} | null
 			updatedAt: string
 			createdAt: string
 		} | null>
@@ -2044,7 +2360,7 @@ export type ListGameSessionsQuery = {
 	} | null
 }
 
-export type GetGameSessionByLobbyIDQueryVariables = {
+export type ListGameSessionsByLobbyIDQueryVariables = {
 	lobbyID: string
 	sortDirection?: ModelSortDirection | null
 	filter?: ModelGameSessionFilterInput | null
@@ -2052,8 +2368,8 @@ export type GetGameSessionByLobbyIDQueryVariables = {
 	nextToken?: string | null
 }
 
-export type GetGameSessionByLobbyIDQuery = {
-	getGameSessionByLobbyID?: {
+export type ListGameSessionsByLobbyIDQuery = {
+	listGameSessionsByLobbyID?: {
 		__typename: "ModelGameSessionConnection"
 		items: Array<{
 			__typename: "GameSession"
@@ -2071,6 +2387,10 @@ export type GetGameSessionByLobbyIDQuery = {
 			}
 			rounds?: {
 				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
 				nextToken?: string | null
 			} | null
 			updatedAt: string
@@ -2109,8 +2429,9 @@ export type GetLobbyQuery = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -2143,6 +2464,10 @@ export type GetLobbyQuery = {
 			}
 			rounds?: {
 				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
 				nextToken?: string | null
 			} | null
 			updatedAt: string
@@ -2178,8 +2503,9 @@ export type ListLobbiesQuery = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -2198,7 +2524,7 @@ export type ListLobbiesQuery = {
 	} | null
 }
 
-export type GetLobbyByCodeQueryVariables = {
+export type ListLobbiesByCodeQueryVariables = {
 	code: string
 	sortDirection?: ModelSortDirection | null
 	filter?: ModelLobbyFilterInput | null
@@ -2206,8 +2532,8 @@ export type GetLobbyByCodeQueryVariables = {
 	nextToken?: string | null
 }
 
-export type GetLobbyByCodeQuery = {
-	getLobbyByCode?: {
+export type ListLobbiesByCodeQuery = {
+	listLobbiesByCode?: {
 		__typename: "ModelLobbyConnection"
 		items: Array<{
 			__typename: "Lobby"
@@ -2225,8 +2551,9 @@ export type GetLobbyByCodeQuery = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -2245,7 +2572,7 @@ export type GetLobbyByCodeQuery = {
 	} | null
 }
 
-export type GetLobbyByCreatorIDQueryVariables = {
+export type ListLobbiesByCreatorIDQueryVariables = {
 	creatorID: string
 	sortDirection?: ModelSortDirection | null
 	filter?: ModelLobbyFilterInput | null
@@ -2253,8 +2580,8 @@ export type GetLobbyByCreatorIDQueryVariables = {
 	nextToken?: string | null
 }
 
-export type GetLobbyByCreatorIDQuery = {
-	getLobbyByCreatorID?: {
+export type ListLobbiesByCreatorIDQuery = {
+	listLobbiesByCreatorID?: {
 		__typename: "ModelLobbyConnection"
 		items: Array<{
 			__typename: "Lobby"
@@ -2272,8 +2599,9 @@ export type GetLobbyByCreatorIDQuery = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -2292,7 +2620,7 @@ export type GetLobbyByCreatorIDQuery = {
 	} | null
 }
 
-export type GetLobbyByGameSessionIDQueryVariables = {
+export type ListLobbiesByGameSessionIDQueryVariables = {
 	gameSessionID: string
 	sortDirection?: ModelSortDirection | null
 	filter?: ModelLobbyFilterInput | null
@@ -2300,8 +2628,8 @@ export type GetLobbyByGameSessionIDQueryVariables = {
 	nextToken?: string | null
 }
 
-export type GetLobbyByGameSessionIDQuery = {
-	getLobbyByGameSessionID?: {
+export type ListLobbiesByGameSessionIDQuery = {
+	listLobbiesByGameSessionID?: {
 		__typename: "ModelLobbyConnection"
 		items: Array<{
 			__typename: "Lobby"
@@ -2319,8 +2647,9 @@ export type GetLobbyByGameSessionIDQuery = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -2350,8 +2679,9 @@ export type GetUserQuery = {
 		email: string
 		name: string
 		selfie?: string | null
-		status: UserStatus
-		type: UserType
+		status?: UserStatus | null
+		type?: UserType | null
+		isOnline?: boolean | null
 		createdLobbies?: {
 			__typename: "ModelLobbyConnection"
 			items: Array<{
@@ -2387,6 +2717,7 @@ export type GetUserQuery = {
 				isCorrect?: boolean | null
 				userID: string
 				gameRoundID: string
+				gameSessionID: string
 				updatedAt: string
 				createdAt: string
 			} | null>
@@ -2412,8 +2743,9 @@ export type ListUsersQuery = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -2433,7 +2765,7 @@ export type ListUsersQuery = {
 	} | null
 }
 
-export type GetUserByEmailQueryVariables = {
+export type ListUsersByEmailQueryVariables = {
 	email: string
 	sortDirection?: ModelSortDirection | null
 	filter?: ModelUserFilterInput | null
@@ -2441,8 +2773,8 @@ export type GetUserByEmailQueryVariables = {
 	nextToken?: string | null
 }
 
-export type GetUserByEmailQuery = {
-	getUserByEmail?: {
+export type ListUsersByEmailQuery = {
+	listUsersByEmail?: {
 		__typename: "ModelUserConnection"
 		items: Array<{
 			__typename: "User"
@@ -2450,8 +2782,9 @@ export type GetUserByEmailQuery = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -2497,8 +2830,9 @@ export type GetParticipantQuery = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -2519,8 +2853,9 @@ export type GetParticipantQuery = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -2571,8 +2906,9 @@ export type ListParticipantsQuery = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -2615,8 +2951,9 @@ export type ParticipantsByLobbyIdQuery = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -2659,8 +2996,9 @@ export type ParticipantsByUserIdQuery = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -2692,6 +3030,7 @@ export type OnCreateGameRoundSubscription = {
 				isCorrect?: boolean | null
 				userID: string
 				gameRoundID: string
+				gameSessionID: string
 				updatedAt: string
 				createdAt: string
 			} | null>
@@ -2714,6 +3053,10 @@ export type OnCreateGameRoundSubscription = {
 			}
 			rounds?: {
 				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
 				nextToken?: string | null
 			} | null
 			updatedAt: string
@@ -2745,6 +3088,7 @@ export type OnUpdateGameRoundSubscription = {
 				isCorrect?: boolean | null
 				userID: string
 				gameRoundID: string
+				gameSessionID: string
 				updatedAt: string
 				createdAt: string
 			} | null>
@@ -2767,6 +3111,10 @@ export type OnUpdateGameRoundSubscription = {
 			}
 			rounds?: {
 				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
 				nextToken?: string | null
 			} | null
 			updatedAt: string
@@ -2798,6 +3146,7 @@ export type OnDeleteGameRoundSubscription = {
 				isCorrect?: boolean | null
 				userID: string
 				gameRoundID: string
+				gameSessionID: string
 				updatedAt: string
 				createdAt: string
 			} | null>
@@ -2820,6 +3169,10 @@ export type OnDeleteGameRoundSubscription = {
 			}
 			rounds?: {
 				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
 				nextToken?: string | null
 			} | null
 			updatedAt: string
@@ -2847,8 +3200,9 @@ export type OnCreateSubmittedAnswerSubscription = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -2884,6 +3238,32 @@ export type OnCreateSubmittedAnswerSubscription = {
 				updatedAt: string
 				createdAt: string
 			}
+			updatedAt: string
+			createdAt: string
+		}
+		gameSessionID: string
+		gameSession: {
+			__typename: "GameSession"
+			id: string
+			lobbyID: string
+			lobby: {
+				__typename: "Lobby"
+				id: string
+				code: string
+				isActive: boolean
+				creatorID: string
+				gameSessionID?: string | null
+				updatedAt: string
+				createdAt: string
+			}
+			rounds?: {
+				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
+				nextToken?: string | null
+			} | null
 			updatedAt: string
 			createdAt: string
 		}
@@ -2909,8 +3289,9 @@ export type OnUpdateSubmittedAnswerSubscription = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -2946,6 +3327,32 @@ export type OnUpdateSubmittedAnswerSubscription = {
 				updatedAt: string
 				createdAt: string
 			}
+			updatedAt: string
+			createdAt: string
+		}
+		gameSessionID: string
+		gameSession: {
+			__typename: "GameSession"
+			id: string
+			lobbyID: string
+			lobby: {
+				__typename: "Lobby"
+				id: string
+				code: string
+				isActive: boolean
+				creatorID: string
+				gameSessionID?: string | null
+				updatedAt: string
+				createdAt: string
+			}
+			rounds?: {
+				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
+				nextToken?: string | null
+			} | null
 			updatedAt: string
 			createdAt: string
 		}
@@ -2971,8 +3378,9 @@ export type OnDeleteSubmittedAnswerSubscription = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -3008,6 +3416,32 @@ export type OnDeleteSubmittedAnswerSubscription = {
 				updatedAt: string
 				createdAt: string
 			}
+			updatedAt: string
+			createdAt: string
+		}
+		gameSessionID: string
+		gameSession: {
+			__typename: "GameSession"
+			id: string
+			lobbyID: string
+			lobby: {
+				__typename: "Lobby"
+				id: string
+				code: string
+				isActive: boolean
+				creatorID: string
+				gameSessionID?: string | null
+				updatedAt: string
+				createdAt: string
+			}
+			rounds?: {
+				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
+				nextToken?: string | null
+			} | null
 			updatedAt: string
 			createdAt: string
 		}
@@ -3041,8 +3475,9 @@ export type OnCreateGameSessionSubscription = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -3066,6 +3501,21 @@ export type OnCreateGameSessionSubscription = {
 				question: string
 				correctAnswer: string
 				isComplete: boolean
+				gameSessionID: string
+				updatedAt: string
+				createdAt: string
+			} | null>
+			nextToken?: string | null
+		} | null
+		submittedAnswers?: {
+			__typename: "ModelSubmittedAnswerConnection"
+			items: Array<{
+				__typename: "SubmittedAnswer"
+				id: string
+				answer: string
+				isCorrect?: boolean | null
+				userID: string
+				gameRoundID: string
 				gameSessionID: string
 				updatedAt: string
 				createdAt: string
@@ -3102,8 +3552,9 @@ export type OnUpdateGameSessionSubscription = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -3127,6 +3578,21 @@ export type OnUpdateGameSessionSubscription = {
 				question: string
 				correctAnswer: string
 				isComplete: boolean
+				gameSessionID: string
+				updatedAt: string
+				createdAt: string
+			} | null>
+			nextToken?: string | null
+		} | null
+		submittedAnswers?: {
+			__typename: "ModelSubmittedAnswerConnection"
+			items: Array<{
+				__typename: "SubmittedAnswer"
+				id: string
+				answer: string
+				isCorrect?: boolean | null
+				userID: string
+				gameRoundID: string
 				gameSessionID: string
 				updatedAt: string
 				createdAt: string
@@ -3163,8 +3629,9 @@ export type OnDeleteGameSessionSubscription = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -3188,6 +3655,21 @@ export type OnDeleteGameSessionSubscription = {
 				question: string
 				correctAnswer: string
 				isComplete: boolean
+				gameSessionID: string
+				updatedAt: string
+				createdAt: string
+			} | null>
+			nextToken?: string | null
+		} | null
+		submittedAnswers?: {
+			__typename: "ModelSubmittedAnswerConnection"
+			items: Array<{
+				__typename: "SubmittedAnswer"
+				id: string
+				answer: string
+				isCorrect?: boolean | null
+				userID: string
+				gameRoundID: string
 				gameSessionID: string
 				updatedAt: string
 				createdAt: string
@@ -3228,8 +3710,9 @@ export type OnCreateLobbySubscription = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -3262,6 +3745,10 @@ export type OnCreateLobbySubscription = {
 			}
 			rounds?: {
 				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
 				nextToken?: string | null
 			} | null
 			updatedAt: string
@@ -3301,8 +3788,9 @@ export type OnUpdateLobbySubscription = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -3335,6 +3823,10 @@ export type OnUpdateLobbySubscription = {
 			}
 			rounds?: {
 				__typename: "ModelGameRoundConnection"
+				nextToken?: string | null
+			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
 				nextToken?: string | null
 			} | null
 			updatedAt: string
@@ -3374,8 +3866,9 @@ export type OnDeleteLobbySubscription = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -3410,6 +3903,10 @@ export type OnDeleteLobbySubscription = {
 				__typename: "ModelGameRoundConnection"
 				nextToken?: string | null
 			} | null
+			submittedAnswers?: {
+				__typename: "ModelSubmittedAnswerConnection"
+				nextToken?: string | null
+			} | null
 			updatedAt: string
 			createdAt: string
 		} | null
@@ -3429,8 +3926,9 @@ export type OnUpdateUserSubscription = {
 		email: string
 		name: string
 		selfie?: string | null
-		status: UserStatus
-		type: UserType
+		status?: UserStatus | null
+		type?: UserType | null
+		isOnline?: boolean | null
 		createdLobbies?: {
 			__typename: "ModelLobbyConnection"
 			items: Array<{
@@ -3466,6 +3964,7 @@ export type OnUpdateUserSubscription = {
 				isCorrect?: boolean | null
 				userID: string
 				gameRoundID: string
+				gameSessionID: string
 				updatedAt: string
 				createdAt: string
 			} | null>
@@ -3502,8 +4001,9 @@ export type OnCreateParticipantSubscription = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -3524,8 +4024,9 @@ export type OnCreateParticipantSubscription = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -3572,8 +4073,9 @@ export type OnUpdateParticipantSubscription = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -3594,8 +4096,9 @@ export type OnUpdateParticipantSubscription = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null
@@ -3642,8 +4145,9 @@ export type OnDeleteParticipantSubscription = {
 				email: string
 				name: string
 				selfie?: string | null
-				status: UserStatus
-				type: UserType
+				status?: UserStatus | null
+				type?: UserType | null
+				isOnline?: boolean | null
 				updatedAt: string
 				createdAt: string
 			}
@@ -3664,8 +4168,9 @@ export type OnDeleteParticipantSubscription = {
 			email: string
 			name: string
 			selfie?: string | null
-			status: UserStatus
-			type: UserType
+			status?: UserStatus | null
+			type?: UserType | null
+			isOnline?: boolean | null
 			createdLobbies?: {
 				__typename: "ModelLobbyConnection"
 				nextToken?: string | null

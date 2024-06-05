@@ -14,7 +14,7 @@ import twr from "twrnc"
 import Placeholder from "~/components/gameplay/Placeholder"
 import QuestionHeader from "~/components/gameplay/QuestionHeader"
 import QuestionOption from "~/components/gameplay/QuestionOption"
-import { CloseButton, Spacer, ThemedAwesomeButton } from "~/components/ui"
+import { CloseButton, ThemedAwesomeButton } from "~/components/ui"
 import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
 
@@ -46,17 +46,19 @@ export default function Page(): ReactNode {
 		}
 	}, [])
 
-	const optionHeight = 85
-
-	const styles = {
-		screen: twr`flex-1 flex-col items-center justify-center bg-[${theme.primary}] px-6 pt-12`,
-		card: twr`flex w-96 flex-grow flex-col items-stretch justify-around rounded-md bg-[${theme.background}] p-8 shadow-md`,
-		question: tw`w-full text-left text-2xl font-bold`,
-		options: tw`gap-4`,
-		closeButton: tw`w-full flex-col items-end justify-end justify-between p-6`,
-	}
+	const OptionHeight = 85
 
 	const [selectedIndex, setSelectedIndex] = useState<number>(-1)
+
+	const animatedStyle = useAnimatedStyle(() => {
+		return {
+			transform: [
+				{
+					translateY: withSpring(selectedIndex * OptionHeight),
+				},
+			],
+		}
+	})
 
 	useEffect(() => {
 		const index = questions[currentQuestionIndex]?.options.findIndex(
@@ -70,15 +72,14 @@ export default function Page(): ReactNode {
 		}
 	}, [selectedAnswer])
 
-	const animatedStyle = useAnimatedStyle(() => {
-		return {
-			transform: [
-				{
-					translateY: withSpring(selectedIndex * optionHeight),
-				},
-			],
-		}
-	})
+	const styles = {
+		screen: twr`flex-1 flex-col items-center justify-center bg-[${theme.primary}] pt-12`,
+		container: twr`w-full flex-1 flex-col items-center justify-center p-4`,
+		card: twr`flex w-full flex-grow flex-col items-stretch justify-around rounded-md bg-[${theme.background}] p-8 shadow-md`,
+		question: tw`w-full text-left text-2xl font-bold`,
+		options: tw`gap-4`,
+		closeButton: tw`w-full flex-col items-end justify-end justify-between p-6`,
+	}
 
 	return (
 		<SafeAreaView style={styles.screen}>
@@ -93,121 +94,125 @@ export default function Page(): ReactNode {
 					timed={false}
 				/>
 			</View>
+			<View style={styles.container}>
+				<AnimatePresence exitBeforeEnter>
+					{showResult ? (
+						<Placeholder solo={true} />
+					) : (
+						<MotiView
+							from={{
+								opacity: 0,
+								scale: 0.5,
+							}}
+							animate={{
+								opacity: 1,
+								scale: 1,
+							}}
+							transition={{
+								type: "timing",
+								duration: 500,
+							}}
+							exit={{
+								opacity: 0,
+								scale: 0.5,
+							}}
+							exitTransition={{
+								type: "timing",
+								duration: 500,
+							}}
+							style={styles.card}
+						>
+							<Text className={styles.question}>
+								{questions[currentQuestionIndex]?.question}
+							</Text>
 
-			<AnimatePresence exitBeforeEnter>
-				{showResult ? (
-					<Placeholder solo={true} />
-				) : (
-					<MotiView
-						from={{
-							opacity: 0,
-							scale: 0.5,
-						}}
-						animate={{
-							opacity: 1,
-							scale: 1,
-						}}
-						transition={{
-							type: "timing",
-							duration: 500,
-						}}
-						exit={{
-							opacity: 0,
-							scale: 0.5,
-						}}
-						exitTransition={{
-							type: "timing",
-							duration: 500,
-						}}
-						style={styles.card}
-					>
-						<Text className={styles.question}>
-							{questions[currentQuestionIndex]?.question}
-						</Text>
-
-						<View className={styles.options}>
-							{questions[currentQuestionIndex]?.options.map(
-								(option, index) => (
-									<QuestionOption
-										index={index + 1}
-										key={index}
-										label={option}
-										isSelected={selectedAnswer === option}
-										showResult={showResult}
-										isCorrect={
-											selectedAnswer ===
-											questions[currentQuestionIndex]
-												?.correctAnswer
-										}
-										onPress={() => {
-											Haptics.impactAsync(
-												Haptics.ImpactFeedbackStyle
-													.Medium,
-											)
-											questions[index]!.userAnswer =
-												option
-											selectAnswer({ answer: option })
+							<View className={styles.options}>
+								{questions[currentQuestionIndex]?.options.map(
+									(option, index) => (
+										<QuestionOption
+											index={index + 1}
+											key={index}
+											label={option}
+											isSelected={
+												selectedAnswer === option
+											}
+											showResult={showResult}
+											isCorrect={
+												selectedAnswer ===
+												questions[currentQuestionIndex]
+													?.correctAnswer
+											}
+											onPress={() => {
+												Haptics.impactAsync(
+													Haptics.ImpactFeedbackStyle
+														.Medium,
+												)
+												questions[index]!.userAnswer =
+													option
+												selectAnswer({ answer: option })
+											}}
+										/>
+									),
+								)}
+								{selectedIndex !== -1 && (
+									<MotiView
+										exit={{
+											opacity: 0,
+											translateY: -100,
 										}}
+										style={[
+											twr`rounded-4 absolute left-0 right-0 top-0 -z-10 h-[${OptionHeight}px] w-full  bg-[${theme.surface}] shadow-md`,
+											animatedStyle,
+										]}
 									/>
-								),
-							)}
-							{selectedIndex !== -1 && (
-								<MotiView
-									exit={{
-										opacity: 0,
-										translateY: -100,
-									}}
-									style={[
-										twr`rounded-4 absolute left-0 right-0 top-0 -z-10 h-[${optionHeight}px] w-full  bg-[${theme.surface}] shadow-md`,
-										animatedStyle,
-									]}
-								/>
-							)}
-						</View>
-					</MotiView>
-				)}
-			</AnimatePresence>
-			<ThemedAwesomeButton
-				type="anchor"
-				size="large"
-				width={370}
-				height={70}
-				textSize={20}
-				style={twr`mt-8`}
-				progress
-				onPress={(next) => {
-					if (!selectedAnswer || !questions[currentQuestionIndex]) {
-						Haptics.notificationAsync(
-							Haptics.NotificationFeedbackType.Error,
-						)
-						//@ts-ignore
-						next()
-
-						return
-					}
-
-					answerQuestion()
-
-					setTimeout(() => {
-						if (questions.length - 1 === currentQuestionIndex) {
-							router.navigate("/result/")
+								)}
+							</View>
+						</MotiView>
+					)}
+				</AnimatePresence>
+				<ThemedAwesomeButton
+					type="anchor"
+					size="large"
+					width={340}
+					height={70}
+					textSize={20}
+					style={twr`mt-8`}
+					progress
+					onPress={(next) => {
+						if (
+							!selectedAnswer ||
+							!questions[currentQuestionIndex]
+						) {
+							Haptics.notificationAsync(
+								Haptics.NotificationFeedbackType.Error,
+							)
 							//@ts-ignore
 							next()
-						} else {
-							nextQuestion()
-							setSelectedIndex(-1)
-							//@ts-ignore
-							next()
+
+							return
 						}
-					}, 5000)
-				}}
-			>
-				{questions.length - 1 === currentQuestionIndex
-					? "Submit"
-					: "Next"}
-			</ThemedAwesomeButton>
 
-			<Spacer />
+						answerQuestion()
+
+						setTimeout(() => {
+							if (questions.length - 1 === currentQuestionIndex) {
+								router.navigate("/result/")
+								//@ts-ignore
+								next()
+							} else {
+								nextQuestion()
+								setSelectedIndex(-1)
+								//@ts-ignore
+								next()
+							}
+						}, 5000)
+					}}
+				>
+					{questions.length - 1 === currentQuestionIndex
+						? "Submit"
+						: "Next"}
+				</ThemedAwesomeButton>
+			</View>
 		</SafeAreaView>
 	)
 }

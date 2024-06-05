@@ -19,7 +19,7 @@ const QuestionHeader = ({
 	timed: boolean
 }): ReactNode => {
 	const styles = {
-		base: tw`w-full flex-col items-center  justify-center`,
+		base: tw`w-full flex-col items-center  justify-center gap-4`,
 		row: tw`mb-2 w-full flex-row items-center justify-center`,
 		text: tw`text-center text-4xl font-bold text-white`,
 		progressBar: tw`rounded-5 bg-surface`,

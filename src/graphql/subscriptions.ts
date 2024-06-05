@@ -51,7 +51,7 @@ export const onCreateSubmittedAnswer =
   $filter: ModelSubscriptionSubmittedAnswerFilterInput
 ) {
   onCreateSubmittedAnswer(filter: $filter) {
-     ${submittedAnswersDocument({ includeUser: true, includeGameRound: false })}
+     ${submittedAnswersDocument({ includeUser: false, includeGameRound: false })}
   }
 }
 ` as GeneratedSubscription<
@@ -179,7 +179,7 @@ export const onCreateParticipant =
   $filter: ModelSubscriptionParticipantFilterInput
 ) {
   onCreateParticipant(filter: $filter) {
-      ${participantDocument({ includeUser: true, includeLobby: false })} 
+      ${participantDocument({ includeUser: true, includeLobby: false })}
   }
 }
 ` as GeneratedSubscription<
@@ -191,7 +191,7 @@ export const onUpdateParticipant =
   $filter: ModelSubscriptionParticipantFilterInput
 ) {
   onUpdateParticipant(filter: $filter) {
-      ${participantDocument({ includeUser: true, includeLobby: false })} 
+      ${participantDocument({ includeUser: true, includeLobby: false })}
   }
 }
 ` as GeneratedSubscription<
@@ -203,7 +203,7 @@ export const onDeleteParticipant =
   $filter: ModelSubscriptionParticipantFilterInput
 ) {
   onDeleteParticipant(filter: $filter) {
-      ${participantDocument({ includeUser: false, includeLobby: false })} 
+      ${participantDocument({ includeUser: false, includeLobby: false })}
   }
 }
 ` as GeneratedSubscription<

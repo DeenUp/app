@@ -32,12 +32,10 @@ export default function CreateGame(): ReactNode {
 		createLobby,
 		leaveLobby,
 		startGame,
-		code,
 		error,
 	} = useGameStore((state: GameStore) => ({
 		gameSessionID: state.gameSessionID,
 		participants: state.participants,
-		code: state.lobbyCode,
 		error: state.error,
 		destroy: state.destroy,
 		createLobby: state.createLobby,
@@ -47,15 +45,11 @@ export default function CreateGame(): ReactNode {
 
 	useEffect(() => {
 		void createLobby()
-
-		return () => {
-			destroy()
-		}
 	}, [])
 
 	useEffect(() => {
 		if (gameSessionID) {
-			router.navigate("/friends-mode/")
+			router.replace("/friends-mode/")
 		}
 	}, [gameSessionID])
 
@@ -101,7 +95,7 @@ export default function CreateGame(): ReactNode {
 						Tell your friends to enter this code to join
 					</Text>
 					<View className={styles.codeTextContainer}>
-						<CodeComponent code={code} />
+						<CodeComponent />
 					</View>
 
 					{error && <Text>{error}</Text>}
@@ -109,7 +103,12 @@ export default function CreateGame(): ReactNode {
 					<Separator color="primary" className="w-full" />
 					<View className={styles.buttonContainer}>
 						<ThemedAwesomeButton
-							onPress={startGame}
+							progress
+							onPress={(next) => {
+								startGame()
+								//@ts-ignore
+								next()
+							}}
 							type="anchor"
 							size="large"
 							textSize={20}

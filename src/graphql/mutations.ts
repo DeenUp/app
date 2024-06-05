@@ -58,7 +58,7 @@ export const createSubmittedAnswer =
   $condition: ModelSubmittedAnswerConditionInput
 ) {
   createSubmittedAnswer(input: $input, condition: $condition) {
-     ${submittedAnswersDocument({ includeUser: true, includeGameRound: false })}
+     ${submittedAnswersDocument({ includeUser: false, includeGameRound: false })}
   }
 }
 ` as GeneratedMutation<
@@ -196,7 +196,7 @@ export const createParticipant = /* GraphQL */ `mutation CreateParticipant(
   $condition: ModelParticipantConditionInput
 ) {
   createParticipant(input: $input, condition: $condition) {
-    ${participantDocument({ includeUser: true, includeLobby: false })} 
+    ${participantDocument({ includeUser: true, includeLobby: false })}
   }
 }
 ` as GeneratedMutation<
@@ -208,7 +208,7 @@ export const updateParticipant = /* GraphQL */ `mutation UpdateParticipant(
   $condition: ModelParticipantConditionInput
 ) {
   updateParticipant(input: $input, condition: $condition) {
-   ${participantDocument({ includeUser: true, includeLobby: false })} 
+   ${participantDocument({ includeUser: true, includeLobby: false })}
   }
 }
 ` as GeneratedMutation<
@@ -220,7 +220,7 @@ export const deleteParticipant = /* GraphQL */ `mutation DeleteParticipant(
   $condition: ModelParticipantConditionInput
 ) {
   deleteParticipant(input: $input, condition: $condition) {
-    ${participantDocument({ includeUser: false, includeLobby: false })} 
+    ${participantDocument({ includeUser: false, includeLobby: false })}
   }
 }
 ` as GeneratedMutation<

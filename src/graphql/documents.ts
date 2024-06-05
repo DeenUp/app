@@ -221,11 +221,11 @@ const submittedAnswersDocument = (include: {
         isCorrect
         userID
         gameRoundID
+        gameSessionID
         updatedAt
         createdAt
         __typename
     `
-
 	if (include.includeUser) {
 		document += `user {
             ${userDocument({

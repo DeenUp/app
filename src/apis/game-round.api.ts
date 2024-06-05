@@ -108,7 +108,7 @@ export default class GameRoundApi implements IGameRoundApi {
 						NeverEmpty<OnCreateGameRoundSubscription>
 					>
 				>
-			>(onCreateGameRound, {})
+			>(onCreateGameRound, params)
 			.subscribe({
 				next: ({ data }) => {
 					onResponse({
@@ -117,7 +117,7 @@ export default class GameRoundApi implements IGameRoundApi {
 					})
 				},
 				error: (error) => {
-					console.error("Error subscribing to participants", error)
+					console.error("Error subscribing to game round", error)
 				},
 			})
 
@@ -130,7 +130,7 @@ export default class GameRoundApi implements IGameRoundApi {
 						NeverEmpty<OnUpdateGameRoundSubscription>
 					>
 				>
-			>(onUpdateGameRound, {})
+			>(onUpdateGameRound, params)
 			.subscribe({
 				next: ({ data }) => {
 					onResponse({

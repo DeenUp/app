@@ -1,5 +1,4 @@
 import type { ReactNode } from "react"
-import type { GestureResponderEvent } from "react-native"
 
 import { Text, View } from "react-native"
 
@@ -24,7 +23,7 @@ const QuestionOption = ({
 	isSelected: boolean
 	showResult: boolean
 	isCorrect?: boolean
-	onPress?: ((event: GestureResponderEvent) => void) | undefined
+	onPress?: ((callback?: () => void) => void) | undefined
 }): ReactNode => {
 	const styles = {
 		card: twr`w-full  flex-row items-center justify-start gap-4 rounded-xl px-4 py-3 `,
@@ -46,7 +45,7 @@ const QuestionOption = ({
 				width={50}
 				height={50}
 				borderRadius={100}
-				onPressIn={onPress}
+				onPress={onPress}
 			>
 				<Text className={tw`text-xl font-semibold text-gray-500`}>
 					{index === 1

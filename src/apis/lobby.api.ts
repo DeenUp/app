@@ -5,10 +5,10 @@ import type {
 	CreateLobbyInput,
 	CreateLobbyMutation,
 	CreateLobbyMutationVariables,
-	GetLobbyByCodeQuery,
-	GetLobbyByCodeQueryVariables,
-	GetLobbyByCreatorIDQuery,
-	GetLobbyByCreatorIDQueryVariables,
+	ListLobbiesByCodeQuery,
+	ListLobbiesByCodeQueryVariables,
+	ListLobbiesByCreatorIDQuery,
+	ListLobbiesByCreatorIDQueryVariables,
 	Lobby,
 	ModelLobbyConnection,
 	ModelLobbyFilterInput,
@@ -32,7 +32,7 @@ import type {
 } from "../types"
 
 import { createLobby, updateLobby } from "../graphql/mutations"
-import { getLobbyByCode, getLobbyByCreatorID } from "../graphql/queries"
+import { listLobbiesByCode, listLobbiesByCreatorID } from "../graphql/queries"
 import { onUpdateLobby } from "../graphql/subscriptions"
 import { AmplifyGraphqlService } from "../services"
 
@@ -45,10 +45,10 @@ export default class LobbyApi implements ILobbyApi {
 
 	async listByCode(code: string): Promise<ListResponse<Lobby>> {
 		const response = await this.graphqlService.query<
-			typeof getLobbyByCode,
-			GetLobbyByCodeQueryVariables,
-			GraphQLResult<GetLobbyByCodeQuery>
-		>(getLobbyByCode, {
+			typeof listLobbiesByCode,
+			ListLobbiesByCodeQueryVariables,
+			GraphQLResult<ListLobbiesByCodeQuery>
+		>(listLobbiesByCode, {
 			code: code,
 			filter: {
 				isActive: {
@@ -65,7 +65,8 @@ export default class LobbyApi implements ILobbyApi {
 			}
 		}
 
-		const connection = response.data.getLobbyByCode as ModelLobbyConnection
+		const connection = response.data
+			.listLobbiesByCode as ModelLobbyConnection
 
 		return {
 			hasError: false,
@@ -134,10 +135,10 @@ export default class LobbyApi implements ILobbyApi {
 		params: ListByIdQueryParams<ModelLobbyFilterInput | null | undefined>,
 	): Promise<ListResponse<Lobby>> {
 		const response = await this.graphqlService.query<
-			typeof getLobbyByCreatorID,
-			GetLobbyByCreatorIDQueryVariables,
-			GraphQLResult<GetLobbyByCreatorIDQuery>
-		>(getLobbyByCreatorID, {
+			typeof listLobbiesByCreatorID,
+			ListLobbiesByCreatorIDQueryVariables,
+			GraphQLResult<ListLobbiesByCreatorIDQuery>
+		>(listLobbiesByCreatorID, {
 			creatorID: params.id,
 			filter: params.filter,
 			limit: params.limit ?? 10,
@@ -153,7 +154,7 @@ export default class LobbyApi implements ILobbyApi {
 		}
 
 		const connection = response.data
-			.getLobbyByCreatorID as ModelLobbyConnection
+			.listLobbiesByCreatorID as ModelLobbyConnection
 
 		return {
 			hasError: false,

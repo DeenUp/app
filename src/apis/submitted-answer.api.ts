@@ -76,7 +76,7 @@ export default class SubmittedAnswerApi implements ISubmittedAnswer {
 						NeverEmpty<OnCreateSubmittedAnswerSubscription>
 					>
 				>
-			>(onCreateSubmittedAnswer, {})
+			>(onCreateSubmittedAnswer, params)
 			.subscribe({
 				next: ({ data }) => {
 					onResponse({
@@ -85,7 +85,10 @@ export default class SubmittedAnswerApi implements ISubmittedAnswer {
 					})
 				},
 				error: (error) => {
-					console.error("Error subscribing to participants", error)
+					console.error(
+						"Error subscribing to submitted answers",
+						error,
+					)
 				},
 			})
 
