@@ -147,6 +147,27 @@ const createMultiplayerSessionSlice: StateCreator<
 			onGameRoundSubscription(gameSessionID)
 			onSubmittedAnswerSubscription(gameSessionID)
 
+			const currentGameRound = get().gameRound
+
+			if (currentGameRound && !currentGameRound.isComplete) {
+				set({ loading: false })
+
+				const submittedAnswersResponse =
+					await submittedAnswerApi.listByGameSessionID(gameSessionID)
+				const submittedAnswers = submittedAnswersResponse.item
+
+				if (submittedAnswers) {
+					set({
+						submittedAnswers: {
+							...get().submittedAnswers,
+							[currentGameRound.id]: submittedAnswers,
+						},
+					})
+				}
+
+				return
+			}
+
 			if (!get().isCreator) return
 
 			if (get().loading) return
@@ -156,8 +177,6 @@ const createMultiplayerSessionSlice: StateCreator<
 			const newQuestion = randomQuestion(get().sessionQuestions)
 
 			try {
-				const currentGameRound = get().gameRound
-
 				const response = await gameRoundApi.create({
 					gameSessionID,
 					index: currentGameRound ? currentGameRound.index + 1 : 1,

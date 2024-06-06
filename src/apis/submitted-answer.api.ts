@@ -5,6 +5,9 @@ import type {
 	CreateSubmittedAnswerInput,
 	CreateSubmittedAnswerMutation,
 	CreateSubmittedAnswerMutationVariables,
+	ListSubmittedAnswersByGameSessionIDQuery,
+	ListSubmittedAnswersByGameSessionIDQueryVariables,
+	ModelSubmittedAnswerConnection,
 	ModelSubmittedAnswerFilterInput,
 	OnCreateSubmittedAnswerSubscription,
 	OnCreateSubmittedAnswerSubscriptionVariables,
@@ -22,6 +25,7 @@ import type {
 } from "~/types"
 
 import { createSubmittedAnswer } from "~/graphql/mutations"
+import { listSubmittedAnswersByGameSessionID } from "~/graphql/queries"
 import { onCreateSubmittedAnswer } from "~/graphql/subscriptions"
 import { AmplifyGraphqlService } from "~/services"
 
@@ -96,6 +100,40 @@ export default class SubmittedAnswerApi implements ISubmittedAnswer {
 			unsubscribe: () => {
 				createStream.unsubscribe()
 			},
+		}
+	}
+
+	async listByGameSessionID(
+		gameSessionID: string,
+	): Promise<ItemResponse<SubmittedAnswer[]>> {
+		const response = await this.graphqlService.query<
+			typeof listSubmittedAnswersByGameSessionID,
+			ListSubmittedAnswersByGameSessionIDQueryVariables,
+			GraphQLResult<ListSubmittedAnswersByGameSessionIDQuery>
+		>(listSubmittedAnswersByGameSessionID, { gameSessionID })
+
+		if (response.errors) {
+			return {
+				error: new Error(response.errors[0]!.message),
+				hasError: true,
+				hasData: false,
+			}
+		}
+
+		const connection = response.data
+			.listSubmittedAnswersByGameSessionID as ModelSubmittedAnswerConnection
+
+		if (!connection.items.length) {
+			return {
+				hasError: false,
+				hasData: false,
+			}
+		}
+
+		return {
+			hasError: false,
+			hasData: true,
+			item: connection.items as SubmittedAnswer[],
 		}
 	}
 }

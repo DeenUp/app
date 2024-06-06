@@ -23,7 +23,7 @@ import { SpaceMonoRegular } from "~/assets"
 import { CloseButton } from "~/components/ui"
 import { getAmplifyConfig } from "~/configs"
 import { AmplifyProvider } from "~/providers"
-import { useAuthStore } from "~/stores"
+import { useAuthStore, useGameStore } from "~/stores"
 
 Amplify.configure(getAmplifyConfig())
 
@@ -43,6 +43,7 @@ preventAutoHideAsync().catch((error) => {
 const RootLayout = () => {
 	const { clear } = useAuthStore()
 	const { theme } = useSettingsStore()
+	const { joinExistingLobby } = useGameStore()
 
 	const [loaded, error] = useFonts({
 		SpaceMono: SpaceMonoRegular,
@@ -81,9 +82,6 @@ const RootLayout = () => {
 					name="index"
 					options={{
 						headerShown: false,
-						statusBarStyle:
-							Platform.OS === "ios" ? undefined : "light",
-						statusBarColor: theme.primary,
 					}}
 				/>
 

@@ -1,10 +1,10 @@
 import type { ReactNode } from "react"
 
-import { Platform, SafeAreaView, View } from "react-native"
+import { useEffect } from "react"
+import { SafeAreaView, View } from "react-native"
 
 import * as Haptics from "expo-haptics"
 import { router } from "expo-router"
-import { StatusBar } from "expo-status-bar"
 
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { MotiImage, MotiView } from "moti"
@@ -13,11 +13,16 @@ import twr from "twrnc"
 import DeenUp from "~/assets/images/deenup.png"
 import { Spacer, ThemedAwesomeButton } from "~/components/ui"
 import { tw } from "~/helpers"
-import { useAuthStore, useSettingsStore } from "~/stores"
+import { useAuthStore, useGameStore, useSettingsStore } from "~/stores"
 
 export default function Page(): ReactNode {
 	const currentUser = useAuthStore((state) => state.currentUser)
 	const { theme } = useSettingsStore()
+	const { checkIfUserInLobby } = useGameStore()
+
+	useEffect(() => {
+		checkIfUserInLobby()
+	}, [])
 
 	const styles = {
 		body: twr`flex-1 bg-[${theme.primary}]`,
@@ -30,8 +35,6 @@ export default function Page(): ReactNode {
 
 	return (
 		<SafeAreaView style={styles.body}>
-			<StatusBar hidden={Platform.OS === "ios"} />
-
 			<View className={styles.container}>
 				<Spacer />
 				<View className={styles.logoContainer}>

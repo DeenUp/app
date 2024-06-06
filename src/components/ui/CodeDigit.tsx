@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react"
+// import React, { useEffect, useMemo, useState } from "react"
 
 import { MotiText } from "moti"
 import twr from "twrnc"
@@ -16,28 +16,16 @@ export const CodeDigitBox: React.FC<CodeComponentProps> = ({
 	digit,
 	onPress,
 }) => {
-	const [placeHolder, setPlaceHolder] = useState<string>("")
+	// const [placeHolder, setPlaceHolder] = useState<string>("")
 	const { theme } = useSettingsStore()
 
-	const characters = useMemo(
-		() => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-		[],
-	)
+	// const characters = useMemo(
+	// 	() => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+	// 	[],
+	// )
 
-	const generatePlaceholder = () =>
-		characters.charAt(Math.floor(Math.random() * characters.length))
-
-	useEffect(() => {
-		if (digit) return
-
-		setPlaceHolder(generatePlaceholder())
-
-		const intervalId = setInterval(() => {
-			setPlaceHolder(generatePlaceholder())
-		}, 100)
-
-		return () => clearInterval(intervalId)
-	}, [])
+	// const generatePlaceholder = () =>
+	// 	characters.charAt(Math.floor(Math.random() * characters.length))
 
 	const styles = {
 		codeText: twr`text-xl font-bold`,

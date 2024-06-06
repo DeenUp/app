@@ -6,7 +6,11 @@ import {
 	deleteGameSession,
 	updateGameSession,
 } from "~graphql/mutations"
-import { getGameSession, listGameSessions } from "~graphql/queries"
+import {
+	getGameSession,
+	listGameSessions,
+	listGameSessionsByLobbyID,
+} from "~graphql/queries"
 import { onCreateGameSession } from "~graphql/subscriptions"
 import { AmplifyGraphqlService } from "~services/index"
 
@@ -19,6 +23,8 @@ import type {
 	GameSession,
 	GetGameSessionQuery,
 	GetGameSessionQueryVariables,
+	ListGameSessionsByLobbyIDQuery,
+	ListGameSessionsByLobbyIDQueryVariables,
 	ListGameSessionsQuery,
 	ListGameSessionsQueryVariables,
 	ModelGameSessionConnection,
@@ -57,38 +63,32 @@ export default class GameSessionApi
 		this.graphqlService = graphqlService ?? new AmplifyGraphqlService()
 	}
 
-	subscribe(
-		params: SubscriptionParams<
-			ModelGameSessionFilterInput | null | undefined
-		>,
-		onResponse: (response: SubscriptionResponse<GameSession>) => void,
-	): Subscription {
-		const createStream = this.graphqlService
-			.subscribe<
-				typeof onCreateGameSession,
-				OnCreateGameSessionSubscriptionVariables,
-				Observable<
-					GraphqlSubscriptionMessage<
-						NeverEmpty<OnCreateGameSessionSubscription>
-					>
-				>
-			>(onCreateGameSession, {})
-			.subscribe({
-				next: ({ data }) => {
-					onResponse({
-						type: "created",
-						data: data.onCreateGameSession as GameSession,
-					})
-				},
-				error: (error) => {
-					console.error("Error subscribing to participants", error)
-				},
-			})
+	async create(
+		input: CreateGameSessionInput,
+	): Promise<ItemResponse<GameSession>> {
+		const response = await this.graphqlService.mutate<
+			typeof createGameSession,
+			CreateGameSessionMutationVariables,
+			GraphQLResult<CreateGameSessionMutation>
+		>(createGameSession, {
+			input: input,
+		})
+
+		if (response.errors) {
+			return {
+				error: new Error(response.errors[0]!.message),
+				hasError: true,
+				hasData: false,
+			}
+		}
+
+		const createdGameSession = response.data
+			.createGameSession as GameSession
 
 		return {
-			unsubscribe: () => {
-				createStream.unsubscribe()
-			},
+			hasError: false,
+			hasData: true,
+			item: createdGameSession,
 		}
 	}
 
@@ -149,35 +149,6 @@ export default class GameSessionApi
 		}
 	}
 
-	async create(
-		input: CreateGameSessionInput,
-	): Promise<ItemResponse<GameSession>> {
-		const response = await this.graphqlService.mutate<
-			typeof createGameSession,
-			CreateGameSessionMutationVariables,
-			GraphQLResult<CreateGameSessionMutation>
-		>(createGameSession, {
-			input: input,
-		})
-
-		if (response.errors) {
-			return {
-				error: new Error(response.errors[0]!.message),
-				hasError: true,
-				hasData: false,
-			}
-		}
-
-		const createdGameSession = response.data
-			.createGameSession as GameSession
-
-		return {
-			hasError: false,
-			hasData: true,
-			item: createdGameSession,
-		}
-	}
-
 	async update(input: GameSession): Promise<ItemResponse<GameSession>> {
 		const response = await this.graphqlService.mutate<
 			typeof updateGameSession,
@@ -229,6 +200,77 @@ export default class GameSessionApi
 			hasError: false,
 			hasData: true,
 			item: deletedGameSession,
+		}
+	}
+
+	subscribe(
+		params: SubscriptionParams<
+			ModelGameSessionFilterInput | null | undefined
+		>,
+		onResponse: (response: SubscriptionResponse<GameSession>) => void,
+	): Subscription {
+		const createStream = this.graphqlService
+			.subscribe<
+				typeof onCreateGameSession,
+				OnCreateGameSessionSubscriptionVariables,
+				Observable<
+					GraphqlSubscriptionMessage<
+						NeverEmpty<OnCreateGameSessionSubscription>
+					>
+				>
+			>(onCreateGameSession, params)
+			.subscribe({
+				next: ({ data }) => {
+					onResponse({
+						type: "created",
+						data: data.onCreateGameSession as GameSession,
+					})
+				},
+				error: (error) => {
+					console.error("Error subscribing to participants", error)
+				},
+			})
+
+		return {
+			unsubscribe: () => {
+				createStream.unsubscribe()
+			},
+		}
+	}
+
+	async findActiveGameSession(
+		lobbyID: string,
+	): Promise<ItemResponse<GameSession>> {
+		const response = await this.graphqlService.query<
+			typeof listGameSessionsByLobbyID,
+			ListGameSessionsByLobbyIDQueryVariables,
+			GraphQLResult<ListGameSessionsByLobbyIDQuery>
+		>(listGameSessionsByLobbyID, {
+			lobbyID,
+		})
+
+		if (response.errors) {
+			return {
+				error: new Error(response.errors[0]!.message),
+				hasError: true,
+				hasData: false,
+			}
+		}
+
+		const connection = response.data
+			.listGameSessionsByLobbyID as ModelGameSessionConnection
+
+		if (connection.items.length === 0) {
+			return {
+				hasError: false,
+				hasData: false,
+			}
+		}
+
+		return {
+			hasError: false,
+			hasData: true,
+			item: connection.items[0] as GameSession,
 		}
 	}
 }

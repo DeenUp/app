@@ -6,6 +6,9 @@ import type {
 	CreateGameRoundMutation,
 	CreateGameRoundMutationVariables,
 	GameRound,
+	ListGameRoundsByGameSessionIDQuery,
+	ListGameRoundsByGameSessionIDQueryVariables,
+	ModelGameRoundConnection,
 	ModelGameRoundFilterInput,
 	OnCreateGameRoundSubscription,
 	OnCreateGameRoundSubscriptionVariables,
@@ -27,6 +30,7 @@ import type {
 } from "~types/index"
 
 import { createGameRound, updateGameRound } from "~/graphql/mutations"
+import { listGameRoundsByGameSessionID } from "~/graphql/queries"
 import { onCreateGameRound, onUpdateGameRound } from "~/graphql/subscriptions"
 import { AmplifyGraphqlService } from "~/services"
 
@@ -148,6 +152,46 @@ export default class GameRoundApi implements IGameRoundApi {
 				createStream.unsubscribe()
 				updateStream.unsubscribe()
 			},
+		}
+	}
+
+	async findActiveGameRound(
+		gameSessionID: string,
+	): Promise<ItemResponse<GameRound>> {
+		const response = await this.graphqlService.query<
+			typeof listGameRoundsByGameSessionID,
+			ListGameRoundsByGameSessionIDQueryVariables,
+			GraphQLResult<ListGameRoundsByGameSessionIDQuery>
+		>(listGameRoundsByGameSessionID, {
+			gameSessionID,
+			filter: {
+				isComplete: { eq: false },
+			},
+		})
+
+		if (response.errors) {
+			return {
+				error: new Error(response.errors[0]!.message),
+				hasError: true,
+				hasData: false,
+			}
+		}
+
+		const connection = response.data
+			.listGameRoundsByGameSessionID as ModelGameRoundConnection
+
+		if (connection.items.length === 0) {
+			return {
+				hasError: true,
+				hasData: false,
+				item: connection.items[0] as GameRound,
+			}
+		}
+
+		return {
+			hasError: false,
+			hasData: true,
+			item: connection.items[0] as GameRound,
 		}
 	}
 }
