@@ -24,7 +24,7 @@ export default function Page(): ReactNode {
 
 	useEffect(() => {
 		checkIfUserInLobby({
-			onFound: (lobby) =>
+			onFound: (lobby, gameSession) =>
 				openModal("AlertModal", {
 					title: translate("notifications.inGameSession.title"),
 					message: translate("notifications.inGameSession.message"),
@@ -36,7 +36,7 @@ export default function Page(): ReactNode {
 						leaveLobby()
 					},
 					onConfirm: () => {
-						joinExistingLobby(lobby)
+						joinExistingLobby(lobby, gameSession)
 					},
 				}),
 		})

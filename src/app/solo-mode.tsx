@@ -156,6 +156,28 @@ export default function Page(): ReactNode {
 									),
 								)}
 								{selectedIndex !== -1 && (
+									// <MotiView
+									// 	exit={{
+									// 		opacity: 0,
+									// 		translateY: -100,
+									// 	}}
+									// 	style={[
+									// 		twr`absolute left-0 right-0 top-0 -z-10 rounded border h-[${OptionHeight}px] w-full border-[${theme.primary}] rounded-xl shadow-md`,
+									// 		animatedStyle,
+									// 	]}
+									// >
+									// 	<LinearGradient
+									// 		style={twr`absolute h-full w-full rounded-xl`}
+									// 		// colors={["#DDB965", "#F1E1B4"]}
+									// 		colors={[
+									// 			theme.background,
+									// 			theme.surface,
+									// 		]}
+									// 		end={[1, 1]}
+									// 		start={[0, 0]}
+									// 		locations={[0.1, 1]}
+									// 	/>
+									// </MotiView>
 									<MotiView
 										exit={{
 											opacity: 0,
