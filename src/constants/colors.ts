@@ -10,7 +10,7 @@ export const colors = {
 	success: "#009485",
 	warning: "#FF9900",
 	error: "#FF5724",
-	card: "#F9FAFB",
+	card: "#E3F1CF",
 	input: "#F9FAFB",
 	"input-focus": "#FFFFFF",
 	"input-placeholder": "#CED3D9",

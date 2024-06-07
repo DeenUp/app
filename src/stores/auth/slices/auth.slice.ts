@@ -40,7 +40,10 @@ type AuthActions = {
 		onSuccess: () => void
 	}) => Promise<void>
 	handleSignInWithGoogle: () => Promise<void>
-	handleSignOut: (p?: { global: boolean }) => Promise<void>
+	handleSignOut: (p?: {
+		global?: boolean
+		onSignOut: () => void
+	}) => Promise<void>
 	handleSignUp: (p: { onVerificationRequired: () => void }) => Promise<void>
 	handleConfirmSignUp: (p: { onSuccess: () => void }) => Promise<void>
 	handleResendSignUpCode: (p: { username: string }) => Promise<void>
@@ -210,15 +213,20 @@ const createAuthSlice: StateCreator<AuthStore, [], [], AuthSlice> = (
 			}
 		},
 
-		handleSignOut: async (p?: { global: boolean }): Promise<void> => {
+		handleSignOut: async (p?: {
+			global?: boolean
+			onSignOut: () => void
+		}): Promise<void> => {
 			if (get().loading) return
 
 			set({ loading: true, error: null })
 
 			try {
-				await signOut(p)
+				await signOut()
 
 				set({ loading: false, currentUser: null })
+
+				p?.onSignOut()
 			} catch (error) {
 				set({
 					loading: false,

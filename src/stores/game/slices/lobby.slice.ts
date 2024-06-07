@@ -25,7 +25,9 @@ type LobbyStates = {
 type LobbyActions = {
 	setIsCreator: (isCreator: boolean) => void
 	createLobby: () => Promise<void>
-	checkIfUserInLobby: () => Promise<void>
+	checkIfUserInLobby: (p: {
+		onFound: (lobby: Lobby) => void
+	}) => Promise<void>
 	joinExistingLobby: (lobby: Lobby) => Promise<void>
 	joinLobby: (lobbyCode: string) => Promise<void>
 	leaveLobby: () => Promise<void>
@@ -254,7 +256,9 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 			}
 		},
 
-		checkIfUserInLobby: async (): Promise<void> => {
+		checkIfUserInLobby: async (p: {
+			onFound: (lobby: Lobby) => void
+		}): Promise<void> => {
 			if (get().loading) return
 
 			set({ loading: true })
@@ -294,7 +298,7 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 					return
 				}
 
-				get().joinExistingLobby(lobby)
+				p.onFound(lobby)
 			} catch (error) {
 				set({ loading: false, error: error as string })
 				console.log("catch", error)

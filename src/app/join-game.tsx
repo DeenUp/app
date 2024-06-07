@@ -31,27 +31,19 @@ export default function CreateGame() {
 	const CODE_LENGTH = 6
 	const { translate, theme } = useSettingsStore()
 
-	const {
-		gameSessionID,
-		checkIfUserInLobby,
-		participants,
-		joinLobby,
-		error,
-	} = useGameStore((state: GameStore) => ({
-		checkIfUserInLobby: state.checkIfUserInLobby,
-		participants: state.participants,
-		error: state.error,
-		destroy: state.destroy,
-		leaveLobby: state.leaveLobby,
-		joinLobby: state.joinLobby,
-		joinExistingLobby: state.joinExistingLobby,
-		gameSessionID: state.gameSessionID,
-		gameRound: state.gameRound,
-	}))
-
-	useEffect(() => {
-		checkIfUserInLobby()
-	}, [])
+	const { gameSessionID, participants, joinLobby } = useGameStore(
+		(state: GameStore) => ({
+			checkIfUserInLobby: state.checkIfUserInLobby,
+			participants: state.participants,
+			error: state.error,
+			destroy: state.destroy,
+			leaveLobby: state.leaveLobby,
+			joinLobby: state.joinLobby,
+			joinExistingLobby: state.joinExistingLobby,
+			gameSessionID: state.gameSessionID,
+			gameRound: state.gameRound,
+		}),
+	)
 
 	useEffect(() => {
 		if (gameSessionID) {

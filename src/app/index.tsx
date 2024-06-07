@@ -2,6 +2,7 @@ import type { ReactNode } from "react"
 
 import { useEffect } from "react"
 import { SafeAreaView, View } from "react-native"
+import { useModal } from "react-native-modalfy"
 
 import * as Haptics from "expo-haptics"
 import { router } from "expo-router"
@@ -18,11 +19,36 @@ import { useAuthStore, useGameStore, useSettingsStore } from "~/stores"
 export default function Page(): ReactNode {
 	const currentUser = useAuthStore((state) => state.currentUser)
 	const { theme } = useSettingsStore()
-	const { checkIfUserInLobby } = useGameStore()
+	const { checkIfUserInLobby, leaveLobby, joinExistingLobby } = useGameStore()
+
+	const { openModal } = useModal()
 
 	useEffect(() => {
-		checkIfUserInLobby()
-	}, [])
+		// setTimeout(() => {
+		// 	openModal("AlertModal", {
+		// 		title: "Already in game session",
+		// 		message: "Would you like to continue the game session?",
+		// 		origin: "createGame",
+		// 		onClose: () => {},
+		// 		onConfirm: () => {},
+		// 	})
+		// }, 1000)
+
+		checkIfUserInLobby({
+			onFound: (lobby) =>
+				openModal("AlertModal", {
+					title: "Already in game session",
+					message: "Would you like to continue the game session?",
+					origin: "createGame",
+					onClose: () => {
+						leaveLobby()
+					},
+					onConfirm: () => {
+						joinExistingLobby(lobby)
+					},
+				}),
+		})
+	}, [currentUser])
 
 	const styles = {
 		body: twr`flex-1 bg-[${theme.primary}]`,
