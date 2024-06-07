@@ -21,7 +21,7 @@ const CodeInput = ({
 	const styles = {
 		container: twMerge("flex flex-row  items-center justify-center gap-2"),
 		input: twMerge(
-			"rounded-lg border border-gray-300   text-center text-xl shadow-sm",
+			`rounded-lg border border-gray-300   text-center text-xl shadow-sm`,
 			inputClass,
 		),
 	}
@@ -40,6 +40,8 @@ const CodeInput = ({
 					className={twMerge(
 						styles.input,
 						index === idx && "border-info",
+						//If there is code for the current index, then bg-primary
+						code[idx] && "bg-primary text-white",
 					)}
 					value={digit}
 					onChangeText={(text) => handleCodeChange(text, idx)}

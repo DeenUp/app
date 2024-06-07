@@ -187,7 +187,6 @@ export default class ParticipantApi implements IParticipantApi {
 			>(onUpdateParticipant, {})
 			.subscribe({
 				next: ({ data }) => {
-					console.log("Updated participant")
 					onResponse({
 						type: "updated",
 						data: data.onUpdateParticipant as Participant,

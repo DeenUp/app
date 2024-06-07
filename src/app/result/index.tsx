@@ -72,7 +72,6 @@ export default function Page(): ReactNode {
 						label="Check Correct Answer"
 						color="accent"
 						onPress={() => {
-							console.log("correct")
 							router.push("/")
 						}}
 					/>

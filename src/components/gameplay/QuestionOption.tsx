@@ -36,7 +36,7 @@ const QuestionOption = ({
 			style={styles.card}
 			from={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
-			transition={{ type: "timing", delay: index * 400, duration: 200 }}
+			transition={{ type: "timing", delay: index * 600, duration: 200 }}
 			exit={{ opacity: 0 }}
 		>
 			<ThemedAwesomeButton

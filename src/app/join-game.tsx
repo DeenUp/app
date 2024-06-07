@@ -31,8 +31,9 @@ export default function CreateGame() {
 	const CODE_LENGTH = 6
 	const { translate, theme } = useSettingsStore()
 
-	const { gameSessionID, joinExistingLobby, participants, joinLobby, error } =
-		useGameStore((state: GameStore) => ({
+	const { gameSessionID, participants, joinLobby } = useGameStore(
+		(state: GameStore) => ({
+			checkIfUserInLobby: state.checkIfUserInLobby,
 			participants: state.participants,
 			error: state.error,
 			destroy: state.destroy,
@@ -41,11 +42,8 @@ export default function CreateGame() {
 			joinExistingLobby: state.joinExistingLobby,
 			gameSessionID: state.gameSessionID,
 			gameRound: state.gameRound,
-		}))
-
-	useEffect(() => {
-		joinExistingLobby()
-	}, [])
+		}),
+	)
 
 	useEffect(() => {
 		if (gameSessionID) {
@@ -109,7 +107,7 @@ export default function CreateGame() {
 	const handlePasteFromClipboard = async () => {
 		try {
 			const text: string = await Clipboard.getStringAsync()
-			console.log("Pasted text from clipboard:", text)
+
 			const newCode: string[] = [...states.inputCode]
 			const sourceText =
 				text.length > CODE_LENGTH
@@ -212,7 +210,7 @@ export default function CreateGame() {
 						</View>
 					)}
 
-					{error && <Text>{error as string}</Text>}
+					{/* {error && <Text>{error as string}</Text>} */}
 				</View>
 			</View>
 		</SafeAreaView>

@@ -42,42 +42,33 @@ export const listGameRounds = /* GraphQL */ `query ListGameRounds(
 	APITypes.ListGameRoundsQueryVariables,
 	APITypes.ListGameRoundsQuery
 >
-export const listGameRoundsByGameSessionID =
-	/* GraphQL */ `query ListGameRoundsByGameSessionID(
-  $gameSessionID: ID!
-  $sortDirection: ModelSortDirection
-  $filter: ModelGameRoundFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listGameRoundsByGameSessionID(
-  $gameSessionID: ID!
-  $sortDirection: ModelSortDirection
-  $filter: ModelGameRoundFilterInput
-  $limit: Int
-  $nextToken: String
+export const listGameRoundsByGameSessionID = `
+  query ListGameRoundsByGameSessionID(
+    $gameSessionID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelGameRoundFilterInput
+    $limit: Int
+    $nextToken: String
   ) {
-    items {
-     ${gameRoundDocument({ includeGameSession: false, includeAnswers: false })}
+    listGameRoundsByGameSessionID(
+      gameSessionID: $gameSessionID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        ${gameRoundDocument({ includeGameSession: false, includeAnswers: false })}
+      }
+      nextToken
+      __typename
     }
-    nextToken
-    __typename
   }
-}
 ` as GeneratedQuery<
-		APITypes.ListGameRoundsByGameSessionIDQueryVariables,
-		APITypes.ListGameRoundsByGameSessionIDQuery
-	>
-export const getSubmittedAnswer =
-	/* GraphQL */ `query GetSubmittedAnswer($id: ID!) {
-  getSubmittedAnswer(id: $id) {
-   ${submittedAnswersDocument({ includeUser: true, includeGameRound: false })}
-  }
-}
-` as GeneratedQuery<
-		APITypes.GetSubmittedAnswerQueryVariables,
-		APITypes.GetSubmittedAnswerQuery
-	>
+	APITypes.ListGameRoundsByGameSessionIDQueryVariables,
+	APITypes.ListGameRoundsByGameSessionIDQuery
+>
+
 export const listSubmittedAnswers = /* GraphQL */ `query ListSubmittedAnswers(
   $filter: ModelSubmittedAnswerFilterInput
   $limit: Int
@@ -305,7 +296,7 @@ export const listLobbiesByCode = /* GraphQL */ `query ListLobbiesByCode(
       ${lobbyDocument({
 			includeCreator: false,
 			includeParticipants: true,
-			includeGameSession: false,
+			includeGameSession: true,
 		})}
     }
     nextToken

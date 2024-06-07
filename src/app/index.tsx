@@ -1,10 +1,11 @@
 import type { ReactNode } from "react"
 
-import { Platform, SafeAreaView, View } from "react-native"
+import { useEffect } from "react"
+import { SafeAreaView, View } from "react-native"
+import { useModal } from "react-native-modalfy"
 
 import * as Haptics from "expo-haptics"
 import { router } from "expo-router"
-import { StatusBar } from "expo-status-bar"
 
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { MotiImage, MotiView } from "moti"
@@ -13,11 +14,33 @@ import twr from "twrnc"
 import DeenUp from "~/assets/images/deenup.png"
 import { Spacer, ThemedAwesomeButton } from "~/components/ui"
 import { tw } from "~/helpers"
-import { useAuthStore, useSettingsStore } from "~/stores"
+import { useAuthStore, useGameStore, useSettingsStore } from "~/stores"
 
 export default function Page(): ReactNode {
 	const currentUser = useAuthStore((state) => state.currentUser)
-	const { theme } = useSettingsStore()
+	const { theme, translate } = useSettingsStore()
+	const { checkIfUserInLobby, leaveLobby, joinExistingLobby } = useGameStore()
+	const { openModal } = useModal()
+
+	useEffect(() => {
+		checkIfUserInLobby({
+			onFound: (lobby, gameSession) =>
+				openModal("AlertModal", {
+					title: translate("notifications.inGameSession.title"),
+					message: translate("notifications.inGameSession.message"),
+					confirmButtonText: translate(
+						"notifications.inGameSession.continue",
+					),
+					origin: "createGame",
+					onClose: () => {
+						leaveLobby()
+					},
+					onConfirm: () => {
+						joinExistingLobby(lobby, gameSession)
+					},
+				}),
+		})
+	}, [currentUser])
 
 	const styles = {
 		body: twr`flex-1 bg-[${theme.primary}]`,
@@ -30,8 +53,6 @@ export default function Page(): ReactNode {
 
 	return (
 		<SafeAreaView style={styles.body}>
-			<StatusBar hidden={Platform.OS === "ios"} />
-
 			<View className={styles.container}>
 				<Spacer />
 				<View className={styles.logoContainer}>

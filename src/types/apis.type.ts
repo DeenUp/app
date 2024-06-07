@@ -50,14 +50,25 @@ export type GetQueryApi<T> = {
 
 export type IGameRoundApi = CreateMutationApi<CreateGameRoundInput, GameRound> &
 	UpdateMutationApi<UpdateGameRoundInput, GameRound> &
-	SubscriptionApi<GameRound, ModelGameRoundFilterInput | null | undefined>
+	SubscriptionApi<GameRound, ModelGameRoundFilterInput | null | undefined> & {
+		findActiveGameRound(
+			gameSessionID: string,
+		): Promise<ItemResponse<GameRound>>
+	}
 
 export type IGameSessionApi = ListByIdQueryApi<
 	GameSession,
 	ModelGameSessionFilterInput | null | undefined
 > &
 	CreateMutationApi<CreateGameSessionInput, GameSession> &
-	SubscriptionApi<GameSession, ModelGameSessionFilterInput | null | undefined>
+	SubscriptionApi<
+		GameSession,
+		ModelGameSessionFilterInput | null | undefined
+	> & {
+		findActiveGameSession(
+			lobbyID: string,
+		): Promise<ItemResponse<GameSession>>
+	}
 
 export type ILobbyApi = CreateMutationApi<CreateLobbyInput, Lobby> &
 	UpdateMutationApi<UpdateLobbyInput, Lobby> &
@@ -75,11 +86,11 @@ export type IParticipantApi = ListByIdQueryApi<
 		ModelParticipantFilterInput | null | undefined
 	> & {
 		findActiveParticipant(
-			userId: string,
+			userID: string,
 		): Promise<ItemResponse<Participant>>
 		joinLobby(
-			lobbyId: string,
-			userId: string,
+			lobbyID: string,
+			userID: string,
 		): Promise<ItemResponse<Participant>>
 	}
 export type ISubmittedAnswer = CreateMutationApi<
@@ -89,7 +100,11 @@ export type ISubmittedAnswer = CreateMutationApi<
 	SubscriptionApi<
 		SubmittedAnswer,
 		ModelSubmittedAnswerFilterInput | null | undefined
-	>
+	> & {
+		listByGameSessionID(
+			gameSessionID: string,
+		): Promise<ItemResponse<SubmittedAnswer[]>>
+	}
 
 export type IUserApi = QueryApi<User, ModelUserFilterInput | null | undefined> &
 	UpdateWithImageMutationApi<UpdateUserInput, User>

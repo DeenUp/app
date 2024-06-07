@@ -33,7 +33,7 @@ export default function Placeholder({ solo }: { solo: boolean }) {
 	const styles = {
 		options: tw`gap-6`,
 		question: tw`text-center text-2xl font-bold`,
-		card: twr`flex h-96 w-full flex-grow flex-col items-stretch justify-around rounded-md bg-[#F9F2DF] p-8 shadow-md`,
+		card: twr`flex h-96 w-full flex-grow flex-col items-stretch justify-around rounded-md border-4 border-black bg-[${theme.background}] p-8 shadow-md`,
 	}
 
 	return (

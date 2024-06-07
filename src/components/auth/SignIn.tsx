@@ -1,5 +1,6 @@
-import React, { useState } from "react"
-import { Alert, Image, Text, TouchableOpacity, View } from "react-native"
+import { useState } from "react"
+import { Image, Text, TouchableOpacity, View } from "react-native"
+import { useModal } from "react-native-modalfy"
 
 import * as Haptics from "expo-haptics"
 import { router } from "expo-router"
@@ -19,6 +20,8 @@ import { useAuthStore, useSettingsStore } from "~/stores"
 
 const SignIn = () => {
 	const translate = useSettingsStore((state) => state.translate)
+	const { openModal } = useModal()
+
 	const {
 		email,
 		password,
@@ -72,15 +75,14 @@ const SignIn = () => {
 				router.push("/auth/verification")
 			},
 			onSuccess: () => {
-				Alert.alert("Signed In", "Welcome back", [
-					{
-						text: "Confirm",
-						onPress: () => {
-							clear()
-							router.dismissAll()
-						},
+				openModal("SuccessModal", {
+					title: translate("notifications.signIn.success.title"),
+					message: translate("notifications.signIn.success.message"),
+					origin: "signin",
+					onConfirm: () => {
+						router.dismissAll()
 					},
-				])
+				})
 				Haptics.notificationAsync(
 					Haptics.NotificationFeedbackType.Success,
 				)

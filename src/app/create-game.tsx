@@ -28,7 +28,6 @@ export default function CreateGame(): ReactNode {
 	const {
 		gameSessionID,
 		participants,
-		destroy,
 		createLobby,
 		leaveLobby,
 		startGame,

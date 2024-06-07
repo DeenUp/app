@@ -107,7 +107,7 @@ const lobbyDocument = (include: {
 
 	if (include.includeGameSession) {
 		document += `gameSession {
-            ${gameSessionDocument({ includeLobby: false, includeGameRounds: false })}
+            ${gameSessionDocument({ includeLobby: true, includeGameRounds: false })}
         }`
 	}
 
@@ -271,9 +271,9 @@ const participantDocument = (include: {
 	if (include.includeLobby) {
 		document += `lobby {
             ${lobbyDocument({
-				includeCreator: false,
+				includeCreator: true,
 				includeParticipants: true,
-				includeGameSession: false,
+				includeGameSession: true,
 			})}
         }`
 	}

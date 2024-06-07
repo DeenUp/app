@@ -1,15 +1,17 @@
 import type { TextInput } from "react-native"
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
 
 import * as Clipboard from "expo-clipboard"
 
+import { FontAwesome6, Ionicons } from "@expo/vector-icons"
 import CodeInput from "~components/auth/CodeInput"
 
-import { Button } from "~/components/ui"
 import { tw } from "~/helpers"
-import { useAuthStore, useSettingsStore } from "~/stores"
+import { useAuthStore, useGameStore, useSettingsStore } from "~/stores"
+
+import { ThemedAwesomeButton } from "../ui"
 
 type States = {
 	inputCode: string[]
@@ -22,6 +24,7 @@ const Verify = ({ error }: Props) => {
 	const CODE_LENGTH = 6
 	const translate = useSettingsStore((state) => state.translate)
 	const { setConfirmationCode } = useAuthStore()
+	const { seconds, setTime, countdown } = useGameStore()
 
 	const [states, setStates] = useState<States>({
 		inputCode: Array(CODE_LENGTH).fill("") as string[],
@@ -85,35 +88,50 @@ const Verify = ({ error }: Props) => {
 		}
 	}
 
+	useEffect(() => {
+		setTime(0, 60)
+		countdown()
+	}, [])
+
 	const styles = {
-		signUpText: tw`font-bold text-primary`,
+		signUpText: tw` font-bold text-primary`,
 		errorText: tw`text-red-500`,
 	}
 
 	return (
-		<View className="w-full items-center justify-center gap-6">
-			<CodeInput
-				code={states.inputCode}
-				handleCodeChange={handleCodeChange}
-				inputRefs={inputRefs}
-				inputClass="w-12 h-14"
-			/>
-			{error && <Text className={styles.errorText}>{error}</Text>}
-			<Text className="w-full text-center text-lg text-gray-500">
-				{translate("authPage.verify.noCodeRecieved")}
-				<TouchableOpacity>
-					<Text className={styles.signUpText}>
-						{translate("authPage.verify.resendCode")}
-					</Text>
-				</TouchableOpacity>
-			</Text>
-			<View className="w-full flex-1 items-center justify-start gap-4">
-				<Button
-					color="outline"
-					size="sm"
-					label={translate("authPage.verify.pasteFromClipboard")}
-					onPress={handlePasteFromClipboard}
+		<View className="w-full flex-col items-center justify-center gap-6">
+			<View className="flex-row gap-2">
+				<CodeInput
+					code={states.inputCode}
+					handleCodeChange={handleCodeChange}
+					inputRefs={inputRefs}
+					inputClass="w-12 h-14 border-primary text-xl font-bold border-2"
 				/>
+				<ThemedAwesomeButton
+					theme="c137"
+					type="anchor"
+					width={55}
+					borderRadius={10}
+					onPress={handlePasteFromClipboard}
+				>
+					<FontAwesome6 name="paste" size={24} color="#472836" />
+				</ThemedAwesomeButton>
+			</View>
+			{error && <Text className={styles.errorText}>{error}</Text>}
+			<Text className="w-full text-center text-xl font-bold text-primary">
+				{translate("authPage.verify.noCodeRecieved")}
+			</Text>
+			<View className="flex flex-row items-center justify-center p-2">
+				<Text className={styles.signUpText}>
+					{translate("authPage.verify.resendCode")}
+					<TouchableOpacity className="">
+						{seconds === 0 ? (
+							<Ionicons name="reload" size={24} color="black" />
+						) : (
+							<Text>{seconds}</Text>
+						)}
+					</TouchableOpacity>
+				</Text>
 			</View>
 		</View>
 	)
