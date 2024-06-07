@@ -80,7 +80,7 @@ jobs:
               if: failure() || success()
               with:
                   webhook: ${{ secrets.DISCORD_WEBHOOK_DEPLOYMENT_DEV }}
-                  title: "iOS Build"
+                  title: "iOS Build Success 🍏"
                   description: |
                       ${{ job.status == 'success' && 'iOS build has been completed :white_check_mark:' || 'iOS build has failed :x:'}}
                       ${{ job.status == 'success' && steps.upload-artifact.outputs.artifact-url || ''}}
@@ -162,7 +162,7 @@ jobs:
               if: failure() || success()
               with:
                   webhook: ${{ secrets.DISCORD_WEBHOOK_DEPLOYMENT_DEV }}
-                  title: "Android Build"
+                  title: "Android Build Success 🤖"
                   description: |
                       ${{ job.status == 'success' && 'Android build has been completed :white_check_mark:' || 'Android build has failed :x:'}}
                       ${{ job.status == 'success' && steps.upload-artifact.outputs.artifact-url || ''}}

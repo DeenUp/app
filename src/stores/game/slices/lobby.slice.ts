@@ -8,7 +8,7 @@ import useUserStore from "~stores/user/useUserStore"
 
 import type { GameStore } from "."
 import type { Subscription } from "~/types"
-import type { Lobby, Participant } from "~graphql/api"
+import type { GameSession, Lobby, Participant } from "~graphql/api"
 
 import { GameRoundApi, GameSessionApi, LobbyApi, ParticipantApi } from "~/apis"
 
@@ -298,6 +298,16 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 					return
 				}
 
+				const gameSession = await gameSessionApi.findActiveGameSession(
+					lobby.id,
+				)
+
+				if (!gameSession.hasData) {
+					set({ loading: false })
+
+					return
+				}
+
 				p.onFound(lobby)
 			} catch (error) {
 				set({ loading: false, error: error as string })
@@ -305,46 +315,39 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 			}
 		},
 
-		joinExistingLobby: async (lobby: Lobby): Promise<void> => {
+		joinExistingLobby: async (
+			lobby: Lobby,
+			gameSession: GameSession,
+		): Promise<void> => {
 			try {
-				const gameSession = await gameSessionApi.findActiveGameSession(
-					lobby.id,
+				const gameRound = await gameRoundApi.findActiveGameRound(
+					gameSession.id,
 				)
 
-				if (gameSession.hasData) {
-					const gameRound = await gameRoundApi.findActiveGameRound(
-						gameSession.item!.id,
-					)
+				const participants = lobby.participants!.items.filter(
+					(item): item is Participant => item !== null,
+				)
 
-					if (!gameRound.hasData) return
+				const allParticipants = [...participants]
 
-					const participants = lobby.participants!.items.filter(
-						(item): item is Participant => item !== null,
-					)
+				set({
+					lobbyCode: lobby.code,
+					lobbyID: lobby.id,
+					isCreator:
+						lobby.creatorID ===
+						useUserStore.getState().currentUser!.id,
+					gameSessionID: gameSession.id,
+					loading: false,
+					gameRound: gameRound.hasData ? gameRound.item! : null,
+					participants: removeDuplicates(allParticipants),
+					error: "",
+				})
 
-					const allParticipants = [...participants]
+				onParticipantSubscription(lobby.id)
+				onGameSessionSubscription(lobby.id)
+				onLobbySubscription(lobby.id)
 
-					set({
-						lobbyCode: lobby.code,
-						lobbyID: lobby.id,
-						isCreator:
-							lobby.creatorID ===
-							useUserStore.getState().currentUser!.id,
-						gameSessionID: gameSession.item!.id,
-						loading: false,
-						gameRound: gameRound.hasData ? gameRound.item! : null,
-						participants: removeDuplicates(allParticipants),
-						error: "",
-					})
-
-					onParticipantSubscription(lobby.id)
-					onGameSessionSubscription(lobby.id)
-					onLobbySubscription(lobby.id)
-
-					router.replace("/friends-mode/")
-
-					return
-				}
+				router.replace("/friends-mode/")
 
 				return
 			} catch (error) {

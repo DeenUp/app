@@ -76,8 +76,8 @@ const SignIn = () => {
 			},
 			onSuccess: () => {
 				openModal("SuccessModal", {
-					title: "Success",
-					message: "You have successfully signed in",
+					title: translate("notifications.signIn.success.title"),
+					message: translate("notifications.signIn.success.message"),
 					origin: "signin",
 					onConfirm: () => {
 						router.dismissAll()

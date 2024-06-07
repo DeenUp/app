@@ -10,10 +10,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons"
 import type { AuthStore } from "~/stores"
 
 import { ThemedAwesomeButton } from "~/components/ui"
-import { useAuthStore } from "~/stores"
+import { useAuthStore, useSettingsStore } from "~/stores"
 
 export default function Page(): ReactNode {
 	const { handleSignOut } = useAuthStore((store: AuthStore) => store)
+	const { translate } = useSettingsStore()
 	const { openModal } = useModal()
 
 	return (
@@ -25,14 +26,23 @@ export default function Page(): ReactNode {
 				paddingHorizontal={4}
 				borderRadius={100}
 				onPress={() => {
-					handleSignOut({
-						onSignOut: () => {
-							openModal("SuccessModal", {
-								title: "Success",
-								message: "You have been signed out",
-								origin: "signin",
-								onConfirm: () => {
-									router.dismissAll()
+					openModal("AlertModal", {
+						title: "Sign Out",
+						message: translate(
+							"notifications.signOut.confirmation",
+						),
+
+						onConfirm: () => {
+							handleSignOut({
+								onSignOut: () => {
+									openModal("SuccessModal", {
+										title: "Success",
+										message: "You have been signed out",
+										origin: "signin",
+										onConfirm: () => {
+											router.dismissAll()
+										},
+									})
 								},
 							})
 						},

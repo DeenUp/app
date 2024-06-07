@@ -18,17 +18,19 @@ import { useAuthStore, useGameStore, useSettingsStore } from "~/stores"
 
 export default function Page(): ReactNode {
 	const currentUser = useAuthStore((state) => state.currentUser)
-	const { theme } = useSettingsStore()
+	const { theme, translate } = useSettingsStore()
 	const { checkIfUserInLobby, leaveLobby, joinExistingLobby } = useGameStore()
-
 	const { openModal } = useModal()
 
 	useEffect(() => {
 		checkIfUserInLobby({
 			onFound: (lobby) =>
 				openModal("AlertModal", {
-					title: "Already in game session",
-					message: "Would you like to continue the game session?",
+					title: translate("notifications.inGameSession.title"),
+					message: translate("notifications.inGameSession.message"),
+					confirmButtonText: translate(
+						"notifications.inGameSession.continue",
+					),
 					origin: "createGame",
 					onClose: () => {
 						leaveLobby()

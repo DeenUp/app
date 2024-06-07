@@ -5,6 +5,7 @@ import { SafeAreaView, Text, View } from "react-native"
 import { useAnimatedStyle, withSpring } from "react-native-reanimated"
 
 import * as Haptics from "expo-haptics"
+import { LinearGradient } from "expo-linear-gradient"
 import { router } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
@@ -75,8 +76,8 @@ export default function Page(): ReactNode {
 	const styles = {
 		screen: twr`flex-1 flex-col items-center justify-center bg-[${theme.primary}] pt-12`,
 		container: twr`w-full flex-1 flex-col items-center justify-center p-4`,
-		card: twr`flex w-full flex-grow flex-col items-stretch justify-around rounded-md bg-[${theme.background}] p-8 shadow-md`,
-		question: tw`w-full text-left text-2xl font-bold`,
+		card: twr` flex w-full flex-grow flex-col items-stretch justify-around rounded-md border-4 border-black  bg-[${theme.background}] p-8 shadow-md`,
+		question: tw`w-full text-center text-2xl font-bold`,
 		options: tw`gap-4`,
 		closeButton: tw`w-full flex-col items-end justify-end justify-between p-6`,
 	}
@@ -161,10 +162,22 @@ export default function Page(): ReactNode {
 											translateY: -100,
 										}}
 										style={[
-											twr`rounded-4 absolute left-0 right-0 top-0 -z-10 h-[${OptionHeight}px] w-full  bg-[${theme.surface}] shadow-md`,
+											twr`absolute left-0 right-0 top-0 -z-10 rounded border h-[${OptionHeight}px] w-full border-[${theme.primary}] rounded-xl shadow-md`,
 											animatedStyle,
 										]}
-									/>
+									>
+										<LinearGradient
+											style={twr`absolute h-full w-full rounded-xl`}
+											// colors={["#DDB965", "#F1E1B4"]}
+											colors={[
+												theme.background,
+												theme.surface,
+											]}
+											end={[1, 1]}
+											start={[0, 0]}
+											locations={[0.1, 1]}
+										/>
+									</MotiView>
 								)}
 							</View>
 						</MotiView>
@@ -205,7 +218,7 @@ export default function Page(): ReactNode {
 								//@ts-ignore
 								next()
 							}
-						}, 5000)
+						}, 2500)
 					}}
 				>
 					{questions.length - 1 === currentQuestionIndex

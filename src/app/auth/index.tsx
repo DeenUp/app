@@ -23,7 +23,7 @@ export default function Auth() {
 		header: tw`h-1/2 flex-1 items-center justify-center bg-[#472836]`,
 		logo: twr`h-40 w-44`,
 		closeButton: tw`absolute right-10 top-12 size-10`,
-		motiStyle: twr`relative w-full flex-col items-center justify-start overflow-hidden rounded-t-3xl bg-[#F9F2DF] p-4 shadow-sm`,
+		motiStyle: twr`relative w-full flex-col items-center justify-start overflow-hidden rounded-t-[50px] bg-[#F9F2DF] p-4 shadow-sm`,
 	}
 
 	return (

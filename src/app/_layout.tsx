@@ -133,7 +133,6 @@ const RootLayout = () => {
 						<Stack.Screen
 							name="profile"
 							options={{
-								presentation: "modal",
 								headerShown: true,
 								headerShadowVisible: false,
 								headerBlurEffect: "light",
@@ -162,7 +161,6 @@ const RootLayout = () => {
 						<Stack.Screen
 							name="settings"
 							options={{
-								presentation: "modal",
 								headerShown: true,
 								headerShadowVisible: false,
 								headerTitle: "Settings",
@@ -190,7 +188,6 @@ const RootLayout = () => {
 						<Stack.Screen
 							name="solo-mode"
 							options={{
-								presentation: "fullScreenModal",
 								headerShown: false,
 								headerTitle: "",
 								headerStyle: {

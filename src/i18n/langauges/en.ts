@@ -21,6 +21,15 @@ export default {
 			"Copy and share the lobby code with your friends so they can join you",
 		button: "START",
 	},
+	gamePage: {
+		round: "Round %{round}",
+		rounds: "Rounds",
+		results: "Results",
+		lobbyClosed: "Lobby Closed",
+		lobbyClosedSubheader: "The game has ended",
+		lobbyClosedButton: "Back to Home",
+		lobbyClosedAlert: "The game has ended",
+	},
 	authPage: {
 		emailInput: "Email Address",
 		passwordInput: "Password",
@@ -54,7 +63,7 @@ export default {
 			passwordHeader: "Password",
 			passwordSubheader: "Lastly, a password to keep things safe. 🔐",
 			verificationHeader: "Verification",
-			verificationSubheader: "Please enter the code we sent to %{email}.",
+			verificationSubheader: "Check your email and enter the code below",
 			continueButton: "Continue 👉",
 			submitButton: "Submit",
 			verifyButton: "Verify 🕵️",
@@ -63,13 +72,11 @@ export default {
 			successSubheader: "Your account is ready to use",
 		},
 		verify: {
-			noCodeRecieved:
-				"Didn't receive the code? check your spam folder or ",
-			resendCode: "Resend Code",
+			noCodeRecieved: "Didn't receive the code?",
+			resendCode: "You can resend the code in",
 			submitButton: "Verify 🕵️",
-
 			header: "Verify Your Email",
-			subheader: "Enter the code we sent to %{email}",
+			subheader: "Check your email and enter the code below",
 			pasteFromClipboard: "Paste from clipboard",
 		},
 		forgotPassword: {
@@ -82,6 +89,51 @@ export default {
 			successHeader: "All set! 🙌",
 			successSubheader: "Your new password is ready to use",
 			backToSignIn: "Back to Sign In",
+		},
+	},
+	notifications: {
+		verification: {
+			success: "Verification code sent",
+			error: "Error sending verification code",
+		},
+		signUp: {
+			success: {
+				title: "Welcome to DeenUp!",
+				message: "Account created successfully",
+			},
+			error: {
+				title: "Error signing up",
+				message: "Please check your email and password",
+			},
+		},
+		signIn: {
+			success: {
+				title: "Welcome back!",
+				message: "Signed in successfully",
+			},
+			error: {
+				title: "Error signing in",
+				message: "Please check your email and password",
+			},
+		},
+		signOut: {
+			success: "Signed out successfully",
+			error: "Error signing out",
+			confirmation: "Are you sure you want to sign out?",
+		},
+		forgotPassword: {
+			success: "Password reset email sent",
+			error: "Error sending password reset email",
+		},
+		resetPassword: {
+			success: "Password reset successfully",
+			error: "Error resetting password",
+		},
+		inGameSession: {
+			title: "You are currently in a game session",
+			message: "Would you like to continue the game or leave?",
+			continue: "Continue",
+			leave: "Leave",
 		},
 	},
 }
