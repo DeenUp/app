@@ -107,7 +107,7 @@ export default function CreateGame() {
 	const handlePasteFromClipboard = async () => {
 		try {
 			const text: string = await Clipboard.getStringAsync()
-			console.log("Pasted text from clipboard:", text)
+
 			const newCode: string[] = [...states.inputCode]
 			const sourceText =
 				text.length > CODE_LENGTH

@@ -24,16 +24,6 @@ export default function Page(): ReactNode {
 	const { openModal } = useModal()
 
 	useEffect(() => {
-		// setTimeout(() => {
-		// 	openModal("AlertModal", {
-		// 		title: "Already in game session",
-		// 		message: "Would you like to continue the game session?",
-		// 		origin: "createGame",
-		// 		onClose: () => {},
-		// 		onConfirm: () => {},
-		// 	})
-		// }, 1000)
-
 		checkIfUserInLobby({
 			onFound: (lobby) =>
 				openModal("AlertModal", {
