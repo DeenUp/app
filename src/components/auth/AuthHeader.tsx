@@ -21,7 +21,7 @@ const AuthHeader = () => {
 	const currentStep = steps![step]!
 
 	const styles = {
-		body: tw`flex w-full gap-6`,
+		body: tw`flex w-full gap-6 px-6`,
 		backButton: tw`size-10`,
 		buttonsContainer: tw`flex flex-row justify-between`,
 		textContainer: tw``,
@@ -35,7 +35,7 @@ const AuthHeader = () => {
 				<TouchableOpacity
 					className={styles.backButton}
 					onPress={
-						step === 0
+						step === 1
 							? () => {
 									handleReset()
 								}
@@ -50,8 +50,8 @@ const AuthHeader = () => {
 				</TouchableOpacity>
 			</View>
 			<SegmentedProgressBar
-				progress={step / (isSignUp ? 4 : 3)}
-				segments={isSignUp ? 4 : 3}
+				progress={step / (isSignUp ? 5 : 3)}
+				segments={isSignUp ? 5 : 3}
 				color="#472836"
 				backgroundColor="#7E6972"
 			/>

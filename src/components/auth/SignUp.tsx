@@ -14,6 +14,7 @@ import {
 	EmailInputField,
 	NameInputField,
 	PasswordInputField,
+	Selfie,
 	ThemedAwesomeButton,
 } from "~/components/ui"
 import { useAuthStore, useSettingsStore } from "~/stores"
@@ -30,7 +31,6 @@ const SignUp = () => {
 		email,
 		password,
 		confirmationCode,
-
 		setName,
 		setUsername,
 		setPassword,
@@ -39,6 +39,7 @@ const SignUp = () => {
 		step,
 		handleNextStep,
 		setIsSignUp,
+		errors,
 	} = useAuthStore((state) => ({
 		name: state.name,
 		email: state.username,
@@ -55,41 +56,23 @@ const SignUp = () => {
 		handlePrevStep: state.handlePrevStep,
 		setIsSignUp: state.setIsSignUp,
 		step: state.step,
+		errors: state.errors,
 	}))
 
 	const [codeError, setCodeError] = useState("")
 
-	const [errors, setErrors] = useState({
-		name: "",
-		email: "",
-		password: "",
-	})
-
 	const handleSubmit = async () => {
-		const newErrors = {
-			name: name ? "" : translate("authPage.alerts.nameRequired"),
-			email: email ? "" : translate("authPage.alerts.emailRequired"),
-			password: password
-				? ""
-				: translate("authPage.alerts.passwordRequired"),
-		}
-
-		setErrors(newErrors)
-
-		if (Object.values(newErrors).some((error) => error !== "")) {
+		if (Object.values(errors).some((error) => error !== "")) {
 			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
 
 			return
 		}
 
-		if (step === 2) {
-			console.debug("signingup")
-			await handleSignUp({
-				onVerificationRequired: () => {
-					handleNextStep()
-				},
-			})
-		}
+		await handleSignUp({
+			onVerificationRequired: () => {
+				handleNextStep()
+			},
+		})
 	}
 
 	const handleVerifySubmit = async () => {
@@ -104,23 +87,6 @@ const SignUp = () => {
 				handleNextStep()
 			},
 		})
-	}
-
-	const handleContinue = () => {
-		const newErrors = {
-			name: step === 0 && !name ? "Name is required" : "",
-			email: step === 1 && !email ? "Email is required" : "",
-			password: step === 2 && !password ? "Password is required" : "",
-		}
-
-		setErrors(newErrors)
-
-		if (Object.values(newErrors).some((error) => error !== "")) {
-			return
-		}
-
-		handleNextStep()
-		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 	}
 
 	const handleInputChange = (field: string, value: string) => {
@@ -154,7 +120,7 @@ const SignUp = () => {
 			}}
 		>
 			<AnimatePresence>
-				{step === 0 && (
+				{step === 5 && (
 					<MotiView
 						key="nameField"
 						from={{ opacity: 0, translateY: -20 }}
@@ -174,7 +140,7 @@ const SignUp = () => {
 						/>
 					</MotiView>
 				)}
-				{step === 1 && (
+				{step === 2 && (
 					<MotiView
 						key="emailField"
 						from={{ opacity: 0, translateY: -20 }}
@@ -182,7 +148,7 @@ const SignUp = () => {
 						style={twr`flex-1 items-center justify-between gap-10`}
 					>
 						<EmailInputField
-							error={errors.email}
+							error={""}
 							value={email}
 							onChangeText={(value) =>
 								handleInputChange("email", value)
@@ -194,7 +160,7 @@ const SignUp = () => {
 						/>
 					</MotiView>
 				)}
-				{step === 2 && (
+				{step === 3 && (
 					<MotiView
 						key="passwordField"
 						from={{ opacity: 0, translateY: -20 }}
@@ -209,7 +175,7 @@ const SignUp = () => {
 						/>
 					</MotiView>
 				)}
-				{step === 3 && (
+				{step === 4 && (
 					<MotiView
 						key="verification"
 						from={{ opacity: 0, translateY: -20 }}
@@ -218,7 +184,18 @@ const SignUp = () => {
 						<Verify error={codeError} key="verify" />
 					</MotiView>
 				)}
-				{step === 4 && (
+				{/* Selfie */}
+				{step === 1 && (
+					<MotiView
+						key="selfie"
+						from={{ opacity: 0, translateY: -20 }}
+						animate={{ opacity: 1, translateY: 0 }}
+					>
+						<Selfie />
+					</MotiView>
+				)}
+
+				{step === 6 && (
 					<MotiView
 						style={{
 							flex: 1,
@@ -244,7 +221,7 @@ const SignUp = () => {
 				progress
 				type="anchor"
 				size="large"
-				width={370}
+				width={350}
 				textSize={20}
 				onPress={async (next) => {
 					if (step === 2) {
@@ -252,16 +229,14 @@ const SignUp = () => {
 						//@ts-ignore
 						next()
 					}
+
 					if (step === 3) {
 						await handleVerifySubmit()
 						//@ts-ignore
 						next()
 					}
 
-					if (step === 4) {
-						setIsSignUp(false)
-					}
-					handleContinue()
+					handleNextStep()
 					//@ts-ignore
 					next()
 				}}

@@ -10,6 +10,7 @@ import InputField, {
 import ParticipantsList from "./ParticipantsList"
 import PlayerAvatar from "./PlayerAvatar"
 import SegmentedProgressBar from "./SegmentedProgressBar"
+import Selfie from "./Selfie"
 import Separator from "./Separator"
 import Spacer from "./Spacer"
 import Timer from "./Timer"
@@ -26,6 +27,7 @@ export {
 	PasswordInputField,
 	PlayerAvatar,
 	SegmentedProgressBar,
+	Selfie,
 	Separator,
 	Spacer,
 	ThemedAwesomeButton,

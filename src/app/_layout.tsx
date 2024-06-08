@@ -45,7 +45,11 @@ const RootLayout = () => {
 	const { clear } = useAuthStore()
 	const { theme } = useSettingsStore()
 
-	const modalConfig = { AlertModal, ErrorModal, SuccessModal }
+	const modalConfig = {
+		AlertModal,
+		ErrorModal,
+		SuccessModal,
+	}
 	const defaultOptions = { backdropOpacity: 0.4 }
 
 	const stack = createModalStack(modalConfig, defaultOptions)
@@ -95,10 +99,6 @@ const RootLayout = () => {
 						<Stack.Screen
 							name="auth"
 							options={{
-								presentation:
-									pathname === "/auth/verification"
-										? "modal"
-										: "modal",
 								headerShadowVisible: false,
 								headerBlurEffect: "light",
 								headerStyle: {

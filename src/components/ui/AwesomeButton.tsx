@@ -37,7 +37,26 @@ const CloseButton: FC<ButtonProps> = ({ onPress }) => {
 		</ThemedAwesomeButton>
 	)
 }
-export { CloseButton }
+
+const AddButton: FC<ButtonProps> = ({ onPress }) => {
+	return (
+		<ThemedAwesomeButton
+			theme="bruce"
+			type="secondary"
+			width={50}
+			height={50}
+			paddingTop={4}
+			paddingHorizontal={4}
+			onPress={onPress}
+			raiseLevel={2}
+			backgroundColor="#F9F2DF"
+		>
+			<MaterialCommunityIcons name="plus" color={"black"} size={18} />
+		</ThemedAwesomeButton>
+	)
+}
+
+export { CloseButton, AddButton }
 
 export type ThemedButton = {
 	disabled?: boolean
