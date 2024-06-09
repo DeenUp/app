@@ -1,4 +1,4 @@
-import ThemedAwesomeButton, { CloseButton } from "./AwesomeButton"
+import ThemedAwesomeButton, { CloseButton, ShareButton } from "./AwesomeButton"
 import Button from "./Button"
 import CodeComponent from "./CodeComponent"
 import Gap from "./Gap"
@@ -26,6 +26,7 @@ export {
 	ParticipantsList,
 	PasswordInputField,
 	PlayerAvatar,
+	ShareButton,
 	SegmentedProgressBar,
 	Selfie,
 	Separator,

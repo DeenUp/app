@@ -56,7 +56,37 @@ const AddButton: FC<ButtonProps> = ({ onPress }) => {
 	)
 }
 
-export { AddButton, CloseButton }
+type ShareButtonProps = {
+	icon: keyof typeof MaterialCommunityIcons.glyphMap
+}
+const ShareButton: FC<
+	ThemedButton & ButtonTypes & ButtonProps & ShareButtonProps
+> = ({ type, onPress, icon }) => {
+	return (
+		<ThemedAwesomeButton
+			theme="bruce"
+			type={type}
+			width={80}
+			height={80}
+			paddingTop={4}
+			paddingHorizontal={4}
+			onPress={onPress}
+			raiseLevel={4}
+		>
+			<MaterialCommunityIcons
+				name={
+					icon in MaterialCommunityIcons.glyphMap
+						? icon
+						: "share-variant"
+				}
+				color="white"
+				size={30}
+			/>
+		</ThemedAwesomeButton>
+	)
+}
+
+export { AddButton, CloseButton, ShareButton }
 
 export type ThemedButton = {
 	disabled?: boolean
