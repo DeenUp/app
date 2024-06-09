@@ -1,4 +1,6 @@
-import { useState } from "react"
+import type { BottomSheetModal } from "@gorhom/bottom-sheet"
+
+import { useRef, useState } from "react"
 
 import * as Haptics from "expo-haptics"
 
@@ -10,6 +12,7 @@ import { lottieBlueCheck } from "~/assets"
 import SignUpEmailImage from "~/assets/images/auth/signup-email.png"
 import SignUpNameImage from "~/assets/images/auth/signup-name.png"
 import Verify from "~/components/auth/Verify"
+import { SelfieBottomSheetModal } from "~/components/modals"
 import {
 	EmailInputField,
 	NameInputField,
@@ -25,6 +28,7 @@ export enum UserType {
 }
 
 const SignUp = () => {
+	const selfieBottomSheetModalRef = useRef<BottomSheetModal>(null)
 	const translate = useSettingsStore((state) => state.translate)
 	const {
 		name,
@@ -38,7 +42,6 @@ const SignUp = () => {
 		handleConfirmSignUp,
 		step,
 		handleNextStep,
-		setIsSignUp,
 		errors,
 	} = useAuthStore((state) => ({
 		name: state.name,
@@ -90,7 +93,8 @@ const SignUp = () => {
 	}
 
 	const handleInputChange = (field: string, value: string) => {
-		if (value === "Enter") handleContinue()
+		// if (value === "Enter") handleContinue()
+
 		switch (field) {
 			case "name":
 				setName(value)
@@ -107,149 +111,156 @@ const SignUp = () => {
 	}
 
 	return (
-		<MotiView
-			key="signup"
-			from={{ opacity: 0 }}
-			animate={{ opacity: 1 }}
-			delay={700}
-			style={twr`flex-1 items-center justify-between gap-10 py-8`}
-			onDidAnimate={() => {
-				Haptics.notificationAsync(
-					Haptics.NotificationFeedbackType.Success,
-				)
-			}}
-		>
-			<AnimatePresence>
-				{step === 5 && (
-					<MotiView
-						key="nameField"
-						from={{ opacity: 0, translateY: -20 }}
-						animate={{ opacity: 1, translateY: 0 }}
-						style={twr`flex-1 items-center justify-between gap-10`}
-					>
-						<NameInputField
-							error={errors.name}
-							value={name}
-							onChangeText={(value) =>
-								handleInputChange("name", value)
-							}
-						/>
-						<MotiImage
-							source={SignUpNameImage}
-							style={twr`h-64 w-64`}
-						/>
-					</MotiView>
-				)}
-				{step === 2 && (
-					<MotiView
-						key="emailField"
-						from={{ opacity: 0, translateY: -20 }}
-						animate={{ opacity: 1, translateY: 0 }}
-						style={twr`flex-1 items-center justify-between gap-10`}
-					>
-						<EmailInputField
-							error={""}
-							value={email}
-							onChangeText={(value) =>
-								handleInputChange("email", value)
-							}
-						/>
-						<MotiImage
-							source={SignUpEmailImage}
-							style={twr`h-64 w-64`}
-						/>
-					</MotiView>
-				)}
-				{step === 3 && (
-					<MotiView
-						key="passwordField"
-						from={{ opacity: 0, translateY: -20 }}
-						animate={{ opacity: 1, translateY: 0 }}
-					>
-						<PasswordInputField
-							error={errors.password}
-							value={password}
-							onChangeText={(value) =>
-								handleInputChange("password", value)
-							}
-						/>
-					</MotiView>
-				)}
-				{step === 4 && (
-					<MotiView
-						key="verification"
-						from={{ opacity: 0, translateY: -20 }}
-						animate={{ opacity: 1, translateY: 0 }}
-					>
-						<Verify error={codeError} key="verify" />
-					</MotiView>
-				)}
-				{/* Selfie */}
-				{step === 1 && (
-					<MotiView
-						key="selfie"
-						from={{ opacity: 0, translateY: -20 }}
-						animate={{ opacity: 1, translateY: 0 }}
-					>
-						<Selfie />
-					</MotiView>
-				)}
-
-				{step === 6 && (
-					<MotiView
-						style={{
-							flex: 1,
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-						key="verify"
-					>
-						<LottieView
-							source={lottieBlueCheck}
-							loop={false}
-							autoPlay
-							style={{
-								width: 300,
-								height: 500,
-							}}
-						/>
-					</MotiView>
-				)}
-			</AnimatePresence>
-
-			<ThemedAwesomeButton
-				progress
-				type="anchor"
-				size="large"
-				width={350}
-				textSize={20}
-				onPress={async (next) => {
-					if (step === 2) {
-						await handleSubmit()
-						//@ts-ignore
-						next()
-					}
-
-					if (step === 3) {
-						await handleVerifySubmit()
-						//@ts-ignore
-						next()
-					}
-
-					handleNextStep()
-					//@ts-ignore
-					next()
+		<>
+			<MotiView
+				key="signup"
+				from={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				delay={700}
+				style={twr`flex-1 items-center justify-between gap-10 py-8`}
+				onDidAnimate={() => {
+					Haptics.notificationAsync(
+						Haptics.NotificationFeedbackType.Success,
+					)
 				}}
 			>
-				{step < 2
-					? translate("authPage.signUp.continueButton")
-					: step === 2
-						? translate("authPage.signUp.submitButton")
-						: step === 3
-							? translate("authPage.signUp.verifyButton")
-							: translate("authPage.signUp.backToSignIn")}
-			</ThemedAwesomeButton>
-		</MotiView>
+				<AnimatePresence>
+					{step === 5 && (
+						<MotiView
+							key="nameField"
+							from={{ opacity: 0, translateY: -20 }}
+							animate={{ opacity: 1, translateY: 0 }}
+							style={twr`flex-1 items-center justify-between gap-10`}
+						>
+							<NameInputField
+								error={errors.name}
+								value={name}
+								onChangeText={(value) =>
+									handleInputChange("name", value)
+								}
+							/>
+							<MotiImage
+								source={SignUpNameImage}
+								style={twr`h-64 w-64`}
+							/>
+						</MotiView>
+					)}
+					{step === 2 && (
+						<MotiView
+							key="emailField"
+							from={{ opacity: 0, translateY: -20 }}
+							animate={{ opacity: 1, translateY: 0 }}
+							style={twr`flex-1 items-center justify-between gap-10`}
+						>
+							<EmailInputField
+								error={""}
+								value={email}
+								onChangeText={(value) =>
+									handleInputChange("email", value)
+								}
+							/>
+							<MotiImage
+								source={SignUpEmailImage}
+								style={twr`h-64 w-64`}
+							/>
+						</MotiView>
+					)}
+					{step === 3 && (
+						<MotiView
+							key="passwordField"
+							from={{ opacity: 0, translateY: -20 }}
+							animate={{ opacity: 1, translateY: 0 }}
+						>
+							<PasswordInputField
+								error={errors.password}
+								value={password}
+								onChangeText={(value) =>
+									handleInputChange("password", value)
+								}
+							/>
+						</MotiView>
+					)}
+					{step === 4 && (
+						<MotiView
+							key="verification"
+							from={{ opacity: 0, translateY: -20 }}
+							animate={{ opacity: 1, translateY: 0 }}
+						>
+							<Verify error={codeError} key="verify" />
+						</MotiView>
+					)}
+					{/* Selfie */}
+					{step === 1 && (
+						<MotiView
+							key="selfie"
+							from={{ opacity: 0, translateY: -20 }}
+							animate={{ opacity: 1, translateY: 0 }}
+						>
+							<Selfie
+								selfieBottomSheetModalRef={
+									selfieBottomSheetModalRef
+								}
+							/>
+						</MotiView>
+					)}
+
+					{step === 6 && (
+						<MotiView
+							style={{
+								flex: 1,
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+							key="verify"
+						>
+							<LottieView
+								source={lottieBlueCheck}
+								loop={false}
+								autoPlay
+								style={{
+									width: 300,
+									height: 500,
+								}}
+							/>
+						</MotiView>
+					)}
+				</AnimatePresence>
+
+				<ThemedAwesomeButton
+					progress
+					type="anchor"
+					size="large"
+					width={350}
+					textSize={20}
+					onPress={async (next) => {
+						if (step === 2) {
+							await handleSubmit()
+							//@ts-ignore
+							next()
+						}
+
+						if (step === 3) {
+							await handleVerifySubmit()
+							//@ts-ignore
+							next()
+						}
+
+						handleNextStep()
+						//@ts-ignore
+						next()
+					}}
+				>
+					{step < 2
+						? translate("authPage.signUp.continueButton")
+						: step === 2
+							? translate("authPage.signUp.submitButton")
+							: step === 3
+								? translate("authPage.signUp.verifyButton")
+								: translate("authPage.signUp.backToSignIn")}
+				</ThemedAwesomeButton>
+			</MotiView>
+			<SelfieBottomSheetModal ref={selfieBottomSheetModalRef} />
+		</>
 	)
 }
 

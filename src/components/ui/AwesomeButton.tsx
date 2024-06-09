@@ -51,12 +51,12 @@ const AddButton: FC<ButtonProps> = ({ onPress }) => {
 			raiseLevel={2}
 			backgroundColor="#F9F2DF"
 		>
-			<MaterialCommunityIcons name="plus" color={"black"} size={18} />
+			<MaterialCommunityIcons name="plus" color="#472836" size={18} />
 		</ThemedAwesomeButton>
 	)
 }
 
-export { CloseButton, AddButton }
+export { AddButton, CloseButton }
 
 export type ThemedButton = {
 	disabled?: boolean

@@ -1,3 +1,4 @@
+import { SelfieBottomSheetModal } from "./BottomSheet"
 import { AlertModal, ErrorModal, SuccessModal } from "./NotificationModal"
 
-export { AlertModal, ErrorModal, SuccessModal }
+export { AlertModal, ErrorModal, SelfieBottomSheetModal, SuccessModal }

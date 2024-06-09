@@ -1,7 +1,4 @@
-import { useState } from "react"
-
 import * as Haptics from "expo-haptics"
-import { XML } from "expo/config-plugins"
 
 import LottieView from "lottie-react-native"
 import { AnimatePresence, MotiView } from "moti"
@@ -21,7 +18,6 @@ const ForgotPassword = () => {
 	const {
 		email,
 		password,
-		passwordConfirm,
 		setUsername,
 		setPassword,
 		setConfirmationCode,

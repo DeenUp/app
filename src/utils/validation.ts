@@ -38,4 +38,4 @@ const validateCode = (code: string): string => {
 	return ""
 }
 
-export { validatePassword, validateName, validateEmail, validateCode }
+export { validateCode, validateEmail, validateName, validatePassword }
