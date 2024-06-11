@@ -3,6 +3,8 @@ import type { ButtonTypes } from "react-native-really-awesome-button/lib/typescr
 
 import { ThemedButton } from "react-native-really-awesome-button"
 
+import * as Haptics from "expo-haptics"
+
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 function ThemedAwesomeButton({
@@ -30,7 +32,10 @@ const CloseButton: FC<ButtonProps> = ({ onPress }) => {
 			height={30}
 			paddingTop={4}
 			paddingHorizontal={4}
-			onPress={onPress}
+			onPress={() => {
+				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid)
+				onPress()
+			}}
 			raiseLevel={5}
 		>
 			<MaterialCommunityIcons name="close" color={"white"} size={18} />
@@ -47,7 +52,10 @@ const AddButton: FC<ButtonProps> = ({ onPress }) => {
 			height={50}
 			paddingTop={4}
 			paddingHorizontal={4}
-			onPress={onPress}
+			onPress={() => {
+				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid)
+				onPress()
+			}}
 			raiseLevel={2}
 			backgroundColor="#F9F2DF"
 		>
@@ -56,9 +64,35 @@ const AddButton: FC<ButtonProps> = ({ onPress }) => {
 	)
 }
 
+const CopyButton: FC<ButtonProps> = ({ onPress }) => {
+	return (
+		<ThemedAwesomeButton
+			theme="bruce"
+			type="secondary"
+			width={60}
+			height={60}
+			paddingTop={4}
+			paddingHorizontal={4}
+			onPress={() => {
+				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid)
+				onPress()
+			}}
+			raiseLevel={2}
+			backgroundColor="#F9F2DF"
+		>
+			<MaterialCommunityIcons
+				name="content-copy"
+				color="#472836"
+				size={18}
+			/>
+		</ThemedAwesomeButton>
+	)
+}
+
 type ShareButtonProps = {
 	icon: keyof typeof MaterialCommunityIcons.glyphMap
 }
+
 const ShareButton: FC<
 	ThemedButton & ButtonTypes & ButtonProps & ShareButtonProps
 > = ({ type, onPress, icon }) => {
@@ -66,11 +100,14 @@ const ShareButton: FC<
 		<ThemedAwesomeButton
 			theme="bruce"
 			type={type}
-			width={80}
-			height={80}
+			width={60}
+			height={60}
 			paddingTop={4}
 			paddingHorizontal={4}
-			onPress={onPress}
+			onPress={() => {
+				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid)
+				onPress()
+			}}
 			raiseLevel={4}
 		>
 			<MaterialCommunityIcons
@@ -86,7 +123,7 @@ const ShareButton: FC<
 	)
 }
 
-export { AddButton, CloseButton, ShareButton }
+export { AddButton, CloseButton, ShareButton, CopyButton }
 
 export type ThemedButton = {
 	disabled?: boolean

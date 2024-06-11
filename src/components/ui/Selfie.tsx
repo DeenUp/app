@@ -23,7 +23,6 @@ const Selfie = ({ selfieBottomSheetModalRef }: Props) => {
 		<View
 			style={twr`flex h-44 w-44 items-center justify-center rounded-full border border-2 border-[${theme.primary}] `}
 		>
-			{/* <Avatar.Image size={150} source={} /> */}
 			{selfieImg ? (
 				<Avatar.Image size={150} source={{ uri: selfieImg }} />
 			) : (

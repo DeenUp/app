@@ -3,7 +3,6 @@ import type { BottomSheetModalProps } from "@gorhom/bottom-sheet"
 import { forwardRef, useCallback, useMemo } from "react"
 import { Text, View } from "react-native"
 
-import * as Haptics from "expo-haptics"
 import { router } from "expo-router"
 
 import { Ionicons } from "@expo/vector-icons"
@@ -15,6 +14,8 @@ import twr from "twrnc"
 
 import { ShareButton, ThemedAwesomeButton } from "~/components/ui"
 import { useSettingsStore } from "~/stores"
+
+import { CopyButton } from "../ui/AwesomeButton"
 
 export const CustomBottomSheetModal = forwardRef<
 	BottomSheetModal,
@@ -49,9 +50,6 @@ export const CustomBottomSheetModal = forwardRef<
 								size={30}
 								color={theme.primary}
 								onPress={() => {
-									Haptics.impactAsync(
-										Haptics.ImpactFeedbackStyle.Rigid,
-									)
 									ref.current?.close()
 								}}
 							/>
@@ -85,9 +83,6 @@ export const SelfieBottomSheetModal = forwardRef<BottomSheetModal>(
 						type="primary"
 						size="large"
 						onPress={() => {
-							Haptics.impactAsync(
-								Haptics.ImpactFeedbackStyle.Rigid,
-							)
 							router.push("/solo-mode")
 						}}
 						width={300}
@@ -109,9 +104,6 @@ export const SelfieBottomSheetModal = forwardRef<BottomSheetModal>(
 						type="secondary"
 						size="large"
 						onPress={() => {
-							Haptics.impactAsync(
-								Haptics.ImpactFeedbackStyle.Rigid,
-							)
 							router.push("/solo-mode")
 						}}
 						width={300}
@@ -152,40 +144,26 @@ export const ShareBottomSheetModal = forwardRef<BottomSheetModal>(
 						<ShareButton
 							type="facebook"
 							icon="facebook"
-							onPress={() => {
-								Haptics.impactAsync(
-									Haptics.ImpactFeedbackStyle.Rigid,
-								)
-							}}
+							onPress={() => {}}
 						/>
 						<ShareButton
 							type="twitter"
 							icon="twitter"
-							onPress={() => {
-								Haptics.impactAsync(
-									Haptics.ImpactFeedbackStyle.Rigid,
-								)
-							}}
+							onPress={() => {}}
 						/>
 
 						<ShareButton
 							type="messenger"
 							icon="facebook-messenger"
-							onPress={() => {
-								Haptics.impactAsync(
-									Haptics.ImpactFeedbackStyle.Rigid,
-								)
-							}}
+							onPress={() => {}}
 						/>
 						<ShareButton
 							type="whatsapp"
 							icon="whatsapp"
-							onPress={() => {
-								Haptics.impactAsync(
-									Haptics.ImpactFeedbackStyle.Rigid,
-								)
-							}}
+							onPress={() => {}}
 						/>
+
+						<CopyButton onPress={() => {}} />
 					</View>
 				</View>
 			</CustomBottomSheetModal>

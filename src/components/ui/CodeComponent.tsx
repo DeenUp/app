@@ -1,7 +1,5 @@
-import { forwardRef } from "react"
+import { forwardRef, useEffect, useState } from "react"
 import { View } from "react-native"
-
-import * as Clipboard from "expo-clipboard"
 
 import type { GameStore } from "~/stores"
 
@@ -15,12 +13,28 @@ const CodeComponent = forwardRef((props: any, ref: any) => {
 		code: state.lobbyCode,
 	}))
 
+	const [chars, setChars] = useState<string[] | undefined>([] as string[])
+
 	const copyCodeToClipboard = () => {
 		if (!code) return
 
-		Clipboard.setStringAsync(code)
 		ref.current?.present()
 	}
+
+	useEffect(() => {
+		if (!code) return
+
+		const codeDigits = code.split("")
+		const setDigits = (digits: string[]) => {
+			if (digits.length === 0) return
+			const [char, ...rest] = digits
+			setChars((prev) => [...prev, char])
+
+			setTimeout(() => setDigits(rest), 100)
+		}
+
+		setDigits(codeDigits)
+	}, [code])
 
 	const styles = {
 		codeTextContainer: tw`flex flex-row items-center justify-center pl-[18px]`,
@@ -33,7 +47,7 @@ const CodeComponent = forwardRef((props: any, ref: any) => {
 					<CodeDigitBox
 						onPress={copyCodeToClipboard}
 						key={index}
-						digit={code ? code[index] : null}
+						digit={code ? chars[index] : null}
 					/>
 				))}
 			</View>

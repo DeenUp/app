@@ -1,4 +1,8 @@
-import ThemedAwesomeButton, { CloseButton, ShareButton } from "./AwesomeButton"
+import ThemedAwesomeButton, {
+	CloseButton,
+	CopyButton,
+	ShareButton,
+} from "./AwesomeButton"
 import Button from "./Button"
 import CodeComponent from "./CodeComponent"
 import Gap from "./Gap"
