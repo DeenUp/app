@@ -90,6 +90,8 @@ const createLobbySlice: StateCreator<GameStore, [], [], LobbySlice> = (
 						...get().participants,
 						participant,
 					]),
+					error: "",
+					loading: false,
 				})
 			},
 		)

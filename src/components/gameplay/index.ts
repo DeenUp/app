@@ -1,5 +1,15 @@
 import Placeholder from "./Placeholder"
-import QuestionAndAnswer from "./QuestionAndAnswer"
+import QuestionCard from "./QuestionCard"
+import QuestionHeader from "./QuestionHeader"
+import QuestionOption from "./QuestionOption"
 import Scores from "./Scores"
+import SelectionIndicator from "./SelectionIndicator"
 
-export { Placeholder, QuestionAndAnswer, Scores }
+export {
+	Placeholder,
+	QuestionCard,
+	QuestionHeader,
+	QuestionOption,
+	Scores,
+	SelectionIndicator,
+}

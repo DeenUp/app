@@ -1,20 +1,21 @@
 import type { ReactNode } from "react"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { SafeAreaView, Text, View } from "react-native"
-import { useAnimatedStyle, withSpring } from "react-native-reanimated"
 
 import * as Haptics from "expo-haptics"
-import { LinearGradient } from "expo-linear-gradient"
 import { router } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
 import { AnimatePresence, MotiView } from "moti"
 import twr from "twrnc"
 
-import Placeholder from "~/components/gameplay/Placeholder"
-import QuestionHeader from "~/components/gameplay/QuestionHeader"
-import QuestionOption from "~/components/gameplay/QuestionOption"
+import {
+	Placeholder,
+	QuestionHeader,
+	QuestionOption,
+	SelectionIndicator,
+} from "~/components/gameplay"
 import { CloseButton, ThemedAwesomeButton } from "~/components/ui"
 import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
@@ -49,34 +50,10 @@ export default function Page(): ReactNode {
 
 	const OptionHeight = 85
 
-	const [selectedIndex, setSelectedIndex] = useState<number>(-1)
-
-	const animatedStyle = useAnimatedStyle(() => {
-		return {
-			transform: [
-				{
-					translateY: withSpring(selectedIndex * OptionHeight),
-				},
-			],
-		}
-	})
-
-	useEffect(() => {
-		const index = questions[currentQuestionIndex]?.options.findIndex(
-			(option) => option === selectedAnswer,
-		)
-
-		if (index === undefined) return
-
-		if (index !== -1) {
-			setSelectedIndex(index)
-		}
-	}, [selectedAnswer])
-
 	const styles = {
 		screen: twr`flex-1 flex-col items-center justify-center bg-[${theme.primary}] pt-12`,
 		container: twr`w-full flex-1 flex-col items-center justify-center p-4`,
-		card: twr` flex w-full flex-grow flex-col items-stretch justify-around rounded-md border-4 border-black  bg-[${theme.background}] p-8 shadow-md`,
+		card: twr`relative flex w-full flex-grow flex-col items-stretch justify-around rounded-3xl border-4 border-black  bg-[${theme.background}] p-8 shadow-md`,
 		question: tw`w-full text-center text-2xl font-bold`,
 		options: tw`gap-4`,
 		closeButton: tw`w-full flex-col items-end justify-end justify-between p-6`,
@@ -155,51 +132,13 @@ export default function Page(): ReactNode {
 										/>
 									),
 								)}
-								{selectedIndex !== -1 && (
-									// <MotiView
-									// 	exit={{
-									// 		opacity: 0,
-									// 		translateY: -100,
-									// 	}}
-									// 	style={[
-									// 		twr`absolute left-0 right-0 top-0 -z-10 rounded border h-[${OptionHeight}px] w-full border-[${theme.primary}] rounded-xl shadow-md`,
-									// 		animatedStyle,
-									// 	]}
-									// >
-									// 	<LinearGradient
-									// 		style={twr`absolute h-full w-full rounded-xl`}
-									// 		// colors={["#DDB965", "#F1E1B4"]}
-									// 		colors={[
-									// 			theme.background,
-									// 			theme.surface,
-									// 		]}
-									// 		end={[1, 1]}
-									// 		start={[0, 0]}
-									// 		locations={[0.1, 1]}
-									// 	/>
-									// </MotiView>
-									<MotiView
-										exit={{
-											opacity: 0,
-											translateY: -100,
-										}}
-										style={[
-											twr`absolute left-0 right-0 top-0 -z-10 rounded border h-[${OptionHeight}px] w-full border-[${theme.primary}] rounded-xl shadow-md`,
-											animatedStyle,
-										]}
-									>
-										<LinearGradient
-											style={twr`absolute h-full w-full rounded-xl`}
-											// colors={["#DDB965", "#F1E1B4"]}
-											colors={[
-												theme.background,
-												theme.surface,
-											]}
-											end={[1, 1]}
-											start={[0, 0]}
-											locations={[0.1, 1]}
-										/>
-									</MotiView>
+								{selectedAnswer && (
+									<SelectionIndicator
+										selectedIndex={questions[
+											currentQuestionIndex
+										]?.options.indexOf(selectedAnswer)}
+										optionHeight={OptionHeight}
+									/>
 								)}
 							</View>
 						</MotiView>
@@ -236,7 +175,7 @@ export default function Page(): ReactNode {
 								next()
 							} else {
 								nextQuestion()
-								setSelectedIndex(-1)
+
 								//@ts-ignore
 								next()
 							}

@@ -12,8 +12,12 @@ import twr from "twrnc"
 import type { SubmittedAnswer } from "~/graphql/api"
 import type { GameStore, SettingsStore, UserStore } from "~/stores"
 
-import { Placeholder, QuestionAndAnswer, Scores } from "~/components/gameplay"
-import QuestionHeader from "~/components/gameplay/QuestionHeader"
+import {
+	Placeholder,
+	QuestionCard,
+	QuestionHeader,
+	Scores,
+} from "~/components/gameplay"
 import { CloseButton, ThemedAwesomeButton } from "~/components/ui"
 import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore, useUserStore } from "~/stores"
@@ -130,7 +134,7 @@ export default function Page(): ReactNode {
 					  ) ? (
 						<Placeholder solo={false} />
 					) : (
-						<QuestionAndAnswer />
+						<QuestionCard />
 					)}
 				</AnimatePresence>
 

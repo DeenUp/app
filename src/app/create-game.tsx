@@ -8,6 +8,7 @@ import { router } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
 import { FontAwesome6 } from "@expo/vector-icons"
+import { MotiText } from "moti"
 import twr from "twrnc"
 
 import type { GameStore } from "~/stores"
@@ -97,7 +98,16 @@ export default function CreateGame(): ReactNode {
 						<CodeComponent />
 					</View>
 
-					{error && <Text>{error}</Text>}
+					{error && (
+						<MotiText
+							style={twr`text-center text-xl text-red-500`}
+							from={{ scale: 0, opacity: 0 }}
+							animate={{ scale: 1, opacity: 1 }}
+							transition={{ type: "spring", duration: 500 }}
+						>
+							{error}
+						</MotiText>
+					)}
 					{participants.length > 0 && <ParticipantsList />}
 					<Separator color="primary" className="w-full" />
 					<View className={styles.buttonContainer}>

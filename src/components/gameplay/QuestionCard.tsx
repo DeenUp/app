@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { Text } from "react-native"
-import { useAnimatedStyle, withSpring } from "react-native-reanimated"
 
 import { MotiView } from "moti"
 import twr from "twrnc"
@@ -12,6 +11,7 @@ import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
 
 import QuestionOption from "./QuestionOption"
+import SelectionIndicator from "./SelectionIndicator"
 
 export default function QuestionAndAnswer() {
 	const [selectedIndex, setSelectedIndex] = useState<number>(-1)
@@ -33,16 +33,6 @@ export default function QuestionAndAnswer() {
 
 	const OptionHeight = 85
 
-	const animatedStyle = useAnimatedStyle(() => {
-		return {
-			transform: [
-				{
-					translateY: withSpring(selectedIndex * OptionHeight),
-				},
-			],
-		}
-	})
-
 	useEffect(() => {
 		const question = questions.find(
 			(question) => question.question === gameRound?.question,
@@ -60,7 +50,7 @@ export default function QuestionAndAnswer() {
 	}, [selectedPossibleAnswer])
 
 	const styles = {
-		card: twr`flex w-full flex-grow flex-col items-stretch justify-around rounded-md bg-[${theme.background}] p-8 shadow-md`,
+		card: twr`flex w-full flex-grow flex-col items-stretch justify-around rounded-3xl bg-[${theme.background}] p-8 shadow-md`,
 		options: twr`gap-4`,
 		question: tw`text-center text-2xl font-bold`,
 	}
@@ -114,30 +104,9 @@ export default function QuestionAndAnswer() {
 							/>
 						))}
 				{selectedIndex !== -1 && (
-					<MotiView
-						style={[
-							{
-								position: "absolute",
-								top: 0,
-								left: 0,
-								right: 0,
-								height: OptionHeight,
-								borderWidth: 2,
-								borderColor: "#472836",
-								borderRadius: 12,
-								backgroundColor: "#FEFFBE",
-								width: "100%",
-								zIndex: -1,
-								shadowColor: "#000",
-								shadowOffset: {
-									width: 0,
-									height: 2,
-								},
-								shadowOpacity: 0.25,
-								shadowRadius: 3.84,
-							},
-							animatedStyle,
-						]}
+					<SelectionIndicator
+						selectedIndex={selectedIndex}
+						optionHeight={OptionHeight}
 					/>
 				)}
 			</MotiView>

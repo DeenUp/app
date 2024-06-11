@@ -1,4 +1,8 @@
-import ThemedAwesomeButton, { CloseButton } from "./AwesomeButton"
+import ThemedAwesomeButton, {
+	CloseButton,
+	CopyButton,
+	ShareButton,
+} from "./AwesomeButton"
 import Button from "./Button"
 import CodeComponent from "./CodeComponent"
 import Gap from "./Gap"
@@ -10,6 +14,7 @@ import InputField, {
 import ParticipantsList from "./ParticipantsList"
 import PlayerAvatar from "./PlayerAvatar"
 import SegmentedProgressBar from "./SegmentedProgressBar"
+import Selfie from "./Selfie"
 import Separator from "./Separator"
 import Spacer from "./Spacer"
 import Timer from "./Timer"
@@ -18,6 +23,7 @@ export {
 	Button,
 	CloseButton,
 	CodeComponent,
+	CopyButton,
 	EmailInputField,
 	Gap,
 	InputField,
@@ -26,7 +32,9 @@ export {
 	PasswordInputField,
 	PlayerAvatar,
 	SegmentedProgressBar,
+	Selfie,
 	Separator,
+	ShareButton,
 	Spacer,
 	ThemedAwesomeButton,
 	Timer,

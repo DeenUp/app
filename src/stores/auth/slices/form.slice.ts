@@ -3,6 +3,12 @@ import type { StateCreator } from "zustand"
 import type { AuthStore } from "."
 
 import { forgotPasswordSteps, signUpSteps } from "~/constants"
+import {
+	validateCode,
+	validateEmail,
+	validateName,
+	validatePassword,
+} from "~/utils"
 
 type FormState = {
 	step: number
@@ -12,6 +18,13 @@ type FormState = {
 	isSignUp: boolean
 	isForgotPassword: boolean
 	steps: Record<number, { header: string; subheader: string }> | null
+	errors: {
+		name: string
+		email: string
+		password: string
+		confirmPassword: string
+		code: string
+	}
 }
 
 type FormActions = {
@@ -25,15 +38,25 @@ type FormActions = {
 
 export type FormSlice = FormState & FormActions
 
-const createFormSlice: StateCreator<AuthStore, [], [], FormSlice> = (set) => {
+const createFormSlice: StateCreator<AuthStore, [], [], FormSlice> = (
+	set,
+	get,
+) => {
 	return {
-		step: 0,
+		step: 1,
 		completed: false,
 		loading: false,
 		error: null,
 		isSignUp: false,
 		isForgotPassword: false,
 		steps: null,
+		errors: {
+			name: "",
+			email: "",
+			password: "",
+			confirmPassword: "",
+			code: "",
+		},
 
 		setStep: (step) => {
 			set({ step })
@@ -48,7 +71,43 @@ const createFormSlice: StateCreator<AuthStore, [], [], FormSlice> = (set) => {
 		},
 
 		handleNextStep: () => {
-			set((state) => ({ step: state.step + 1 }))
+			if (get().isSignUp) {
+				const newErrors = {}
+				switch (get().step) {
+					case 1:
+						validateName(get().name!)
+						break
+					case 2:
+						validateEmail(get().username!)
+						break
+					case 3:
+						validatePassword(get().password!)
+						break
+					case 4:
+						validateCode(get().confirmationCode!)
+						break
+				}
+
+				set((state) => ({ errors: { ...state.errors, ...newErrors } }))
+
+				if (Object.values(newErrors).some((error) => error)) {
+					return
+				}
+
+				set((state) => ({ step: state.step + 1 }))
+			}
+
+			if (get().isForgotPassword) {
+				const newErrors = {}
+
+				set((state) => ({ errors: { ...state.errors, ...newErrors } }))
+
+				if (Object.values(newErrors).some((error) => error)) {
+					return
+				}
+
+				set((state) => ({ step: state.step + 1 }))
+			}
 		},
 
 		handlePrevStep: () => {
@@ -57,10 +116,17 @@ const createFormSlice: StateCreator<AuthStore, [], [], FormSlice> = (set) => {
 
 		handleReset: () => {
 			set({
-				step: 0,
+				step: 1,
 				completed: false,
 				loading: false,
 				error: null,
+				errors: {
+					name: "",
+					email: "",
+					password: "",
+					confirmPassword: "",
+					code: "",
+				},
 				isSignUp: false,
 				isForgotPassword: false,
 			})

@@ -1,5 +1,3 @@
-import { useState } from "react"
-
 import * as Haptics from "expo-haptics"
 
 import LottieView from "lottie-react-native"
@@ -20,16 +18,18 @@ const ForgotPassword = () => {
 	const {
 		email,
 		password,
-		passwordConfirm,
 		setUsername,
 		setPassword,
+		setConfirmationCode,
 		step,
 		handleNextStep,
 		handlePrevStep,
+		errors,
 	} = useAuthStore((state) => ({
 		setName: state.setName,
 		setUsername: state.setUsername,
 		setPassword: state.setPassword,
+		setConfirmationCode: state.setConfirmationCode,
 		handleResetPassword: state.handleResetPassword,
 		email: state.username,
 		name: state.name,
@@ -39,39 +39,11 @@ const ForgotPassword = () => {
 		handleNextStep: state.handleNextStep,
 		handlePrevStep: state.handlePrevStep,
 		step: state.step,
+		errors: state.errors,
 	}))
-	const [code, setCode] = useState("")
-	const [_isSubmiting, setSubmitting] = useState(false)
-
-	const [errors, setErrors] = useState({
-		email: "",
-		password: "",
-		confirmPassword: "",
-		code: "",
-	})
 
 	const handleSubmit = () => {
-		const newErrors = {
-			email: step === 0 && !email ? "Email is required" : "",
-			code: step === 1 && !code ? "Code is required" : "",
-			password: step === 2 && !password ? "Password is required" : "",
-			confirmPassword:
-				step === 2 && (!passwordConfirm || password !== password)
-					? "Passwords do not match"
-					: "",
-		}
-
-		setErrors(newErrors)
-
-		if (Object.values(newErrors).some((error) => error !== "")) {
-			return
-		}
-
-		setSubmitting(true)
-		setTimeout(() => {
-			handleNextStep()
-			setSubmitting(false)
-		}, 1000)
+		handleNextStep()
 	}
 
 	const handleInputChange = (field: string, value: string) => {
@@ -86,7 +58,7 @@ const ForgotPassword = () => {
 				setPassword(value)
 				break
 			case "code":
-				setCode(value)
+				setConfirmationCode(value)
 				break
 			default:
 				break
@@ -107,7 +79,7 @@ const ForgotPassword = () => {
 			}}
 		>
 			<AnimatePresence>
-				{step === 0 && (
+				{step === 1 && (
 					<MotiView
 						key="emailField"
 						from={{ opacity: 0, translateY: -20 }}
@@ -122,7 +94,7 @@ const ForgotPassword = () => {
 						/>
 					</MotiView>
 				)}
-				{step === 1 && (
+				{step === 2 && (
 					<MotiView
 						key="verify"
 						from={{ opacity: 0, translateY: -20 }}

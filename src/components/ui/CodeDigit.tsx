@@ -1,4 +1,4 @@
-// import React, { useEffect, useMemo, useState } from "react"
+import { ActivityIndicator } from "react-native-paper"
 
 import { MotiText } from "moti"
 import twr from "twrnc"
@@ -16,16 +16,7 @@ export const CodeDigitBox: React.FC<CodeComponentProps> = ({
 	digit,
 	onPress,
 }) => {
-	// const [placeHolder, setPlaceHolder] = useState<string>("")
 	const { theme } = useSettingsStore()
-
-	// const characters = useMemo(
-	// 	() => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-	// 	[],
-	// )
-
-	// const generatePlaceholder = () =>
-	// 	characters.charAt(Math.floor(Math.random() * characters.length))
 
 	const styles = {
 		codeText: twr`text-xl font-bold`,
@@ -42,24 +33,31 @@ export const CodeDigitBox: React.FC<CodeComponentProps> = ({
 			style={twr`mx-1`}
 			onPress={onPress}
 		>
-			<MotiText
-				from={{
-					opacity: 0,
-					translateY: 20,
-				}}
-				animate={{
-					opacity: 1,
-					translateY: 0,
-				}}
-				transition={{
-					type: "timing",
-					duration: 100,
-					delay: 1000,
-				}}
-				style={styles.codeText}
-			>
-				{digit}
-			</MotiText>
+			{digit ? (
+				<MotiText
+					from={{
+						opacity: 0,
+						translateY: 20,
+					}}
+					animate={{
+						opacity: 1,
+						translateY: 0,
+					}}
+					transition={{
+						type: "timing",
+						duration: 100,
+					}}
+					style={styles.codeText}
+				>
+					{digit}
+				</MotiText>
+			) : (
+				<ActivityIndicator
+					style={twr`flex-1`}
+					color={"black"}
+					size="small"
+				/>
+			)}
 		</ThemedAwesomeButton>
 	)
 }

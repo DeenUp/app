@@ -23,7 +23,6 @@ export default function Page(): ReactNode {
 		openModal("AlertModal", {
 			title: "Sign Out",
 			message: translate("notifications.signOut.confirmation"),
-
 			onConfirm: () => {
 				handleSignOut({
 					onSignOut: () => {
@@ -71,7 +70,9 @@ export default function Page(): ReactNode {
 					paddingTop={4}
 					paddingHorizontal={4}
 					borderRadius={100}
-					onPress={() => onSignOut}
+					onPress={() => {
+						onSignOut()
+					}}
 					textSize={24}
 					before={
 						<MaterialCommunityIcons
