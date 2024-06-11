@@ -1,7 +1,6 @@
-import type { BottomSheetModal } from "@gorhom/bottom-sheet"
-
 import { useState } from "react"
 import { View } from "react-native"
+import { SheetManager } from "react-native-actions-sheet"
 import { Avatar } from "react-native-paper"
 
 import twr from "twrnc"
@@ -10,11 +9,7 @@ import { useSettingsStore } from "~/stores"
 
 import { AddButton } from "./AwesomeButton"
 
-type Props = {
-	selfieBottomSheetModalRef: React.RefObject<BottomSheetModal>
-}
-
-const Selfie = ({ selfieBottomSheetModalRef }: Props) => {
+const Selfie = () => {
 	const [selfieImg, _setSelfieImg] = useState<string | null>(null)
 
 	const { theme } = useSettingsStore()
@@ -34,9 +29,7 @@ const Selfie = ({ selfieBottomSheetModalRef }: Props) => {
 				/>
 			)}
 			<View className="absolute bottom-0 right-0">
-				<AddButton
-					onPress={() => selfieBottomSheetModalRef.current?.present()}
-				/>
+				<AddButton onPress={() => SheetManager.show("selfie-sheet")} />
 			</View>
 		</View>
 	)

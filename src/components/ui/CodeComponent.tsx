@@ -1,5 +1,6 @@
-import { forwardRef, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { View } from "react-native"
+import { SheetManager } from "react-native-actions-sheet"
 
 import type { GameStore } from "~/stores"
 
@@ -8,17 +9,19 @@ import { useGameStore } from "~/stores"
 
 import { CodeDigitBox } from "./CodeDigit"
 
-const CodeComponent = forwardRef((props: any, ref: any) => {
+const CodeComponent = () => {
 	const { code } = useGameStore((state: GameStore) => ({
 		code: state.lobbyCode,
 	}))
 
-	const [chars, setChars] = useState<string[] | undefined>([] as string[])
+	const [chars, setChars] = useState<string[] | undefined>([])
 
 	const copyCodeToClipboard = () => {
 		if (!code) return
 
-		ref.current?.present()
+		SheetManager.show("share-sheet")
+
+		// ref.current?.present()
 	}
 
 	useEffect(() => {
@@ -27,10 +30,17 @@ const CodeComponent = forwardRef((props: any, ref: any) => {
 		const codeDigits = code.split("")
 		const setDigits = (digits: string[]) => {
 			if (digits.length === 0) return
-			const [char, ...rest] = digits
-			setChars((prev) => [...prev, char])
 
-			setTimeout(() => setDigits(rest), 100)
+			codeDigits.forEach((digit, index) => {
+				setTimeout(() => {
+					setChars((prev) => {
+						const newChars = [...(prev || [])]
+						newChars[index] = digit
+
+						return newChars
+					})
+				}, 100 * index)
+			})
 		}
 
 		setDigits(codeDigits)
@@ -47,12 +57,16 @@ const CodeComponent = forwardRef((props: any, ref: any) => {
 					<CodeDigitBox
 						onPress={copyCodeToClipboard}
 						key={index}
-						digit={code ? chars[index] : null}
+						digit={
+							chars && chars.length > index
+								? chars[index]
+								: undefined
+						}
 					/>
 				))}
 			</View>
 		</>
 	)
-})
+}
 
 export default CodeComponent

@@ -123,7 +123,7 @@ const ShareButton: FC<
 	)
 }
 
-export { AddButton, CloseButton, ShareButton, CopyButton }
+export { AddButton, CloseButton, CopyButton, ShareButton }
 
 export type ThemedButton = {
 	disabled?: boolean

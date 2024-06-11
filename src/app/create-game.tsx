@@ -1,7 +1,6 @@
-import type { BottomSheetModal } from "@gorhom/bottom-sheet"
 import type { ReactNode } from "react"
 
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { Text, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
@@ -9,11 +8,11 @@ import { router } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
 import { FontAwesome6 } from "@expo/vector-icons"
+import { MotiText } from "moti"
 import twr from "twrnc"
 
 import type { GameStore } from "~/stores"
 
-import { ShareBottomSheetModal } from "~/components/modals"
 import {
 	Button,
 	CodeComponent,
@@ -25,7 +24,6 @@ import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
 
 export default function CreateGame(): ReactNode {
-	const ShareBottomSheetModalRef = useRef<BottomSheetModal>(null)
 	const { translate, theme } = useSettingsStore()
 
 	const {
@@ -97,10 +95,19 @@ export default function CreateGame(): ReactNode {
 						Tell your friends to enter this code to join
 					</Text>
 					<View className={styles.codeTextContainer}>
-						<CodeComponent ref={ShareBottomSheetModalRef} />
+						<CodeComponent />
 					</View>
 
-					{error && <Text>{error}</Text>}
+					{error && (
+						<MotiText
+							style={twr`text-center text-xl text-red-500`}
+							from={{ scale: 0, opacity: 0 }}
+							animate={{ scale: 1, opacity: 1 }}
+							transition={{ type: "spring", duration: 500 }}
+						>
+							{error}
+						</MotiText>
+					)}
 					{participants.length > 0 && <ParticipantsList />}
 					<Separator color="primary" className="w-full" />
 					<View className={styles.buttonContainer}>
@@ -130,7 +137,6 @@ export default function CreateGame(): ReactNode {
 					</View>
 				</View>
 			</View>
-			<ShareBottomSheetModal ref={ShareBottomSheetModalRef} />
 		</SafeAreaView>
 	)
 }

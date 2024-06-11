@@ -8,6 +8,8 @@ import { hideAsync, preventAutoHideAsync } from "expo-splash-screen"
 
 import { Amplify } from "aws-amplify"
 
+import "../components/sheets/sheets"
+
 import { useSettingsStore } from "~/stores"
 
 import "react-native-reanimated"
@@ -18,6 +20,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome"
 import "../../global.css"
 
 import { TouchableOpacity } from "react-native"
+import { SheetProvider } from "react-native-actions-sheet"
 
 import { SpaceMonoRegular } from "~/assets"
 import { AlertModal, ErrorModal, SuccessModal } from "~/components/modals"
@@ -50,6 +53,7 @@ const RootLayout = () => {
 		ErrorModal,
 		SuccessModal,
 	}
+
 	const defaultOptions = { backdropOpacity: 0.4 }
 
 	const stack = createModalStack(modalConfig, defaultOptions)
@@ -80,134 +84,136 @@ const RootLayout = () => {
 	return (
 		<AmplifyProvider>
 			<GestureHandlerRootView style={{ flex: 1 }}>
-				<ModalProvider stack={stack}>
-					<Stack
-						screenOptions={{
-							headerShown: false,
-							headerTitleStyle: {
-								fontWeight: "bold",
-							},
-						}}
-					>
-						<Stack.Screen
-							name="index"
-							options={{
+				<SheetProvider>
+					<ModalProvider stack={stack}>
+						<Stack
+							screenOptions={{
 								headerShown: false,
-							}}
-						/>
-
-						<Stack.Screen
-							name="auth"
-							options={{
-								headerShadowVisible: false,
-								headerBlurEffect: "light",
-								headerStyle: {
-									backgroundColor:
-										pathname === "/auth/verification"
-											? "#F9FAFB"
-											: "#472836",
-								},
-								headerShown: true,
-								headerTitle: "",
-
-								headerLeft: () => (
-									<TouchableOpacity
-										className={"size-1"}
-										onPress={() => {
-											clear()
-											router.back()
-										}}
-									/>
-								),
-
-								headerRight: () => (
-									<CloseButton
-										onPress={() => {
-											clear()
-											router.back()
-										}}
-									/>
-								),
-							}}
-						/>
-						<Stack.Screen
-							name="profile"
-							options={{
-								headerShown: true,
-								headerShadowVisible: false,
-								headerBlurEffect: "light",
-								headerTitle: "Profile",
 								headerTitleStyle: {
-									color: theme.primary,
+									fontWeight: "bold",
 								},
-								headerStyle: {
-									backgroundColor: theme.primary,
-								},
-								headerLeft: () => (
-									<TouchableOpacity
-										onPress={() => {
-											router.back()
-										}}
-									>
-										<FontAwesome
-											name="chevron-left"
-											color={theme.surface}
-											size={24}
-										/>
-									</TouchableOpacity>
-								),
 							}}
-						/>
-						<Stack.Screen
-							name="settings"
-							options={{
-								headerShown: true,
-								headerShadowVisible: false,
-								headerTitle: "Settings",
-								headerTitleStyle: {
-									color: theme.primary,
-								},
-								headerStyle: {
-									backgroundColor: theme.primary,
-								},
-								headerLeft: () => (
-									<TouchableOpacity
-										onPress={() => {
-											router.back()
-										}}
-									>
-										<FontAwesome
-											name="chevron-left"
-											color={theme.surface}
-											size={24}
-										/>
-									</TouchableOpacity>
-								),
-							}}
-						/>
-						<Stack.Screen
-							name="solo-mode"
-							options={{
-								headerShown: false,
-								headerTitle: "",
-								headerStyle: {
-									backgroundColor: "#472836",
-								},
-								headerShadowVisible: false,
+						>
+							<Stack.Screen
+								name="index"
+								options={{
+									headerShown: false,
+								}}
+							/>
 
-								headerLeft: () => (
-									<TouchableOpacity
-										className={"size-1"}
-										onPress={() => {
-											clear()
-											router.back()
-										}}
-									/>
-								),
-							}}
-						/>
-					</Stack>
-				</ModalProvider>
+							<Stack.Screen
+								name="auth"
+								options={{
+									headerShadowVisible: false,
+									headerBlurEffect: "light",
+									headerStyle: {
+										backgroundColor:
+											pathname === "/auth/verification"
+												? "#F9FAFB"
+												: "#472836",
+									},
+									headerShown: true,
+									headerTitle: "",
+
+									headerLeft: () => (
+										<TouchableOpacity
+											className={"size-1"}
+											onPress={() => {
+												clear()
+												router.back()
+											}}
+										/>
+									),
+
+									headerRight: () => (
+										<CloseButton
+											onPress={() => {
+												clear()
+												router.back()
+											}}
+										/>
+									),
+								}}
+							/>
+							<Stack.Screen
+								name="profile"
+								options={{
+									headerShown: true,
+									headerShadowVisible: false,
+									headerBlurEffect: "light",
+									headerTitle: "Profile",
+									headerTitleStyle: {
+										color: theme.primary,
+									},
+									headerStyle: {
+										backgroundColor: theme.primary,
+									},
+									headerLeft: () => (
+										<TouchableOpacity
+											onPress={() => {
+												router.back()
+											}}
+										>
+											<FontAwesome
+												name="chevron-left"
+												color={theme.surface}
+												size={24}
+											/>
+										</TouchableOpacity>
+									),
+								}}
+							/>
+							<Stack.Screen
+								name="settings"
+								options={{
+									headerShown: true,
+									headerShadowVisible: false,
+									headerTitle: "Settings",
+									headerTitleStyle: {
+										color: theme.primary,
+									},
+									headerStyle: {
+										backgroundColor: theme.primary,
+									},
+									headerLeft: () => (
+										<TouchableOpacity
+											onPress={() => {
+												router.back()
+											}}
+										>
+											<FontAwesome
+												name="chevron-left"
+												color={theme.surface}
+												size={24}
+											/>
+										</TouchableOpacity>
+									),
+								}}
+							/>
+							<Stack.Screen
+								name="solo-mode"
+								options={{
+									headerShown: false,
+									headerTitle: "",
+									headerStyle: {
+										backgroundColor: "#472836",
+									},
+									headerShadowVisible: false,
+
+									headerLeft: () => (
+										<TouchableOpacity
+											className={"size-1"}
+											onPress={() => {
+												clear()
+												router.back()
+											}}
+										/>
+									),
+								}}
+							/>
+						</Stack>
+					</ModalProvider>
+				</SheetProvider>
 			</GestureHandlerRootView>
 		</AmplifyProvider>
 	)
