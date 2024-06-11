@@ -72,11 +72,20 @@ const createFormSlice: StateCreator<AuthStore, [], [], FormSlice> = (
 
 		handleNextStep: () => {
 			if (get().isSignUp) {
-				const newErrors = {
-					name: validateName(get().name!),
-					email: validateEmail(get().username!),
-					password: validatePassword(get().password!),
-					code: validateCode(get().confirmationCode!),
+				const newErrors = {}
+				switch (get().step) {
+					case 1:
+						validateName(get().name!)
+						break
+					case 2:
+						validateEmail(get().username!)
+						break
+					case 3:
+						validatePassword(get().password!)
+						break
+					case 4:
+						validateCode(get().confirmationCode!)
+						break
 				}
 
 				set((state) => ({ errors: { ...state.errors, ...newErrors } }))

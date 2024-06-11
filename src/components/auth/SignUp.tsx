@@ -101,6 +101,7 @@ const SignUp = () => {
 			case "password":
 				setPassword(value)
 				break
+
 			default:
 				break
 		}
@@ -119,13 +120,13 @@ const SignUp = () => {
 				)
 			}}
 		>
-			<AnimatePresence>
+			<AnimatePresence exitBeforeEnter>
 				{step === 1 && (
 					<MotiView
 						key="nameField"
-						from={{ opacity: 0, translateY: -20 }}
-						animate={{ opacity: 1, translateY: 0 }}
-						exit={{ opacity: 0, translateY: 20 }}
+						from={{ opacity: 0, translateX: -20 }}
+						animate={{ opacity: 1, translateX: 0 }}
+						exit={{ opacity: 0, translateX: 20 }}
 						style={twr`flex-1 items-center justify-between gap-10`}
 					>
 						<NameInputField
@@ -144,9 +145,9 @@ const SignUp = () => {
 				{step === 2 && (
 					<MotiView
 						key="emailField"
-						from={{ opacity: 0, translateY: -20 }}
-						animate={{ opacity: 1, translateY: 0 }}
-						exit={{ opacity: 0, translateY: 20 }}
+						from={{ opacity: 0, translateX: -20 }}
+						animate={{ opacity: 1, translateX: 0 }}
+						exit={{ opacity: 0, translateX: 20 }}
 						style={twr`flex-1 items-center justify-between gap-10`}
 					>
 						<EmailInputField
@@ -165,9 +166,9 @@ const SignUp = () => {
 				{step === 3 && (
 					<MotiView
 						key="passwordField"
-						from={{ opacity: 0, translateY: -20 }}
-						animate={{ opacity: 1, translateY: 0 }}
-						exit={{ opacity: 0, translateY: 20 }}
+						from={{ opacity: 0, translateX: -20 }}
+						animate={{ opacity: 1, translateX: 0 }}
+						exit={{ opacity: 0, translateX: 20 }}
 					>
 						<PasswordInputField
 							error={errors.password}
@@ -181,9 +182,9 @@ const SignUp = () => {
 				{step === 4 && (
 					<MotiView
 						key="verification"
-						from={{ opacity: 0, translateY: -20 }}
-						animate={{ opacity: 1, translateY: 0 }}
-						exit={{ opacity: 0, translateY: 20 }}
+						from={{ opacity: 0, translateX: -20 }}
+						animate={{ opacity: 1, translateX: 0 }}
+						exit={{ opacity: 0, translateX: 20 }}
 					>
 						<Verify error={codeError} key="verify" />
 					</MotiView>
@@ -192,9 +193,9 @@ const SignUp = () => {
 				{step === 5 && (
 					<MotiView
 						key="selfie"
-						from={{ opacity: 0, translateY: -20 }}
-						animate={{ opacity: 1, translateY: 0 }}
-						exit={{ opacity: 0, translateY: 20 }}
+						from={{ opacity: 0, translateX: -20 }}
+						animate={{ opacity: 1, translateX: 0 }}
+						exit={{ opacity: 0, translateX: 20 }}
 					>
 						<Selfie />
 					</MotiView>
@@ -203,9 +204,9 @@ const SignUp = () => {
 				{step === 6 && (
 					<MotiView
 						key="verify"
-						from={{ opacity: 0, translateY: -20 }}
-						animate={{ opacity: 1, translateY: 0 }}
-						exit={{ opacity: 0, translateY: 20 }}
+						from={{ opacity: 0, translateX: -20 }}
+						animate={{ opacity: 1, translateX: 0 }}
+						exit={{ opacity: 0, translateX: 20 }}
 						style={{
 							flex: 1,
 							justifyContent: "center",

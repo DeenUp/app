@@ -60,7 +60,7 @@ const AuthHeader = () => {
 					{translate(currentStep.header)}
 				</Text>
 				<Text className={styles.subheaderText}>
-					{step === 1 && isSignUp
+					{step === 2 && isSignUp
 						? translate(currentStep.subheader, { name })
 						: step === 3 && isSignUp
 							? translate(currentStep.subheader, { username })
