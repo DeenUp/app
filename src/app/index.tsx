@@ -6,6 +6,7 @@ import { useModal } from "react-native-modalfy"
 
 import * as Haptics from "expo-haptics"
 import { router } from "expo-router"
+import { StatusBar } from "expo-status-bar"
 
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { MotiImage, MotiView } from "moti"
@@ -53,6 +54,7 @@ export default function Page(): ReactNode {
 
 	return (
 		<SafeAreaView style={styles.body}>
+			<StatusBar style="light" />
 			<View className={styles.container}>
 				<Spacer />
 				<View className={styles.logoContainer}>
