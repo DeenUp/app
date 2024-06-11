@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { SafeAreaView, Text, View } from "react-native"
 
 import * as Haptics from "expo-haptics"
@@ -175,7 +175,7 @@ export default function Page(): ReactNode {
 								next()
 							} else {
 								nextQuestion()
-								setSelectedIndex(-1)
+
 								//@ts-ignore
 								next()
 							}

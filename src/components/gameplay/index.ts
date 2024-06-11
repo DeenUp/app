@@ -8,8 +8,8 @@ import SelectionIndicator from "./SelectionIndicator"
 export {
 	Placeholder,
 	QuestionCard,
-	Scores,
-	SelectionIndicator,
 	QuestionHeader,
 	QuestionOption,
+	Scores,
+	SelectionIndicator,
 }
