@@ -11,6 +11,9 @@ importers:
       '@aws-amplify/react-native':
         specifier: ^1.1.1
         version: 1.1.1(react-native-get-random-values@1.11.0(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@types/react@18.2.79)(react@18.2.0)))(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@types/react@18.2.79)(react@18.2.0))
+      '@aws-amplify/rtn-web-browser':
+        specifier: ^1.0.30
+        version: 1.0.30
       '@expo/metro-config':
         specifier: ^0.18.4
         version: 0.18.4
@@ -326,6 +329,9 @@ packages:
     peerDependencies:
       react-native: '>=0.70'
       react-native-get-random-values: '>=1.9.0'
+
+  '@aws-amplify/rtn-web-browser@1.0.30':
+    resolution: {integrity: sha512-1n3za9kmCOMjOXh3qMGZboQm6PlefiDZED1b78cOpeyha7AzynOfJm8y8jGd71gZPODSP94FD+6aa7VNq/S/4w==}
 
   '@aws-amplify/storage@6.4.4':
     resolution: {integrity: sha512-LsBjzpdg7/HjCS3P6Yl7BBnCXVIaBGqlUoHxlkKtUkb9baMJveF5WCSA+wF2dmvIfbz7GwyBatK2rkCNizpGPg==}
@@ -1379,6 +1385,7 @@ packages:
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
     engines: {node: '>=10.10.0'}
+    deprecated: Use @eslint/config-array instead
 
   '@humanwhocodes/module-importer@1.0.1':
     resolution: {integrity: sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA==}
@@ -1386,6 +1393,7 @@ packages:
 
   '@humanwhocodes/object-schema@2.0.3':
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
+    deprecated: Use @eslint/object-schema instead
 
   '@ianvs/prettier-plugin-sort-imports@4.2.1':
     resolution: {integrity: sha512-NKN1LVFWUDGDGr3vt+6Ey3qPeN/163uR1pOPAlkWpgvAqgxQ6kSdUf1F0it8aHUtKRUzEGcK38Wxd07O61d7+Q==}
@@ -7067,6 +7075,8 @@ snapshots:
       react-native: 0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@types/react@18.2.79)(react@18.2.0)
       react-native-get-random-values: 1.11.0(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@types/react@18.2.79)(react@18.2.0))
       react-native-url-polyfill: 2.0.0(react-native@0.74.1(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@types/react@18.2.79)(react@18.2.0))
+
+  '@aws-amplify/rtn-web-browser@1.0.30': {}
 
   '@aws-amplify/storage@6.4.4(@aws-amplify/core@6.3.1)':
     dependencies:
