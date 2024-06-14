@@ -74,6 +74,7 @@
 		"lottie-react-native": "6.7.0",
 		"moti": "^0.29.0",
 		"nativewind": "4.0.1",
+		"next-view-transitions": "^0.2.0",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"react-native": "~0.74.1",
