@@ -4,23 +4,19 @@
 			"developmentClient": true,
 			"distribution": "internal",
 			"android": {
-				"buildType": "app-bundle",
-				"applicationArchivePath": "build/dev.aab"
+				"buildType": "app-bundle"
 			},
 			"ios": {
-				"simulator": true,
-				"applicationArchivePath": "build/dev.ipa"
+				"simulator": true
 			}
 		},
 		"production": {
 			"distribution": "store",
 			"android": {
-				"buildType": "app-bundle",
-				"applicationArchivePath": "build/production.aab"
+				"buildType": "app-bundle"
 			},
 			"ios": {
-				"simulator": true,
-				"applicationArchivePath": "build/production.ipa"
+				"simulator": true
 			}
 		},
 		"staging": {
