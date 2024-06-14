@@ -62,6 +62,7 @@ jobs:
             - name: 👷 Build iOS app
               run: |
                   eas build --local \
+                    --output=build \
                     --non-interactive \
                     --platform=ios \
                     --profile=${{ github.ref_name}}
@@ -71,8 +72,8 @@ jobs:
               id: upload-artifact
               if: success()
               with:
-                  name: app.ipa
-                  path: ./build/app.ipa
+                  name: ios-app
+                  path: ./build/
 
             - name: 📣 Notify Discord about iOS build and share the artifact URL
               uses: sarisia/actions-status-discord@v1
@@ -143,6 +144,7 @@ jobs:
             - name: 👷 Build Android app
               run: |
                   eas build --local \
+                    --output=build \
                     --platform=android \
                     --profile=${{ github.ref_name}}
 
@@ -150,8 +152,8 @@ jobs:
               id: upload-artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: app.aab
-                  path: ./build/app.aab
+                  name: android-app
+                  path: ./build/
                   retention-days: 1
                   overwrite: true
 
