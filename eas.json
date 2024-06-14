@@ -4,7 +4,7 @@
 			"developmentClient": true,
 			"distribution": "internal",
 			"android": {
-				"buildType": "apk"
+				"buildType": "app-bundle"
 			},
 			"ios": {
 				"simulator": true
