@@ -27,6 +27,7 @@ const SignIn = () => {
 		password,
 		error,
 		handleSignIn,
+		handleSignInWithGoogle,
 		setUsername,
 		setPassword,
 		clear,
@@ -37,6 +38,7 @@ const SignIn = () => {
 		setUsername: state.setUsername,
 		setPassword: state.setPassword,
 		handleSignIn: state.handleSignIn,
+		handleSignInWithGoogle: state.handleSignInWithGoogle,
 		clear: state.clear,
 		email: state.username,
 		name: state.name,
@@ -174,7 +176,7 @@ const SignIn = () => {
 					width={350}
 					textSize={16}
 					type="anchor"
-					onPress={() => {}}
+					onPress={() => handleSignInWithGoogle()}
 					before={
 						<Image source={googleLogo} style={twr`mr-4 h-6 w-6`} />
 					}

@@ -57,7 +57,6 @@ type AuthActions = {
 	setUsername: (email: string) => void
 	setPassword: (password: string) => void
 	setConfirmationCode: (confirmationCode: string) => void
-
 	destroy: () => void
 	clear: () => void
 }
@@ -205,7 +204,10 @@ const createAuthSlice: StateCreator<AuthStore, [], [], AuthSlice> = (
 
 			try {
 				await signInWithRedirect({ provider: "Google" })
+
+				set({ loading: false })
 			} catch (error) {
+				console.log(error)
 				set({
 					loading: false,
 					error: (error as AuthError).message,
