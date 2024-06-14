@@ -63,7 +63,6 @@ jobs:
               run: |
                   eas build --local \
                     --non-interactive \
-                    --applicationArchivePath=./build/app.ipa \
                     --platform=ios \
                     --profile=${{ github.ref_name}}
 
@@ -144,7 +143,6 @@ jobs:
             - name: 👷 Build Android app
               run: |
                   eas build --local \
-                    --applicationArchivePath=./build/app.aab \
                     --platform=android \
                     --profile=${{ github.ref_name}}
 
