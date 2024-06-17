@@ -32,7 +32,7 @@ const SelectionIndicator = ({ optionHeight, selectedIndex }: Props) => {
 				translateY: -100,
 			}}
 			style={[
-				twr`absolute left-0 right-0 top-0 -z-10 rounded border bg-transparent h-[${optionHeight}px] w-full border-[${theme.primary}] rounded-xl `,
+				twr`absolute left-0 right-0 top-0 -z-10 rounded bg-transparent h-[${optionHeight}px] w-full border-[${theme.primary}] rounded-xl `,
 				animatedStyle,
 			]}
 		>

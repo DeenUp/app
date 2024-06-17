@@ -73,7 +73,7 @@ export default function Page(): ReactNode {
 				/>
 			</View>
 			<View style={styles.container}>
-				<AnimatePresence exitBeforeEnter>
+				<AnimatePresence>
 					{showResult ? (
 						<Placeholder solo={true} />
 					) : (
