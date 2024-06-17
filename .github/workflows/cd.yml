@@ -170,7 +170,7 @@ jobs:
                   color: ${{ job.status == 'success' && '00FF00' || 'FF0000' }}
 
             - name: 🚢 Submit Android app
-              run: eas submit -p android --profile ${{ github.ref_name }} --path build.aab
+              run: eas submit -p android --profile ${{ github.ref_name }} --path build
 
             - name: Notify Discord
               uses: sarisia/actions-status-discord@v1

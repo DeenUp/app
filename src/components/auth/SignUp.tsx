@@ -250,11 +250,11 @@ const SignUp = () => {
 					next()
 				}}
 			>
-				{step < 2
+				{step < 3
 					? translate("authPage.signUp.continueButton")
-					: step === 2
+					: step === 3
 						? translate("authPage.signUp.submitButton")
-						: step === 3
+						: step === 4
 							? translate("authPage.signUp.verifyButton")
 							: translate("authPage.signUp.backToSignIn")}
 			</ThemedAwesomeButton>
