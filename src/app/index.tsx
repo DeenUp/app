@@ -48,7 +48,7 @@ export default function Page(): ReactNode {
 		container: tw`flex h-full flex-col bg-primary`,
 		logoContainer: tw`items-center`,
 		playButtonsContainer: tw`flex w-full flex-row items-center justify-center gap-2 px-1`,
-		logo: twr`flex flex-col items-center justify-center text-center text-8xl font-bold`,
+		logo: twr``,
 		motiContainer: twr`-mb-8 flex w-full items-center justify-start gap-2 gap-4 rounded-3xl bg-[#F9F2DF] p-6`,
 	}
 
@@ -60,8 +60,8 @@ export default function Page(): ReactNode {
 				<View className={styles.logoContainer}>
 					<MotiImage
 						style={styles.logo}
-						from={{ opacity: 0, translateY: 200, scale: 0.5 }}
-						animate={{ opacity: 1, translateY: 0, scale: 1.5 }}
+						from={{ opacity: 0, translateY: 200, scale: 0.1 }}
+						animate={{ opacity: 1, translateY: 0, scale: 0.4 }}
 						transition={{
 							scale: { type: "spring", delay: 350 },
 						}}
@@ -75,7 +75,7 @@ export default function Page(): ReactNode {
 					style={styles.motiContainer}
 					transition={{
 						type: "spring",
-						delay: 200,
+						delay: 500,
 					}}
 				>
 					<View className={styles.playButtonsContainer}>

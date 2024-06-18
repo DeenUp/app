@@ -89,8 +89,6 @@ const SignUp = () => {
 	}
 
 	const handleInputChange = (field: string, value: string) => {
-		// if (value === "Enter") handleContinue()
-
 		switch (field) {
 			case "name":
 				setName(value)

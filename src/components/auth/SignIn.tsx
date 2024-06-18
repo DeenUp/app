@@ -142,16 +142,8 @@ const SignIn = () => {
 				/>
 			</View>
 
-			<Button
-				buttonStyle=""
-				color="link"
-				size="md"
-				label={translate("authPage.signIn.forgotPassword")}
-				onPress={() => setIsForgotPassword(true)}
-			/>
 			<ThemedAwesomeButton
-				width={350}
-				height={70}
+				width={328}
 				textSize={20}
 				type="anchor"
 				onPress={async (next) => {
@@ -164,16 +156,22 @@ const SignIn = () => {
 			>
 				Sign In
 			</ThemedAwesomeButton>
-			{/* Seperator with text in between */}
+			<Button
+				color="link"
+				size="md"
+				label={translate("authPage.signIn.forgotPassword")}
+				onPress={() => setIsForgotPassword(true)}
+			/>
+
 			<View className="flex flex-row items-center gap-4">
-				<View className="h-1 flex-1 bg-gray-300" />
+				<View className="h-1 flex-1 rounded bg-primary" />
 				<Text className="text-gray-500">or</Text>
-				<View className="h-1 flex-1 bg-gray-300" />
+				<View className="h-1 flex-1 rounded bg-primary" />
 			</View>
 
 			<View className="flex flex-row items-center gap-4">
 				<ThemedAwesomeButton
-					width={350}
+					width={328}
 					textSize={16}
 					type="anchor"
 					onPress={() => handleSignInWithGoogle()}

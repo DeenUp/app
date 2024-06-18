@@ -14,22 +14,23 @@ import twr from "twrnc"
 
 import { AuthHeader, ForgotPassword, SignIn, SignUp } from "~/components/auth"
 import { tw } from "~/helpers"
-import { useAuthStore } from "~/stores"
+import { useAuthStore, useSettingsStore } from "~/stores"
 
 export default function Auth() {
 	const { isSignUp, isForgotPassword } = useAuthStore()
+	const { theme } = useSettingsStore()
 
 	const styles = {
-		header: tw`h-1/2 flex-1 items-center justify-center bg-[#472836]`,
+		header: tw`h-1/2 flex-1 items-center justify-center bg-[${theme.primary}]`,
 		logo: twr`h-40 w-44`,
 		closeButton: tw`absolute right-10 top-12 size-10`,
-		motiStyle: twr`relative w-full flex-col items-center justify-start overflow-hidden rounded-t-[50px] bg-[#F9F2DF] p-4 shadow-sm`,
+		motiStyle: twr`relative w-full flex-col items-center justify-start overflow-hidden rounded-t-[50px] bg-[#F9F2DF] p-8 shadow-sm`,
 	}
 
 	return (
 		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 			<KeyboardAvoidingView
-				style={twr`flex-1 bg-[#472836]`}
+				style={twr`flex-1 bg-[${theme.primary}]`}
 				enabled={isSignUp || isForgotPassword ? false : true}
 				behavior={Platform.OS === "ios" ? "height" : "height"}
 			>
