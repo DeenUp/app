@@ -96,12 +96,12 @@ const createFormSlice: StateCreator<AuthStore, [], [], FormSlice> = (
 								password: validatePassword(get().password!),
 							},
 						})
-						break
+
 					case 4:
 						set({
 							errors: {
 								...get().errors,
-								code: validateCode(get().confirmationCode!),
+								code: validateCode(get().confirmationCode),
 							},
 						})
 						break

@@ -7,8 +7,8 @@ import twr from "twrnc"
 import type { GameStore } from "~/stores"
 
 import { questions } from "~/assets"
-import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
+import { tw } from "~/utils"
 
 import QuestionOption from "./QuestionOption"
 import SelectionIndicator from "./SelectionIndicator"

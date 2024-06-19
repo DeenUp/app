@@ -21,8 +21,8 @@ const signUpSteps: Record<number, Step> = {
 		subheader: "authPage.verify.subheader",
 	},
 	5: {
-		header: "Final Step",
-		subheader: "Smile to the camera!",
+		header: "authPage.signUp.selfieHeader",
+		subheader: "authPage.signUp.selfieSubheader",
 	},
 	6: {
 		header: "authPage.signUp.successHeader",

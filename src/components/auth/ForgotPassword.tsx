@@ -10,6 +10,7 @@ import {
 	EmailInputField,
 	PasswordInputField,
 	ThemedAwesomeButton,
+	Transition,
 } from "~/components/ui"
 import { useAuthStore, useSettingsStore } from "~/stores"
 
@@ -80,11 +81,7 @@ const ForgotPassword = () => {
 		>
 			<AnimatePresence>
 				{step === 1 && (
-					<MotiView
-						key="emailField"
-						from={{ opacity: 0, translateY: -20 }}
-						animate={{ opacity: 1, translateY: 0 }}
-					>
+					<Transition key="emailField" style="gap-10">
 						<EmailInputField
 							value={email}
 							error={errors.email}
@@ -92,24 +89,15 @@ const ForgotPassword = () => {
 								handleInputChange("email", value)
 							}
 						/>
-					</MotiView>
+					</Transition>
 				)}
 				{step === 2 && (
-					<MotiView
-						key="verify"
-						from={{ opacity: 0, translateY: -20 }}
-						animate={{ opacity: 1, translateY: 0 }}
-					>
+					<Transition key="verify" style="gap-10">
 						<Verify error={errors.code} />
-					</MotiView>
+					</Transition>
 				)}
 				{step === 2 && (
-					<MotiView
-						key="passwordField"
-						from={{ opacity: 0, translateY: -20 }}
-						animate={{ opacity: 1, translateY: 0 }}
-						style={{ gap: 32 }}
-					>
+					<Transition key="passwordField" style="gap-10">
 						<PasswordInputField
 							value={password}
 							error={errors.password}
@@ -124,17 +112,10 @@ const ForgotPassword = () => {
 								handleInputChange("confirmPassword", value)
 							}
 						/>
-					</MotiView>
+					</Transition>
 				)}
 				{step === 3 && (
-					<MotiView
-						style={{
-							flex: 1,
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-						key="verify"
-					>
+					<Transition key="verify" style="justify-center">
 						<LottieView
 							source={lottieBlueCheck}
 							loop={false}
@@ -145,7 +126,8 @@ const ForgotPassword = () => {
 								aspectRatio: "auto",
 							}}
 						/>
-					</MotiView>
+					</Transition>
+					// </MotiView>
 				)}
 			</AnimatePresence>
 			<ThemedAwesomeButton

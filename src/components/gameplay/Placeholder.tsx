@@ -6,8 +6,8 @@ import twr from "twrnc"
 
 import type { GameStore, SettingsStore } from "~/stores"
 
-import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
+import { tw } from "~/utils"
 
 export default function Placeholder({ solo }: { solo: boolean }) {
 	const theme = useSettingsStore((state: SettingsStore) => state.theme)

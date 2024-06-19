@@ -13,8 +13,8 @@ import type { GameStore } from "~/stores"
 
 import Trophy from "~/assets/lottie/result-trophy.json"
 import { Button } from "~/components/ui"
-import { tw } from "~/helpers"
 import { useGameStore } from "~/stores"
+import { tw } from "~/utils"
 
 type StatItemProps = {
 	styles: {

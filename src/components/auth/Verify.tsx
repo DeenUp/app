@@ -8,8 +8,8 @@ import * as Clipboard from "expo-clipboard"
 import { FontAwesome6, Ionicons } from "@expo/vector-icons"
 import CodeInput from "~components/auth/CodeInput"
 
-import { tw } from "~/helpers"
 import { useAuthStore, useGameStore, useSettingsStore } from "~/stores"
+import { tw } from "~/utils"
 
 import { ThemedAwesomeButton } from "../ui"
 

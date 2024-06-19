@@ -18,6 +18,7 @@ import Selfie from "./Selfie"
 import Separator from "./Separator"
 import Spacer from "./Spacer"
 import Timer from "./Timer"
+import Transition from "./Transition"
 
 export {
 	Button,
@@ -38,4 +39,5 @@ export {
 	Spacer,
 	ThemedAwesomeButton,
 	Timer,
+	Transition,
 }

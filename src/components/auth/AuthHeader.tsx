@@ -3,8 +3,8 @@ import { Text, TouchableOpacity, View } from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 import { SegmentedProgressBar } from "~/components/ui"
-import { tw } from "~/helpers"
 import { useAuthStore, useSettingsStore } from "~/stores"
+import { tw } from "~/utils"
 
 const AuthHeader = () => {
 	const translate = useSettingsStore((state) => state.translate)

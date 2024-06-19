@@ -4,8 +4,8 @@ import { SheetManager } from "react-native-actions-sheet"
 
 import type { GameStore } from "~/stores"
 
-import { tw } from "~/helpers"
 import { useGameStore } from "~/stores"
+import { tw } from "~/utils"
 
 import { CodeDigitBox } from "./CodeDigit"
 

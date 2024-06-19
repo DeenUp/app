@@ -13,8 +13,8 @@ import { AnimatePresence, MotiImage, MotiView } from "moti"
 import twr from "twrnc"
 
 import { AuthHeader, ForgotPassword, SignIn, SignUp } from "~/components/auth"
-import { tw } from "~/helpers"
 import { useAuthStore, useSettingsStore } from "~/stores"
+import { tw } from "~/utils"
 
 export default function Auth() {
 	const { isSignUp, isForgotPassword } = useAuthStore()

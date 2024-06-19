@@ -30,7 +30,7 @@ const validateEmail = (email: string): string => {
 	return ""
 }
 
-const validateCode = (code: string): string => {
+const validateCode = (code: string | null): string => {
 	if (!code) return "Code is required"
 
 	if (code.length < 6) return "Code must be 6 characters"

@@ -8,8 +8,8 @@ import LottieView from "lottie-react-native"
 import { lottieBlueCheck } from "~/assets/"
 import { Verify } from "~/components/auth/"
 import { Button } from "~/components/ui"
-import { tw } from "~/helpers"
 import { useAuthStore, useSettingsStore } from "~/stores"
+import { tw } from "~/utils"
 
 export default function Auth() {
 	const translate = useSettingsStore((state) => state.translate)

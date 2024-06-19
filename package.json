@@ -55,6 +55,7 @@
 		"@react-native-async-storage/async-storage": "1.23.1",
 		"@react-native-community/netinfo": "^11.3.2",
 		"aws-amplify": "^6.3.4",
+		"clsx": "^2.1.1",
 		"expo": "~51.0.9",
 		"expo-build-properties": "~0.12.1",
 		"expo-clipboard": "^6.0.3",

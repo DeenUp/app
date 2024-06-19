@@ -14,8 +14,8 @@ import twr from "twrnc"
 
 import DeenUp from "~/assets/images/deenup.png"
 import { Spacer, ThemedAwesomeButton } from "~/components/ui"
-import { tw } from "~/helpers"
 import { useAuthStore, useGameStore, useSettingsStore } from "~/stores"
+import { tw } from "~/utils"
 
 export default function Page(): ReactNode {
 	const currentUser = useAuthStore((state) => state.currentUser)

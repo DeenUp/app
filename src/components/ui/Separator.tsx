@@ -2,7 +2,7 @@ import { Text, View } from "react-native"
 
 import { twMerge } from "tailwind-merge"
 
-import { tw } from "~/helpers"
+import { tw } from "~/utils"
 
 type SeparatorProps = {
 	children?: React.ReactNode
