@@ -1,5 +1,4 @@
 name: Clean Deployment History
-
 on:
     push:
         branches:
