@@ -1,3 +1,10 @@
+name: Clean Deployment History
+
+on:
+    push:
+        branches:
+            - dev
+
 jobs:
     cleanup:
         runs-on: ubuntu-latest
