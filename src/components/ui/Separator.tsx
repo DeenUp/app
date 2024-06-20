@@ -21,11 +21,19 @@ const Separator: React.FC<SeparatorProps> = ({
 }) => {
 	return children ? (
 		<View className={twMerge(tw`flex-row items-center`, className)}>
-			<View className={twMerge(tw`${thickness} flex-1 bg-${color}`)} />
+			<View
+				className={twMerge(
+					tw`${thickness} flex-1 rounded-xl bg-${color}`,
+				)}
+			/>
 			<Text className={twMerge(tw`px-2 text-${textColor}`)}>
 				{children}
 			</Text>
-			<View className={twMerge(tw`${thickness} flex-1 bg-${color}`)} />
+			<View
+				className={twMerge(
+					tw`${thickness} flex-1 rounded-xl bg-${color}`,
+				)}
+			/>
 		</View>
 	) : (
 		<View className={twMerge(tw`${thickness} bg-${color}`, className)} />

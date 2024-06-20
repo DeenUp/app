@@ -13,6 +13,7 @@ import {
 	Button,
 	EmailInputField,
 	PasswordInputField,
+	Separator,
 	ThemedAwesomeButton,
 } from "~/components/ui"
 import { useAuthStore, useSettingsStore } from "~/stores"
@@ -163,12 +164,9 @@ const SignIn = () => {
 				onPress={() => setIsForgotPassword(true)}
 			/>
 
-			<View className="flex flex-row items-center gap-4">
-				<View className="h-1 flex-1 rounded bg-primary" />
-				<Text className="text-gray-500">or</Text>
-				<View className="h-1 flex-1 rounded bg-primary" />
-			</View>
-
+			<Separator color="primary" textColor="primary">
+				OR
+			</Separator>
 			<View className="flex flex-row items-center gap-4">
 				<ThemedAwesomeButton
 					width={328}
