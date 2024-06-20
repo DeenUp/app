@@ -3,12 +3,7 @@ import type { StateCreator } from "zustand"
 import type { AuthStore } from "."
 
 import { forgotPasswordSteps, signUpSteps } from "~/constants"
-import {
-	validateCode,
-	validateEmail,
-	validateName,
-	validatePassword,
-} from "~/utils"
+import { validateEmail, validateName, validatePassword } from "~/utils"
 
 type FormState = {
 	step: number
@@ -23,7 +18,6 @@ type FormState = {
 		email: string
 		password: string
 		confirmPassword: string
-		code: string
 	}
 }
 
@@ -55,7 +49,6 @@ const createFormSlice: StateCreator<AuthStore, [], [], FormSlice> = (
 			email: "",
 			password: "",
 			confirmPassword: "",
-			code: "",
 		},
 
 		setStep: (step) => {
@@ -71,6 +64,18 @@ const createFormSlice: StateCreator<AuthStore, [], [], FormSlice> = (
 		},
 
 		handleNextStep: () => {
+			if (get().loading) return
+
+			set({
+				error: null,
+				errors: {
+					name: "",
+					email: "",
+					password: "",
+					confirmPassword: "",
+				},
+			})
+
 			if (get().isSignUp) {
 				switch (get().step) {
 					case 1:
@@ -96,20 +101,13 @@ const createFormSlice: StateCreator<AuthStore, [], [], FormSlice> = (
 								password: validatePassword(get().password!),
 							},
 						})
-
-					case 4:
-						set({
-							errors: {
-								...get().errors,
-								code: validateCode(get().confirmationCode),
-							},
-						})
-						break
 				}
 
 				if (Object.values(get().errors).some((error) => error)) {
 					return
 				}
+
+				if (get().step === 4 && get().error) return
 
 				set((state) => ({ step: state.step + 1 }))
 			}
@@ -142,10 +140,12 @@ const createFormSlice: StateCreator<AuthStore, [], [], FormSlice> = (
 					email: "",
 					password: "",
 					confirmPassword: "",
-					code: "",
 				},
 				isSignUp: false,
 				isForgotPassword: false,
+				name: "",
+				username: "",
+				password: "",
 			})
 		},
 	}

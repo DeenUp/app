@@ -16,14 +16,11 @@ import { ThemedAwesomeButton } from "../ui"
 type States = {
 	inputCode: string[]
 }
-type Props = {
-	error?: string | null
-}
 
-const Verify = ({ error }: Props) => {
+const Verify = () => {
 	const CODE_LENGTH = 6
 	const translate = useSettingsStore((state) => state.translate)
-	const { setConfirmationCode } = useAuthStore()
+	const { setConfirmationCode, error } = useAuthStore()
 	const { seconds, setTime, countdown } = useGameStore()
 
 	const [states, setStates] = useState<States>({

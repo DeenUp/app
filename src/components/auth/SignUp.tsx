@@ -29,7 +29,6 @@ const SignUp = () => {
 		name,
 		email,
 		password,
-		confirmationCode,
 		setName,
 		setUsername,
 		setPassword,
@@ -55,6 +54,7 @@ const SignUp = () => {
 		setIsSignUp: state.setIsSignUp,
 		step: state.step,
 		errors: state.errors,
+		error: state.error,
 	}))
 
 	const handleSubmit = async () => {
@@ -72,12 +72,6 @@ const SignUp = () => {
 	}
 
 	const handleVerifySubmit = async () => {
-		if (Object.values(errors).some((error) => error !== "")) {
-			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
-
-			return
-		}
-
 		await handleConfirmSignUp({
 			onSuccess: () => {
 				handleNextStep()
@@ -116,7 +110,7 @@ const SignUp = () => {
 			}}
 		>
 			<AnimatePresence exitBeforeEnter>
-				{step === 1 && (
+				{step === 5 && (
 					<Transition key="nameField" style="gap-10">
 						<NameInputField
 							error={errors.name}
@@ -159,11 +153,11 @@ const SignUp = () => {
 				)}
 				{step === 4 && (
 					<Transition key="verification" style="gap-10">
-						<Verify error={errors.code} key="verify" />
+						<Verify key="verify" />
 					</Transition>
 				)}
 
-				{step === 5 && (
+				{step === 1 && (
 					<Transition key="selfie" style="gap-10">
 						<Selfie />
 					</Transition>
@@ -194,7 +188,7 @@ const SignUp = () => {
 				width={350}
 				textSize={20}
 				onPress={async (next) => {
-					if (step === 2) {
+					if (step === 3) {
 						await handleSubmit()
 						//@ts-ignore
 						next()
@@ -204,7 +198,6 @@ const SignUp = () => {
 
 					if (step === 4) {
 						await handleVerifySubmit()
-						console.log("verify")
 						//@ts-ignore
 						next()
 

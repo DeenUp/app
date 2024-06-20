@@ -93,7 +93,7 @@ export type Theme = {
 	surface: string
 	accent: string
 	neutral: string
-
+	sheet: string
 	info: string
 	success: string
 	warning: string
