@@ -1,8 +1,6 @@
 import { View } from "react-native"
 import ActionSheet from "react-native-actions-sheet"
 
-import { router } from "expo-router"
-
 import { Ionicons } from "@expo/vector-icons"
 import twr from "twrnc"
 
@@ -26,16 +24,14 @@ const SelfieSheet = () => {
 					/>
 				</View>
 			}
-			containerStyle={twr`h-72 items-center  rounded-t-3xl  border-[${theme.primary}] bg-[#F1E1B4]`}
+			containerStyle={twr`h-64 items-center rounded-t-3xl border-[${theme.primary}] bg-[${theme.sheet}]`}
 		>
 			<View className="flex-1 items-center justify-center gap-4">
 				<ThemedAwesomeButton
 					theme={"mysterion"}
 					type="primary"
 					size="large"
-					onPress={() => {
-						router.push("/solo-mode")
-					}}
+					onPress={() => {}}
 					width={300}
 					height={70}
 					textSize={18}
@@ -54,9 +50,7 @@ const SelfieSheet = () => {
 					theme={"mysterion"}
 					type="secondary"
 					size="large"
-					onPress={() => {
-						router.push("/solo-mode")
-					}}
+					onPress={() => {}}
 					width={300}
 					height={70}
 					textSize={18}

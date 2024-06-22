@@ -6,7 +6,7 @@ import { MaterialIcons } from "@expo/vector-icons"
 import { twMerge } from "tailwind-merge"
 import twr from "twrnc"
 
-import { tw } from "~/helpers"
+import { tw } from "~/utils"
 
 type Props = {
 	icon?: ReactNode
@@ -64,7 +64,7 @@ const InputField = ({
 
 			{error && <Text>⛔️🙅‍♂️</Text>}
 			{error && (
-				<View className="absolute -bottom-6 left-3 flex flex-row items-center justify-center ">
+				<View className="absolute -bottom-8 left-3 flex flex-row items-center justify-center">
 					<Text className="text-sm font-light text-red-500">🗣</Text>
 					<Text className="mt-1 text-sm font-light text-red-500">
 						{typeof error === "string" ? error : "🤷‍♂️"}

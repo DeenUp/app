@@ -26,7 +26,7 @@ const ShareSheet = () => {
 					/>
 				</View>
 			}
-			containerStyle={twr`flex h-72 items-center rounded-t-3xl  border-2 border-[${theme.primary}] bg-[#F1E1B4]`}
+			containerStyle={twr`flex h-72 items-center rounded-t-3xl  border-2 border-[${theme.primary}] bg-[${theme.sheet}]`}
 		>
 			<Text className="my-8 text-center text-3xl font-bold text-primary">
 				Share with Friends

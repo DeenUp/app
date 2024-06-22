@@ -6,7 +6,7 @@ import AntIcons from "@expo/vector-icons/AntDesign"
 import { MotiView } from "moti"
 import twr from "twrnc"
 
-import { tw } from "~/helpers"
+import { tw } from "~/utils"
 
 import { ThemedAwesomeButton } from "../ui"
 

@@ -1,5 +1,3 @@
-import { useState } from "react"
-
 import * as Haptics from "expo-haptics"
 
 import LottieView from "lottie-react-native"
@@ -16,6 +14,7 @@ import {
 	PasswordInputField,
 	Selfie,
 	ThemedAwesomeButton,
+	Transition,
 } from "~/components/ui"
 import { useAuthStore, useSettingsStore } from "~/stores"
 
@@ -30,7 +29,6 @@ const SignUp = () => {
 		name,
 		email,
 		password,
-		confirmationCode,
 		setName,
 		setUsername,
 		setPassword,
@@ -56,9 +54,8 @@ const SignUp = () => {
 		setIsSignUp: state.setIsSignUp,
 		step: state.step,
 		errors: state.errors,
+		error: state.error,
 	}))
-
-	const [codeError, setCodeError] = useState("")
 
 	const handleSubmit = async () => {
 		if (Object.values(errors).some((error) => error !== "")) {
@@ -75,12 +72,6 @@ const SignUp = () => {
 	}
 
 	const handleVerifySubmit = async () => {
-		if (confirmationCode!.length !== 6) {
-			setCodeError("Code must be 6 digits")
-
-			return
-		}
-
 		await handleConfirmSignUp({
 			onSuccess: () => {
 				handleNextStep()
@@ -119,14 +110,8 @@ const SignUp = () => {
 			}}
 		>
 			<AnimatePresence exitBeforeEnter>
-				{step === 1 && (
-					<MotiView
-						key="nameField"
-						from={{ opacity: 0, translateX: -20 }}
-						animate={{ opacity: 1, translateX: 0 }}
-						exit={{ opacity: 0, translateX: 20 }}
-						style={twr`flex-1 items-center justify-between gap-10`}
-					>
+				{step === 5 && (
+					<Transition key="nameField" style="gap-10">
 						<NameInputField
 							error={errors.name}
 							value={name}
@@ -138,18 +123,12 @@ const SignUp = () => {
 							source={SignUpNameImage}
 							style={twr`h-64 w-64`}
 						/>
-					</MotiView>
+					</Transition>
 				)}
 				{step === 2 && (
-					<MotiView
-						key="emailField"
-						from={{ opacity: 0, translateX: -20 }}
-						animate={{ opacity: 1, translateX: 0 }}
-						exit={{ opacity: 0, translateX: 20 }}
-						style={twr`flex-1 items-center justify-between gap-10`}
-					>
+					<Transition key="emailField" style="gap-10">
 						<EmailInputField
-							error={""}
+							error={errors.email}
 							value={email}
 							onChangeText={(value) =>
 								handleInputChange("email", value)
@@ -159,15 +138,10 @@ const SignUp = () => {
 							source={SignUpEmailImage}
 							style={twr`h-64 w-64`}
 						/>
-					</MotiView>
+					</Transition>
 				)}
 				{step === 3 && (
-					<MotiView
-						key="passwordField"
-						from={{ opacity: 0, translateX: -20 }}
-						animate={{ opacity: 1, translateX: 0 }}
-						exit={{ opacity: 0, translateX: 20 }}
-					>
+					<Transition key="passwordField" style="gap-10">
 						<PasswordInputField
 							error={errors.password}
 							value={password}
@@ -175,41 +149,24 @@ const SignUp = () => {
 								handleInputChange("password", value)
 							}
 						/>
-					</MotiView>
+					</Transition>
 				)}
 				{step === 4 && (
-					<MotiView
-						key="verification"
-						from={{ opacity: 0, translateX: -20 }}
-						animate={{ opacity: 1, translateX: 0 }}
-						exit={{ opacity: 0, translateX: 20 }}
-					>
-						<Verify error={codeError} key="verify" />
-					</MotiView>
+					<Transition key="verification" style="gap-10">
+						<Verify key="verify" />
+					</Transition>
 				)}
 
-				{step === 5 && (
-					<MotiView
-						key="selfie"
-						from={{ opacity: 0, translateX: -20 }}
-						animate={{ opacity: 1, translateX: 0 }}
-						exit={{ opacity: 0, translateX: 20 }}
-					>
+				{step === 1 && (
+					<Transition key="selfie" style="gap-10">
 						<Selfie />
-					</MotiView>
+					</Transition>
 				)}
 
 				{step === 6 && (
-					<MotiView
+					<Transition
 						key="verify"
-						from={{ opacity: 0, translateX: -20 }}
-						animate={{ opacity: 1, translateX: 0 }}
-						exit={{ opacity: 0, translateX: 20 }}
-						style={{
-							flex: 1,
-							justifyContent: "center",
-							alignItems: "center",
-						}}
+						style="flex-1 justify-center items-center"
 					>
 						<LottieView
 							source={lottieBlueCheck}
@@ -220,7 +177,7 @@ const SignUp = () => {
 								height: 500,
 							}}
 						/>
-					</MotiView>
+					</Transition>
 				)}
 			</AnimatePresence>
 
@@ -231,16 +188,20 @@ const SignUp = () => {
 				width={350}
 				textSize={20}
 				onPress={async (next) => {
-					if (step === 2) {
+					if (step === 3) {
 						await handleSubmit()
 						//@ts-ignore
 						next()
+
+						return
 					}
 
-					if (step === 3) {
+					if (step === 4) {
 						await handleVerifySubmit()
 						//@ts-ignore
 						next()
+
+						return
 					}
 
 					handleNextStep()

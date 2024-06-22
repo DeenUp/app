@@ -17,8 +17,8 @@ import {
 	SelectionIndicator,
 } from "~/components/gameplay"
 import { CloseButton, ThemedAwesomeButton } from "~/components/ui"
-import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
+import { tw } from "~/utils"
 
 export default function Page(): ReactNode {
 	const { theme } = useSettingsStore()

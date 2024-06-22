@@ -64,9 +64,12 @@ export default {
 			passwordSubheader: "Lastly, a password to keep things safe. 🔐",
 			verificationHeader: "Verification",
 			verificationSubheader: "Check your email and enter the code below",
+			selfieHeader: "Selfie",
+			selfieSubheader: "Take a selfie so people can recognize you",
 			continueButton: "Continue 👉",
 			submitButton: "Submit",
 			verifyButton: "Verify 🕵️",
+
 			backToSignIn: "Back to Sign In",
 			successHeader: "All set! 🙌",
 			successSubheader: "Your account is ready to use",

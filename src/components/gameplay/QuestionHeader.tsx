@@ -3,7 +3,7 @@ import type { ReactNode } from "react"
 import { Text, View } from "react-native"
 
 import { SegmentedProgressBar, Timer } from "~/components/ui"
-import { tw } from "~/helpers"
+import { tw } from "~/utils"
 
 const QuestionHeader = ({
 	index,

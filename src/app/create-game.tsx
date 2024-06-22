@@ -20,8 +20,8 @@ import {
 	ThemedAwesomeButton,
 } from "~/components/ui"
 import ParticipantsList from "~/components/ui/ParticipantsList"
-import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
+import { tw } from "~/utils"
 
 export default function CreateGame(): ReactNode {
 	const { translate, theme } = useSettingsStore()

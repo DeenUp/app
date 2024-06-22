@@ -20,8 +20,8 @@ import {
 	Separator,
 	ThemedAwesomeButton,
 } from "~/components/ui"
-import { tw } from "~/helpers"
 import { useGameStore, useSettingsStore } from "~/stores"
+import { tw } from "~/utils"
 
 type States = {
 	inputCode: string[]
