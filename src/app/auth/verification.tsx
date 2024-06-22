@@ -14,7 +14,7 @@ import { tw } from "~/utils"
 export default function Auth() {
 	const translate = useSettingsStore((state) => state.translate)
 
-	const { username, loading, error, handleConfirmSignUp } = useAuthStore()
+	const { username, loading, handleConfirmSignUp } = useAuthStore()
 
 	const [isVerified, setVerified] = useState(false)
 
@@ -61,7 +61,7 @@ export default function Auth() {
 						}}
 					/>
 				) : (
-					<Verify error={error} />
+					<Verify />
 				)}
 
 				<Button

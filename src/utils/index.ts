@@ -10,9 +10,9 @@ import {
 export {
 	cn,
 	removeDuplicates,
+	tw,
 	validateCode,
 	validateEmail,
 	validateName,
 	validatePassword,
-	tw,
 }
