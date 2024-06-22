@@ -93,7 +93,7 @@ const ForgotPassword = () => {
 				)}
 				{step === 2 && (
 					<Transition key="verify" style="gap-10">
-						<Verify error={errors.code} />
+						<Verify />
 					</Transition>
 				)}
 				{step === 2 && (
@@ -127,7 +127,6 @@ const ForgotPassword = () => {
 							}}
 						/>
 					</Transition>
-					// </MotiView>
 				)}
 			</AnimatePresence>
 			<ThemedAwesomeButton
@@ -140,6 +139,8 @@ const ForgotPassword = () => {
 						handlePrevStep()
 						//@ts-ignore
 						next()
+
+						return
 					}
 
 					handleSubmit()

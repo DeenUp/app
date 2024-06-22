@@ -100,13 +100,4 @@ export type Theme = {
 	error: string
 	card: string
 	input: string
-	"input-focus": string
-	"input-placeholder": string
-	"input-border": string
-	"input-error": string
-	"input-success": string
-	"input-warning": string
-	"input-info": string
-
-	// Add more theme properties as needed
 }

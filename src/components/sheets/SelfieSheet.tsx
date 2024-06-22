@@ -1,8 +1,6 @@
 import { View } from "react-native"
 import ActionSheet from "react-native-actions-sheet"
 
-import { router } from "expo-router"
-
 import { Ionicons } from "@expo/vector-icons"
 import twr from "twrnc"
 
