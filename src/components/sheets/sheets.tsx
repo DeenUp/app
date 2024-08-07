@@ -11,7 +11,7 @@ registerSheet("share-sheet", ShareSheet)
 // We extend some of the types here to give us great intellisense
 // across the app for all registered sheets.
 declare module "react-native-actions-sheet" {
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
+	// eslint-disable-next-line
 	interface Sheets {
 		"selfie-sheet": SheetDefinition
 		"share-sheet": SheetDefinition
